@@ -37,7 +37,7 @@ public class P10State extends GameState
      */
     public P10State() {
     	// randomly pick the player who starts
-    	toPlay = (int)(2*Math.random());
+    	toPlay = (int)(6*Math.random());
     	
     	// initialize the decks as follows:
     	// - each player deck (#0 and #1) gets half the cards, randomly
@@ -47,7 +47,7 @@ public class P10State extends GameState
     	piles[0] = new Deck(); // create empty deck
     	piles[1] = new Deck(); // create empty deck
     	piles[2] = new Deck(); // create empty deck
-    	piles[toPlay].add52(); // give all cards to player whose turn it is, in order
+    	piles[toPlay].add108(); // give all cards to player whose turn it is, in order
     	piles[toPlay].shuffle(); // shuffle the cards
     	// move cards to opponent, until to piles have ~same size
     	while (piles[toPlay].size() >=

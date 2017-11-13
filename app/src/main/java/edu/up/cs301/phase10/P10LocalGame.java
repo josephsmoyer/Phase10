@@ -42,7 +42,7 @@ public class P10LocalGame extends LocalGame {
     		// there are cards in the middle pile
     		if (state.getDeck(0).size() == 0 &&
     				state.getDeck(1).size() == 0 &&
-    				state.getDeck(2).peekAtTopCard().getRank() != Rank.JACK) {
+    				state.getDeck(2).peekAtTopCard().getRank() != Rank.SKIP) {
     			// All the cards have ended up in the middle pile, and the top card
     			// is not a Jack. This situation is a draw, since the only move a player
     			// would would be to slap the top card, causing his opponent to win.
@@ -140,7 +140,7 @@ public class P10LocalGame extends LocalGame {
 				// empty deck: return false, as move is illegal
 				return false;
 			}
-			else if (state.getDeck(2).peekAtTopCard().getRank() == Rank.JACK){
+			else if (state.getDeck(2).peekAtTopCard().getRank() == Rank.SKIP){
 				// a Jack was slapped: give all cards to slapping player
 				giveMiddleCardsToPlayer(thisPlayerIdx);
 			}

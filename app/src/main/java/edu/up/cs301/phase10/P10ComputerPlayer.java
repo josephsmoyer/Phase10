@@ -55,7 +55,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	
     	// look at the top card now. If it's still a Jack, slap it
     	Card topCard = savedState.getDeck(2).peekAtTopCard();
-    	if (topCard != null && topCard.getRank() == Rank.JACK) {
+    	if (topCard != null && topCard.getRank() == Rank.SKIP) {
     		// the Jack is still there, so submit our move to the game object
     		game.sendAction(new P10MakePhaseAction(this));
     	}
@@ -88,7 +88,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	
     	// if it's a Jack, slap it; otherwise, if it's our turn to
     	// play, play a card
-    	if (topCard != null && topCard.getRank() == Rank.JACK) {
+    	if (topCard != null && topCard.getRank() == Rank.WILD) {
     		// we have a Jack to slap: set up a timer, depending on reaction time.
     		// The slap will occur when the timer "ticks". Our reaction time will be
     		// between the minimum reaction time and 3 times the minimum reaction time
