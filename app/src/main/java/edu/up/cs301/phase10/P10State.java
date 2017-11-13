@@ -1,6 +1,10 @@
 package edu.up.cs301.phase10;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import edu.up.cs301.card.Card;
+import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
@@ -26,7 +30,15 @@ public class P10State extends GameState
 	// Note that when players receive the state, all but the top card in all piles
 	// are passed as null.
     private Deck[] piles;
-    
+    private int turn;
+	private boolean drawMade;
+	private ArrayList<Card> drawPile;
+	private ArrayList<Card> discardPile;
+
+	private HashMap<String, Integer> playerScores;
+	private ArrayList<Card>playerHand;
+
+
     // whose turn is it to turn a card?
     private int toPlay;
 
@@ -70,7 +82,7 @@ public class P10State extends GameState
     	piles[1] = new Deck(orig.piles[1]);
     	piles[2] = new Deck(orig.piles[2]);
     }
-    
+
     /**
      * Gives the given deck.
      * 

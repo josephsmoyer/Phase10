@@ -40,19 +40,19 @@ public class P10LocalGame extends LocalGame {
     	
     	if (state.getDeck(2).size() > 0) {
     		// there are cards in the middle pile
-    		if (state.getDeck(0).size() == 0 &&
-    				state.getDeck(1).size() == 0 &&
-    				state.getDeck(2).peekAtTopCard().getRank() != Rank.SKIP) {
+    		//if (state.getDeck(0).size() == 0 &&
+    		//		state.getDeck(1).size() == 0 &&
+    				//state.getDeck(2).peekAtTopCard().getRank() != Rank.JACK) {
     			// All the cards have ended up in the middle pile, and the top card
     			// is not a Jack. This situation is a draw, since the only move a player
     			// would would be to slap the top card, causing his opponent to win.
-    			return "game is a draw";
-    		}
-    		else {
+    		//	return "game is a draw";
+    		//}
+    		//else {
     			// there are either cards in at least two piles, or all cards are in the
     			// middle pile with a Jack on top; return null, as the game is not over
     			return null;
-    		}
+    		///}
     	}
     	else if (state.getDeck(0).size() <= 0) {
     		// player 1 has all the cards
@@ -136,33 +136,22 @@ public class P10LocalGame extends LocalGame {
 
 		if (P10ma.isMakePhase()) {
 			// if we have a slap 
-			if (state.getDeck(2).size() == 0) {
-				// empty deck: return false, as move is illegal
-				return false;
-			}
-			else if (state.getDeck(2).peekAtTopCard().getRank() == Rank.SKIP){
-				// a Jack was slapped: give all cards to slapping player
-				giveMiddleCardsToPlayer(thisPlayerIdx);
-			}
-			else {
-				// a non-Jack was slapped: give all cards to non-slapping player
-				giveMiddleCardsToPlayer(1-thisPlayerIdx);
-			}
+
 		}
 		else if (P10ma.isPlay()) { // we have a "play" action
-			if (thisPlayerIdx != state.toPlay()) {
+			//if (thisPlayerIdx != state.toPlay()) {
 				// attempt to play when it's the other player's turn
 				return false;
-			}
-			else {
+			//}
+			//else {
 				// it's the correct player's turn: move the top card from the
 				// player's deck to the top of the middle deck
-				state.getDeck(thisPlayerIdx).moveTopCardTo(state.getDeck(2));
+			//	state.getDeck(thisPlayerIdx).moveTopCardTo(state.getDeck(2));
 				// if the opponent has any cards, make it the opponent's move
-				if (state.getDeck(1-thisPlayerIdx).size() > 0) {
-					state.setToPlay(1-thisPlayerIdx);
-				}
-			}
+				//if (state.getDeck(1-thisPlayerIdx).size() > 0) {
+				//	state.setToPlay(1-thisPlayerIdx);
+				//}
+			//}
 		}
 		else if(P10ma.isHitCard()){
 
