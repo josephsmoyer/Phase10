@@ -93,7 +93,7 @@ public class P10State extends GameState
         if (num < 0 || num > 2) return null;
         return piles[num];
     }
-    
+
     /**
      * Tells which player's turn it is.
      * 
