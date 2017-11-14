@@ -49,7 +49,7 @@ public class P10State extends GameState
      */
     public P10State() {
     	// randomly pick the player who starts
-    	toPlay = (int)(2*Math.random());
+    	toPlay = (int)(6*Math.random());
     	
     	// initialize the decks as follows:
     	// - each player deck (#0 and #1) gets half the cards, randomly
