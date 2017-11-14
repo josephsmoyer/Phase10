@@ -174,9 +174,9 @@ public class P10State extends GameState
 		//Indicate that game should start with a draw action
 		shouldDraw = orig.shouldDraw;
 
-		//Copy the decks shared by all
-		drawPile = new Deck(orig.drawPile);
-		discardPile = new Deck(orig.discardPile);
+		//Copy the decks shared by all (only sending the legal info for the player to know)
+		drawPile = new Deck(); //player should not have access to any card in the deck
+		discardPile = new Deck(orig.discardPile); //all cards in discard pile are face up
 
 		//initialize the new deck for the hands
 		hands = new Deck[numPlayers];
@@ -186,7 +186,7 @@ public class P10State extends GameState
 				hands[i] = new Deck(orig.hands[i]);
 			}
 			else{
-				hands[i] = null; // only give player access to his own hand
+				hands[i] = null; // only give player access to his/her own hand
 			}
 		}
 		//initialize the new decks for phase components
@@ -212,16 +212,14 @@ public class P10State extends GameState
 	}
 
     /**
-     * Gives the given deck.
-     * 
-     * @return  the deck for the given player, or the middle deck if the
-     *   index is 2
+     * Tells how many players there are
+     *
+     * @return the number of players in the game
      */
-    public Deck getDeck(int num) {
-        if (num < 0 || num > 2) return null;
-        return piles[num];
+    public int getNumberPlayers() {
+        return numPlayers;
     }
-    
+
     /**
      * Tells which player's turn it is.
      * 
@@ -240,87 +238,184 @@ public class P10State extends GameState
     public void setToPlay(int idx) {
     	toPlay = idx;
     }
- 
+
     /**
-     * Replaces all cards with null, except for the top card of deck 2
+     * Returns the top card of the draw pile
+     *
+     * @return the top card from the draw pile. If no access to draw pile / empty pile, returns null
      */
-    public void nullAllButTopOf2() {
-    	// see if the middle deck is empty; remove top card from middle deck
-    	boolean empty2 = piles[2].size() == 0;
-    	Card c = piles[2].removeTopCard();
-    	
-    	// set all cards in deck to null
-    	for (Deck d : piles) {
-    		d.nullifyDeck();
-    	}
-    	
-    	// if middle deck had not been empty, add back the top (non-null) card
-    	if (!empty2) {
-    		piles[2].add(c);
-    	}
+    public Card getDrawCard() {
+        if(drawPile.size() == 0){               //if the draw pile is empty
+            reshuffle();
+        }
+        return drawPile.removeTopCard();
+    }
+
+    /**
+     * Returns the top card of the discard pile
+     *
+     * @return the top card from the discard pile. If no access to discard pile / empty pile, returns null
+     */
+    public Card getDiscardCard() {
+        return discardPile.removeTopCard();
+    }
+
+    /**
+     * 'Sets' the top card of the discard pile, by adding a card to it
+     *
+     * @param discard
+     *      the card to add to the discard pile
+     */
+    public void setDiscardCard(Card discard) {
+        discardPile.add(discard);
+    }
+
+    /**
+     * Returns whether or not a draw action is expected next
+     *
+     * @return boolean indicator of what the next expected action is
+     */
+    public boolean getShouldDraw() {
+        return shouldDraw;
+    }
+
+    /**
+     * Sets the shouldDraw variable
+     *
+     * @param expectedDraw
+     *      boolean to updated what the next expected move type is
+     */
+    public void setShouldDraw(boolean expectedDraw) {
+        shouldDraw = expectedDraw;
+    }
+
+    /**
+     * Returns the array listing what phase each player is on
+     *
+     * @return the array listing what phase each player is on
+     */
+    public int[] getPhases() {
+        return phases;
+    }
+
+    /**
+     * Sets a phase for an individual player
+     *
+     * @param playerID
+     *      the ID of the player that is having his/her phase updated
+     * @param myPhase
+     *      the phase the player should be on
+     */
+    public void setPhase(int playerID, int myPhase) {
+        phases[playerID] = myPhase;
+    }
+
+    /**
+     * Returns the array listing what score each player has
+     *
+     * @return the array listing what score each player has
+     */
+    public int[] getScores() {
+        return scores;
+    }
+
+    /**
+     * Sets the score for an individual player
+     *
+     * @param playerID
+     *      the ID of the player that is having his/her phase updated
+     * @param myScore
+     *      the score to change that players score to
+     */
+    public void setScore(int playerID, int myScore) {
+        scores[playerID] = myScore;
+    }
+
+    /**
+     * Returns the array listing which players are set to be skipped
+     *
+     * @return the array listing which players are set to be skipped
+     */
+    public boolean[] getToSkip() {
+        return toSkip;
+    }
+
+    /**
+     * Sets the toSkip for an individual player
+     *
+     * @param playerID
+     *      the ID of the player that is having his/her toSkip updated
+     * @param mySkip
+     *      the boolean indicating if that player should be skipped or not
+     */
+    public void setToSkip(int playerID, boolean mySkip) {
+        toSkip[playerID] = mySkip;
+    }
+
+    /**
+     * Returns the array listing which players have been skipped
+     *
+     * @return the array listing which players have been skipped
+     */
+    public boolean[] getAlreadySkip() {
+        return alreadySkip;
+    }
+
+    /**
+     * Sets the alreadySkip for an individual player
+     *
+     * @param playerID
+     *      the ID of the player that is having his/her alreadySkip updated
+     * @param mySkip
+     *      the boolean indicating if that player has been skipped or not
+     */
+    public void setAlreadySkip(int playerID, boolean mySkip) {
+        alreadySkip[playerID] = mySkip;
+    }
+
+    /**
+     * Returns the hand for a specific player
+     *
+     * @param playerID
+     * @return the hand for a specific player
+     */
+    public Deck getHand(int playerID) {
+        return hands[playerID];
+    }
+
+    /**
+     * discards a card from a specific players hand to the discard pile
+     *
+     * @param playerID
+     *      the ID of the player that is discarding
+     * @param myCard
+     *      the card he/she wants to discard
+     */
+    public void discardFromHand(int playerID, Card myCard) {
+        if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
+            hands[playerID].moveTopCardTo(discardPile);
+        }
+    }
+
+    /**
+     * Returns the played phases on the table
+     *
+     * @return the array with all of the played phases
+     */
+    public Deck[][] getPlayedPhase() {
+        return playedPhase;
     }
 
     /*
-    //SlapJack Code for Reference
-
-		///////////////////////////////////////////////////
-		// ************** instance variables ************
-		///////////////////////////////////////////////////
-
-		// the three piles of cards:
-		//  - 0: pile for player 0
-		//  - 1: pile for player 1
-		//  - 2: the "up" pile, where the top card
-		// Note that when players receive the state, all but the top card in all piles
-		// are passed as null.
-		private Deck[] piles;
-		private int turn;
-		private boolean drawMade;
-		private ArrayList<Card> drawPile;
-		private ArrayList<Card> discardPile;
-
-		private HashMap<String, Integer> playerScores;
-		private ArrayList<Card>playerHand;
-
-
-		// whose turn is it to turn a card?
-		private int toPlay;
-
-
-		//@return  the deck specified
-		public Deck getDeck(int num) {
-			if (num < 0 || num > 2) return null;
-			return piles[num];
-		}
-
-		//Tells which player's turn it is.
-		public int toPlay() {
-			return toPlay;
-		}
-
-		//change whose move it is
-		//@param idx the index of the player whose move it now is
-
-		public void setToPlay(int idx) {
-			toPlay = idx;
-		}
-
-
-		//Replaces all cards with null, except for the top card of deck 2
-		public void nullAllButTopOf2() {
-			// see if the middle deck is empty; remove top card from middle deck
-			boolean empty2 = piles[2].size() == 0;
-			Card c = piles[2].removeTopCard();
-
-			// set all cards in deck to null
-			for (Deck d : piles) {
-				d.nullifyDeck();
-			}
-
-			// if middle deck had not been empty, add back the top (non-null) card
-			if (!empty2) {
-				piles[2].add(c);
-			}
-		}
+     * Moves all cards, except top card, from discard pile back to draw pile, and shuffles
      */
+    private void reshuffle(){
+        Card top = discardPile.removeTopCard();
+        for(int i = 0; i < discardPile.size(); i++){
+            discardPile.moveTopCardTo(drawPile);
+        }
+        drawPile.shuffle();
+        discardPile.add(top);                               //return the top card to the discard pile
+    }
+
 }
