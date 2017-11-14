@@ -18,14 +18,13 @@ public class P10LocalGame extends LocalGame {
 
     // the game's state
     P10State state;
-
     /**
      * Constructor for the P10LocalGame.
      */
     public P10LocalGame() {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new P10State();
+        state = new P10State(players.length);
     }
 
 
@@ -106,7 +105,7 @@ public class P10LocalGame extends LocalGame {
 		else {
 			// player can move if it's their turn, or if the middle deck is non-empty
 			// so they can slap
-			return state.getDeck(2).size() > 0 || state.toPlay() == playerIdx;
+			return state.getDeck(2).size() > 0 || state.getToPlay() == playerIdx;
 		}
 	}
 
