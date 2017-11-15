@@ -1,5 +1,7 @@
 package edu.up.cs301.phase10;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 import edu.up.cs301.game.GameMainActivity;
@@ -7,7 +9,6 @@ import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.config.GameConfig;
 import edu.up.cs301.game.config.GamePlayerType;
-import android.graphics.Color;
 
 /**
  * this is the primary activity for Phase10 game
@@ -66,6 +67,8 @@ public class P10MainActivity extends GameMainActivity {
 
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
+		defaultConfig.addPlayer("Computer", 2);
+		defaultConfig.addPlayer("Computer", 2);
 		defaultConfig.addPlayer("Computer", 2);
 		
 		// Set the initial information for the remote player
