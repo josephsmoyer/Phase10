@@ -54,15 +54,17 @@ public class Deck implements Serializable {
 	 */
 	public Deck add108() {
 		// add the cards
-		for (char s : "RBYG".toCharArray()) {
-			for (char r : "112233445566778899TTEEVVWW".toCharArray()) {
+		for (char s : "rbyg".toCharArray()) {
+			for (char r : "112233445566778899tteevv".toCharArray()) {
 				this.add(Card.fromString(""+r+s));
 			}
 		}
-		this.add(Card.fromString("BS"));
-		this.add(Card.fromString("BS"));
-		this.add(Card.fromString("BS"));
-		this.add(Card.fromString("BS"));
+		this.add(Card.fromString("zs"));
+		this.add(Card.fromString("zs"));
+		this.add(Card.fromString("zs"));
+		this.add(Card.fromString("zs"));
+		this.add(Card.fromString("zw"));
+		this.add(Card.fromString("zw"));
 		// return the deck
 		return this;
 	}
@@ -231,7 +233,7 @@ public class Deck implements Serializable {
 			}
 		}
 		
-		// surround by brackets and retuirn
+		// surround by brackets and return
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;
 	}

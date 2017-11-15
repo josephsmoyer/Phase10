@@ -2,13 +2,22 @@
 <items version="2" >
 
     <item
-        is-multidex="false"
-        jar="/Users/josephsmoyer/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\Phase10\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
         optimize="true"
-        revision="22.0.1"
-        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
-        <dex dex="/Users/josephsmoyer/Downloads/SlapJack-master/app/build/intermediates/pre-dexed/debug/support-v4-18.0.0_b3fab023a130e6098998307ba6f58d6285a0f6d5.jar" />
+        revision="25.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\Phase10\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_57a26496427d7d3da98b546183b9372f29485b31\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\Phase10\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ee4a3662f1c5a051e7af65ce6341c8347042b939">
+        <dex dex="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\Phase10\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_2919a03f8c683764ef05810ec813834ae15fe70e\classes.dex" />
     </item>
 
 </items>

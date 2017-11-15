@@ -169,7 +169,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the canvas on which we are to draw
 	 */
 	public void tick(Canvas g) {
-		
+		/*
 		// ignore if we have not yet received the game state
 		if (state == null) return;
 
@@ -211,6 +211,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		Paint paint = new Paint();
 		paint.setColor(Color.RED);
 		g.drawRect(turnIndicator, paint);
+		*/
 	}
 	
 	/**

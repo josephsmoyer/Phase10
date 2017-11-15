@@ -18,14 +18,13 @@ public class P10LocalGame extends LocalGame {
 
     // the game's state
     P10State state;
-
     /**
      * Constructor for the P10LocalGame.
      */
     public P10LocalGame() {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new P10State();
+        state = new P10State(players.length);
     }
 
 
@@ -37,7 +36,7 @@ public class P10LocalGame extends LocalGame {
      */
     @Override
     protected String checkIfGameOver() {
-    	
+    	/*
     	if (state.getDeck(2).size() > 0) {
     		// there are cards in the middle pile
     		//if (state.getDeck(0).size() == 0 &&
@@ -66,6 +65,8 @@ public class P10LocalGame extends LocalGame {
     		// each player has some cards: no winner yet
     		return null;
     	}
+    	*/
+    	return null;
     }
 
     /**
@@ -78,6 +79,7 @@ public class P10LocalGame extends LocalGame {
      */
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
+		/*
 		// if there is no state to send, ignore
 		if (state == null) {
 			return;
@@ -90,6 +92,7 @@ public class P10LocalGame extends LocalGame {
 		
 		// send the modified copy of the state to the player
 		p.sendInfo(stateForPlayer);
+		*/
 	}
 	
 	/**
@@ -99,6 +102,7 @@ public class P10LocalGame extends LocalGame {
 	 * 		the player-number of the player in question
 	 */
 	protected boolean canMove(int playerIdx) {
+		/*
 		if (playerIdx < 0 || playerIdx > 1) {
 			// if our player-number is out of range, return false
 			return false;
@@ -106,8 +110,10 @@ public class P10LocalGame extends LocalGame {
 		else {
 			// player can move if it's their turn, or if the middle deck is non-empty
 			// so they can slap
-			return state.getDeck(2).size() > 0 || state.toPlay() == playerIdx;
+			return state.getDeck(2).size() > 0 || state.getToPlay() == playerIdx;
 		}
+		*/
+		return false;
 	}
 
 	/**
@@ -178,6 +184,7 @@ public class P10LocalGame extends LocalGame {
 	 * 		the index of the player to whom the cards should be given
 	 */
 	private void giveMiddleCardsToPlayer(int idx) {
+		/*
 		// illegal player: ignore
 		if (idx < 0 || idx > 1) return;
 		
@@ -186,5 +193,6 @@ public class P10LocalGame extends LocalGame {
 		
 		// shuffle the target deck
 		state.getDeck(idx).shuffle();
+		*/
 	}
 }
