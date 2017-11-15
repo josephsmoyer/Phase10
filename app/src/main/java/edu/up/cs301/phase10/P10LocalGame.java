@@ -36,7 +36,7 @@ public class P10LocalGame extends LocalGame {
      */
     @Override
     protected String checkIfGameOver() {
-    	
+    	/*
     	if (state.getDeck(2).size() > 0) {
     		// there are cards in the middle pile
     		//if (state.getDeck(0).size() == 0 &&
@@ -65,6 +65,8 @@ public class P10LocalGame extends LocalGame {
     		// each player has some cards: no winner yet
     		return null;
     	}
+    	*/
+    	return null;
     }
 
     /**
@@ -77,6 +79,7 @@ public class P10LocalGame extends LocalGame {
      */
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
+		/*
 		// if there is no state to send, ignore
 		if (state == null) {
 			return;
@@ -89,6 +92,7 @@ public class P10LocalGame extends LocalGame {
 		
 		// send the modified copy of the state to the player
 		p.sendInfo(stateForPlayer);
+		*/
 	}
 	
 	/**
@@ -98,6 +102,7 @@ public class P10LocalGame extends LocalGame {
 	 * 		the player-number of the player in question
 	 */
 	protected boolean canMove(int playerIdx) {
+		/*
 		if (playerIdx < 0 || playerIdx > 1) {
 			// if our player-number is out of range, return false
 			return false;
@@ -107,6 +112,8 @@ public class P10LocalGame extends LocalGame {
 			// so they can slap
 			return state.getDeck(2).size() > 0 || state.getToPlay() == playerIdx;
 		}
+		*/
+		return false;
 	}
 
 	/**
@@ -177,6 +184,7 @@ public class P10LocalGame extends LocalGame {
 	 * 		the index of the player to whom the cards should be given
 	 */
 	private void giveMiddleCardsToPlayer(int idx) {
+		/*
 		// illegal player: ignore
 		if (idx < 0 || idx > 1) return;
 		
@@ -185,5 +193,6 @@ public class P10LocalGame extends LocalGame {
 		
 		// shuffle the target deck
 		state.getDeck(idx).shuffle();
+		*/
 	}
 }

@@ -51,6 +51,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
 	 */
     @Override
     protected void timerTicked() {
+		/*
     	// we had seen a Jack, now we have waited the requisite time to slap
     	
     	// look at the top card now. If it's still a Jack, slap it
@@ -63,6 +64,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	// stop the timer, since we don't want another timer-tick until it
     	// again is explicitly started
     	getTimer().stop();
+    	*/
     }
 
     /**
@@ -71,7 +73,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
      */
     @Override
     protected void receiveInfo(GameInfo info) {
-    	
+    	/*
     	// if we don't have a game-state, ignore
     	if (!(info instanceof P10State)) {
     		return;
@@ -105,5 +107,6 @@ public class P10ComputerPlayer extends GameComputerPlayer
         	// submit our move to the game object
         	game.sendAction(new P10PlayAction(this));
     	}
+    	*/
     }
 }
