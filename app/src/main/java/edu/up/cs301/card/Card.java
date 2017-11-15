@@ -1,8 +1,5 @@
 package edu.up.cs301.card;
 
-import java.io.Serializable;
-
-import edu.up.cs301.game.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
+import java.io.Serializable;
+
+import edu.up.cs301.game.R;
 
 /**
  * A playing card in the standard 52-card deck. The images, which have been
@@ -184,32 +185,32 @@ public class Card implements Serializable {
     // images
     private static int[][] resIdx = {
     	{
-    		R.drawable.card_ac, R.drawable.card_2c, R.drawable.card_3c,
-    		R.drawable.card_4c, R.drawable.card_5c, R.drawable.card_6c,
-    		R.drawable.card_7c, R.drawable.card_8c, R.drawable.card_9c,
-    		R.drawable.card_tc, R.drawable.card_jc, R.drawable.card_qc,
-    		R.drawable.card_kc, 
+    		R.drawable.b_01, R.drawable.b_02, R.drawable.b_03,
+    		R.drawable.b_04, R.drawable.b_05, R.drawable.b_06,
+    		R.drawable.b_07, R.drawable.b_08, R.drawable.b_09,
+    		R.drawable.b_10, R.drawable.b_11, R.drawable.b_12,
+    		R.drawable.s,
     	},
     	{
-    		R.drawable.card_ad, R.drawable.card_2d, R.drawable.card_3d,
-    		R.drawable.card_4d, R.drawable.card_5d, R.drawable.card_6d,
-    		R.drawable.card_7d, R.drawable.card_8d, R.drawable.card_9d,
-    		R.drawable.card_td, R.drawable.card_jd, R.drawable.card_qd,
-    		R.drawable.card_kd, 
+    		R.drawable.g_01, R.drawable.g_02, R.drawable.g_03,
+    		R.drawable.g_04, R.drawable.g_05, R.drawable.g_06,
+    		R.drawable.g_07, R.drawable.g_08, R.drawable.g_09,
+    		R.drawable.g_10, R.drawable.g_11, R.drawable.g_12,
+    		//R.drawable.card_kd,
     	},
     	{
-    		R.drawable.card_ah, R.drawable.card_2h, R.drawable.card_3h,
-    		R.drawable.card_4h, R.drawable.card_5h, R.drawable.card_6h,
-    		R.drawable.card_7h, R.drawable.card_8h, R.drawable.card_9h,
-    		R.drawable.card_th, R.drawable.card_jh, R.drawable.card_qh,
-    		R.drawable.card_kh, 
+    		R.drawable.r_01, R.drawable.r_02, R.drawable.r_03,
+    		R.drawable.r_04, R.drawable.r_05, R.drawable.r_06,
+    		R.drawable.r_07, R.drawable.r_08, R.drawable.r_09,
+    		R.drawable.r_10, R.drawable.r_11, R.drawable.r_12,
+    		//R.drawable.card_kh,
     	},
     	{
-    		R.drawable.card_as, R.drawable.card_2s, R.drawable.card_3s,
-    		R.drawable.card_4s, R.drawable.card_5s, R.drawable.card_6s,
-    		R.drawable.card_7s, R.drawable.card_8s, R.drawable.card_9s,
-    		R.drawable.card_ts, R.drawable.card_js, R.drawable.card_qs,
-    		R.drawable.card_ks, 
+    		R.drawable.y_01, R.drawable.y_02, R.drawable.y_03,
+    		R.drawable.y_04, R.drawable.y_05, R.drawable.y_06,
+    		R.drawable.y_07, R.drawable.y_08, R.drawable.y_09,
+    		R.drawable.y_10, R.drawable.y_11, R.drawable.y_12,
+    		R.drawable.w,
     	},
     };
     
