@@ -6,7 +6,8 @@ import java.util.ArrayList;
 /**
  *
  * @author Steven R. Vegdahl
- * @version December 2016
+ * @author Trenton Langer
+ * @version December 2017
  */
 public enum Rank implements Serializable {
 
@@ -88,18 +89,50 @@ public enum Rank implements Serializable {
 	},
 	
 	// ten
-	TEN,
+	TEN {
+		// override the shortName behavior: the corresponding letter
+		@Override
+		public char shortName() {
+			return 't';
+		}
+	},
 
-	// jack
-	ELEVEN,
+	// eleven
+	ELEVEN {
+		// override the shortName behavior: the corresponding letter
+		@Override
+		public char shortName() {
+			return 'e';
+		}
+	},
 
-	// queen
-	TWELVE,
+	// twelve
+	TWELVE {
+		// override the shortName behavior: the corresponding letter
+		//cannot use T again, so use v
+		@Override
+		public char shortName() {
+			return 'v';
+		}
+	},
 
-	// king
-	WILD,
+	// wild
+	WILD {
+		// override the shortName behavior: the corresponding letter
+		@Override
+		public char shortName() {
+			return 'w';
+		}
+	},
 
-	SKIP
+	// skip
+	SKIP {
+		// override the shortName behavior: the corresponding letter
+		@Override
+		public char shortName() {
+			return 's';
+		}
+	}
 	;
 
 	// to satisfy the Serializable interface
@@ -113,7 +146,7 @@ public enum Rank implements Serializable {
 	 */
 	public char shortName() {
 		// the default is the first character of the print-string;
-		// TWO through NINE override this
+		// all override this
 		return this.toString().charAt(0);
 	}
 	
@@ -123,10 +156,11 @@ public enum Rank implements Serializable {
 	 * @param aceValue
 	 * 		the value to use for an Ace
 	 * @return
-	 * 		the numeric value of the rank: 2-13 for TWO through KING;
-	 * 		the given value (typically 1 or 14) for ACE
+	 * 		the numeric value of the rank: 2-12 for TWO through Twelve, 13 for Wild, 14 for Skip;
+	 * 		the given value (Always 1 for ACE
 	 */
 	public int value(int aceValue) {
+		aceValue = 1;								//No aces in Phase10, always value 1
 		return this == ONE ? aceValue : ordinal()+1;
 	}
 	

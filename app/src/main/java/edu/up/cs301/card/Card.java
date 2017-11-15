@@ -91,10 +91,10 @@ public class Card implements Serializable {
      * Produces a textual description of a Card.
      *
      * @return
-	 *		A string such as "Jack of Spades", which describes the card.
+	 *		A string such as "Red Ten", which describes the card.
      */
     public String toString() {
-        return rank.longName()+" of "+suit.longName()+"s";
+        return suit.longName()+" " + rank.longName();
     }
 
 	/**
@@ -112,14 +112,6 @@ public class Card implements Serializable {
 		return this.rank == c.rank && this.suit == c.suit;
 	}
 
-	/**
-	 * Tells whether object are equal -- in other words that they are both Card
-	 * objects that represent the same card.
-	 *
-	 * @return
-	 *		true if the two card objects represent the same card, false
-	 *		otherwise.
-	 */
 	@Override
 	public int hashCode() {
 		return rank.hashCode()*18737 + suit.hashCode()*1737372;
@@ -127,7 +119,7 @@ public class Card implements Serializable {
 
     /**
      * Draws the card on a Graphics object.  The card is drawn as a
-     * white card with a black border.  If the card's rank is numerih, the
+     * white card with a black border.  If the card's rank is numeric, the
      * appropriate number of spots is drawn.  Otherwise the appropriate
      * picture (e.g., of a queen) is included in the card's drawing.
      *
@@ -151,8 +143,7 @@ public class Card implements Serializable {
 
     
     /**
-     * Gives a two-character version of the card (e.g., "TS" for ten of
-     * spades).
+     * Gives a two-character version of the card (e.g., "RT" for a red ten).
      */
     public String shortName() {
         return "" + getRank().shortName() + getSuit().shortName();
@@ -163,7 +154,7 @@ public class Card implements Serializable {
      *
      * @return
 	 *		a Rank object (actually of a subclass) that tells the card's
-     *		rank (e.g., Jack, three).
+     *		rank (e.g., Wild, three).
      */
     public Rank getRank() {
     	return rank;
@@ -174,13 +165,13 @@ public class Card implements Serializable {
      *
      * @return
 	 *		a Color object (actually of a subclass) that tells the card's
-     *		rank (e.g., heart, club).
+     *		color (e.g., red, blue).
      */
     public Color getSuit() {
     	return suit;
     }
  
-    // array that contains the android resource indices for the 52 card
+    // array that contains the android resource indices for the card
     // images
     private static int[][] resIdx = {
     	{

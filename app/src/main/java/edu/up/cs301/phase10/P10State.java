@@ -186,7 +186,7 @@ public class P10State extends GameState
 				hands[i] = new Deck(orig.hands[i]);
 			}
 			else{
-				hands[i] = null; // only give player access to his/her own hand
+				hands[i].nullifyDeck(); // only give player access to his/her own hand
 			}
 		}
 		//initialize the new decks for phase components

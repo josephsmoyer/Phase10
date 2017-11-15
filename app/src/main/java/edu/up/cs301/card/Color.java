@@ -11,18 +11,20 @@ import java.util.ArrayList;
  */
 public enum Color implements Serializable {
 	
-	// club
+	// Red
 	Red,
 	
-	// diamond
+	// Blue
 	Blue,
 	
-	// heart
+	// Yellow
 	Yellow,
 	
-	// spade
+	// green
 	Green,
 
+	// black
+	Black
 	;
 
 	// to satisfy the Serializable interface
@@ -34,7 +36,14 @@ public enum Color implements Serializable {
 	 * @return
 	 * 		the suit's short name
 	 */
-	public char shortName() { return longName().charAt(0); }
+	public char shortName() {
+		if (longName() == Black.toString()){
+			return 'z'; 						//z to indicate black, since blue is using 'b'
+		}
+		else {
+			return longName().charAt(0);		//otherwise use the first letter for the color shortname
+		}
+	}
 	
 	/**
 	 * the "long" (full-word) name that represents the suit

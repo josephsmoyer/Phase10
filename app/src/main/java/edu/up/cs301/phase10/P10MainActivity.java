@@ -10,7 +10,7 @@ import edu.up.cs301.game.config.GamePlayerType;
 import android.graphics.Color;
 
 /**
- * this is the primary activity for Slapjack game
+ * this is the primary activity for Phase10 game
  * 
  * @author Steven R. Vegdahl
  * @version July 2013
@@ -19,7 +19,7 @@ public class P10MainActivity extends GameMainActivity {
 	
 	public static final int PORT_NUMBER = 4752;
 
-	/** a slapjack game for two players. The default is human vs. computer */
+	/** a Phase10 game for 2-6 players. The default is human vs. computer */
 	@Override
 	public GameConfig createDefaultConfig() {
 
@@ -62,7 +62,7 @@ public class P10MainActivity extends GameMainActivity {
 		});
 
 		// Create a game configuration class for SlapJack
-		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 2, "SlapJack", PORT_NUMBER);
+		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 2, "Phase10", PORT_NUMBER);
 
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
