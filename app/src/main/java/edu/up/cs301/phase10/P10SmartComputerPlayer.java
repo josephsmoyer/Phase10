@@ -5,7 +5,7 @@ package edu.up.cs301.phase10;
  */
 
 public class P10SmartComputerPlayer extends P10ComputerPlayer {
-    public P10SmartComputerPlayer(String name) {
-        super(name);
+    public P10SmartComputerPlayer(String playerName) {
+        super(playerName);
     }
 }

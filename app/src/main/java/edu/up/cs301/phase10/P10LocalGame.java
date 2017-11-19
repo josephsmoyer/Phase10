@@ -2,6 +2,7 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
+import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -21,10 +22,10 @@ public class P10LocalGame extends LocalGame {
     /**
      * Constructor for the P10LocalGame.
      */
-    public P10LocalGame() {
+    public P10LocalGame(int number) {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new P10State(6);
+        state = new P10State(number);
 		String myStateStr = Integer.toString(state.getHand(1).size());
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
     }
@@ -113,22 +114,54 @@ public class P10LocalGame extends LocalGame {
 		if (thisPlayerIdx < 0 || thisPlayerIdx > 5) { // illegal player
 			return false;
 		}
+		if (!canMove(thisPlayerIdx)){	//not their turn
+			return false;
+		}
 
 		if (P10ma.isMakePhase()) {
 			// if we have a make phase
-
+			P10MakePhaseAction myAction = (P10MakePhaseAction) P10ma;
 		}
 		else if (P10ma.isPlay()) { // we have a "play" action
 			//What is this action? We only need make phase, draw, discard, and hit
 		}
 		else if(P10ma.isHitCard()){
 			//if we have a hit card action
+			P10HitCardAction myAction = (P10HitCardAction) P10ma;
 		}
 		else if(P10ma.isDrawCard()){
-			//if we have a draw card action
+			//if it is not supposed to be a draw action
+			if(!state.getShouldDraw()){
+				return false;
+			}
+			//if we have a draw card action, at the proper time
+			P10DrawCardAction myAction = (P10DrawCardAction) P10ma;
+			//determine which pile should be drawn from
+			if(myAction.drawPile){
+				Card c = state.getDrawCard();
+				state.getHand(thisPlayerIdx).add(c);
+			}
+			else{
+				Card c = state.getDiscardCard();
+				state.getHand(thisPlayerIdx).add(c);
+			}
+			//after a successful draw, the next move will not be a draw
+			state.setShouldDraw(false);
 		}
 		else if(P10ma.isDiscardCard()){
 			//if we have a discard card action
+			P10DiscardCardAction myAction = (P10DiscardCardAction) P10ma;
+			Card c = myAction.toDiscard;
+			state.discardFromHand(thisPlayerIdx, c);
+			//after discarding, the next action should be a draw
+			state.setShouldDraw(true);
+            Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+			int nextIDX = thisPlayerIdx + 1; //increment players whose turn it is
+			if(nextIDX >= state.getNumberPlayers()){
+				nextIDX = 0;				//if it was the last players turn, reset to player zero
+			}
+            Log.i("Turn is player", Integer.toString(nextIDX));
+			state.setToPlay(nextIDX);		//update\
 		}
 		else { // some unexpected action
 			return false;

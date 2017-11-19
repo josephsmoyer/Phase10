@@ -191,6 +191,21 @@ public class Deck implements Serializable {
 			return cards.remove(cards.size()-1);
 		}
 	}
+
+	/**
+	 * remove a card from a specified location
+	 *
+	 * @return
+	 * 		the top card in the deck, which is also removed,
+	 * 		or null if the deck was empty
+	 */
+	public Card removeCard(int loc) {
+		synchronized (this.cards) {
+			if (cards.isEmpty()) return null;
+			if (loc > cards.size()) return null;
+			return cards.remove(loc);
+		}
+	}
 	
 	/**
 	 * @return
@@ -199,7 +214,7 @@ public class Deck implements Serializable {
 	 */
 	public Card peekAtTopCard() {
 		synchronized (this.cards) {
-			if (cards.isEmpty()) return null;
+			if (cards.isEmpty()) {return null;}
 			return cards.get(cards.size()-1);
 		}
 	}
