@@ -48,6 +48,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	
 	// the background color
 	private int backgroundColor;
+	private RectF[][] rects = new RectF[2][4];
 	
 	/**
 	 * constructor
@@ -169,6 +170,31 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the canvas on which we are to draw
 	 */
 	public void tick(Canvas g) {
+		int height = surface.getHeight();
+		int width = surface.getWidth();
+		if( state.getHand(1) == null)return;
+		if(rects == null){
+			rects[0][0] = new RectF((float).566*height,width,(float).601*height,(float).947*width) ;
+			rects[0][1] = new RectF((float).611*height,width,(float).646*height, (float).947*width);
+			rects[0][2] = new RectF((float).656*height,width,(float).691*height, (float).947*width);
+			rects[0][3] = new RectF((float).701*height,width,(float).736*height, (float).947*width);
+			rects[0][4] = new RectF((float).746*height,width,(float).781*height, (float).947*width);
+			rects[1][0] = new RectF((float).566*height,(float).940*width,(float).601*height, (float).889*width);
+			rects[1][1] = new RectF((float).611*height,(float).940*width,(float).646*height, (float).889*width);
+			rects[1][2] = new RectF((float).656*height,(float).940*width,(float).691*height, (float).889*width);
+			rects[1][3] = new RectF((float).701*height,(float).940*width,(float).736*height, (float).889*width);
+			rects[1][4] = new RectF((float).746*height,(float).940*width,(float).781*height, (float).889*width);
+		}
+		//int height = surface.getHeight();
+		//int width = surface.getWidth();
+
+
+		Card c = state.getDrawCard();
+
+		if(c!=null){
+
+		}
+
 		/*
 		// ignore if we have not yet received the game state
 		if (state == null) return;
