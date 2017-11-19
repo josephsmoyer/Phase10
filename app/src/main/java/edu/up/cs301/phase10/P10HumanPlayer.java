@@ -31,8 +31,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	// sizes and locations of card decks and cards, expressed as percentages
 	// of the screen height and width
-	private final static float CARD_HEIGHT_PERCENT = 40; // height of a card
-	private final static float CARD_WIDTH_PERCENT = 17; // width of a card
+	private final static float CARD_HEIGHT_PERCENT = 20; // height of a card
+	private final static float CARD_WIDTH_PERCENT = 8.5f; // width of a card
 	private final static float LEFT_BORDER_PERCENT = 4; // width of left border
 	private final static float RIGHT_BORDER_PERCENT = 20; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
@@ -195,7 +195,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Card c = state.getHand(playerNum).peekAtTopCard();
 			//Log.i("Card is", c.toString());
 
-			RectF loc = middlePileTopCardLocation();
+			float rectLeft = (CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT+RIGHT_BORDER_PERCENT)*width/200;
+			float rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+			float rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+			float rectBottom = (100-VERTICAL_BORDER_PERCENT)*height/100f;
+			RectF loc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 			drawCard(g, loc, state.getHand(playerNum).peekAtTopCard() );
 
 		/*
