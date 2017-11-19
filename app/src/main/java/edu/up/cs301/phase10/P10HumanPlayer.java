@@ -31,10 +31,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	// sizes and locations of card decks and cards, expressed as percentages
 	// of the screen height and width
-	private final static float CARD_HEIGHT_PERCENT = 20; // height of a card
-	private final static float CARD_WIDTH_PERCENT = 8.5f; // width of a card
-	private final static float LEFT_BORDER_PERCENT = 4; // width of left border
-	private final static float RIGHT_BORDER_PERCENT = 4; // width of right border
+	private final static float CARD_HEIGHT_PERCENT = 15; // height of a card
+	private final static float CARD_WIDTH_PERCENT = 6.375f; // width of a card
+	private final static float LEFT_BORDER_PERCENT = 2; // width of left border
+	private final static float RIGHT_BORDER_PERCENT = 2; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
 	
 	// our game state
@@ -48,7 +48,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	
 	// the background color
 	private int backgroundColor;
-	private RectF[][] rects = new RectF[2][5];
+	private RectF[] rects = new RectF[11];
 	
 	/**
 	 * constructor
@@ -177,30 +177,26 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			int height = surface.getHeight();
 			int width = surface.getWidth();
 			if (state.getHand(1) == null) return;
-			if (rects == null) {
-				rects[0][0] = new RectF((float) .566 * height, width, (float) .601 * height, (float) .947 * width);
-				rects[0][1] = new RectF((float) .611 * height, width, (float) .646 * height, (float) .947 * width);
-				rects[0][2] = new RectF((float) .656 * height, width, (float) .691 * height, (float) .947 * width);
-				rects[0][3] = new RectF((float) .701 * height, width, (float) .736 * height, (float) .947 * width);
-				rects[0][4] = new RectF((float) .746 * height, width, (float) .781 * height, (float) .947 * width);
-				rects[1][0] = new RectF((float) .566 * height, (float) .940 * width, (float) .601 * height, (float) .889 * width);
-				rects[1][1] = new RectF((float) .611 * height, (float) .940 * width, (float) .646 * height, (float) .889 * width);
-				rects[1][2] = new RectF((float) .656 * height, (float) .940 * width, (float) .691 * height, (float) .889 * width);
-				rects[1][3] = new RectF((float) .701 * height, (float) .940 * width, (float) .736 * height, (float) .889 * width);
-				rects[1][4] = new RectF((float) .746 * height, (float) .940 * width, (float) .781 * height, (float) .889 * width);
+			float rectLeft;
+			float rectRight;
+			float rectTop;
+			float rectBottom;
+
+			int length = state.getHand(playerNum).size();
+			float start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
+			for (int i = 0; i < length; i++) {
+				rectLeft = (start+(i*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)))*width/100;
+				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+				rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+				rectBottom = (100-VERTICAL_BORDER_PERCENT)*height/100f;
+				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 			}
 
 			Log.i("Hand size is", Integer.toString(state.getHand(playerNum).size()));
 
 			//Card c = state.getHand(playerNum).peekAtTopCard();
 			//Log.i("Card is", c.toString());
-
-			float rectLeft = (LEFT_BORDER_PERCENT)*width/200;
-			float rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
-			float rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
-			float rectBottom = (100-VERTICAL_BORDER_PERCENT)*height/100f;
-			RectF loc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-			drawCard(g, loc, state.getHand(playerNum).peekAtTopCard() );
 
 		/*
 		// ignore if we have not yet received the game state
