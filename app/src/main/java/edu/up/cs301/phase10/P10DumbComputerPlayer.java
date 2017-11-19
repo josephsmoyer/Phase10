@@ -18,6 +18,8 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info){
+        String message = "Computer"+Integer.toString(playerNum);
+        //Log.i(message, "Received");
 
     	// if we don't have a game-state, ignore
     	if (!(info instanceof P10State)) {
@@ -29,8 +31,10 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
 
         //if its this players turn
     	if (savedState.getToPlay() == this.playerNum) {
-            // delay for 5 seconds for debugging - remove this for true gameplay
-        	sleep(5000);
+            String turnIs = Integer.toString(savedState.getToPlay());
+            Log.i("Players turn", turnIs);
+            // delay for 2 seconds for debugging - remove this for true gameplay
+        	sleep(2000);
 
             //create an generic action to be set and sent later
             GameAction myAction;

@@ -22,10 +22,10 @@ public class P10LocalGame extends LocalGame {
     /**
      * Constructor for the P10LocalGame.
      */
-    public P10LocalGame() {
+    public P10LocalGame(int number) {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new P10State(6);
+        state = new P10State(number);
 		String myStateStr = Integer.toString(state.getHand(1).size());
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
     }
@@ -155,10 +155,12 @@ public class P10LocalGame extends LocalGame {
 			state.discardFromHand(thisPlayerIdx, c);
 			//after discarding, the next action should be a draw
 			state.setShouldDraw(true);
-			int nextIDX = thisPlayerIdx ++; //increment players whose turn it is
-			if(nextIDX > state.getNumberPlayers()){
+            Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+			int nextIDX = thisPlayerIdx + 1; //increment players whose turn it is
+			if(nextIDX >= state.getNumberPlayers()){
 				nextIDX = 0;				//if it was the last players turn, reset to player zero
 			}
+            Log.i("Turn is player", Integer.toString(nextIDX));
 			state.setToPlay(nextIDX);		//update\
 		}
 		else { // some unexpected action

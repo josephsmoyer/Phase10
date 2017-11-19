@@ -1,6 +1,7 @@
 package edu.up.cs301.phase10;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -62,8 +63,8 @@ public class P10MainActivity extends GameMainActivity {
 			}
 		});
 
-		// Create a game configuration class for SlapJack
-		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 2, "Phase10", PORT_NUMBER);
+		// Create a game configuration class for Phase10
+		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 6, "Phase10", PORT_NUMBER);
 
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
@@ -80,6 +81,9 @@ public class P10MainActivity extends GameMainActivity {
 
 	@Override
 	public LocalGame createLocalGame() {
-		return new P10LocalGame();
+		int number = this.scrapeData().getNumPlayers();
+		String numbers = Integer.toString(number);
+		Log.i("NUmberPlayers", numbers);
+		return new P10LocalGame(number);
 	}
 }

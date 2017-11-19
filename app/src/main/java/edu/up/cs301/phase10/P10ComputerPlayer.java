@@ -49,8 +49,8 @@ public class P10ComputerPlayer extends GameComputerPlayer
 	 * Invoked whenever the player's timer has ticked. It is expected
 	 * that this will be overridden in many players.
 	 */
-    @Override
-    protected void timerTicked() {
+    //@Override
+    //protected void timerTicked() {
 		/*
     	// we had seen a Jack, now we have waited the requisite time to slap
     	
@@ -65,7 +65,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	// again is explicitly started
     	getTimer().stop();
     	*/
-    }
+    //}
 
     /**
      * callback method, called when we receive a message, typicallly from

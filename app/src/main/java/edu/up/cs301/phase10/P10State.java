@@ -10,7 +10,7 @@ import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
- * Contains the state of a Slapjack game.  Sent by the game when
+ * Contains the state of a Phase10 game.  Sent by the game when
  * a player wants to enquire about the state of the game.  (E.g., to display
  * it, or to help figure out its next move.)
  * 
@@ -69,7 +69,9 @@ public class P10State extends GameState
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
 		hands = new Deck[numPlayers];
+		Log.i("NUmberPlayers", Integer.toString(numPlayers));
 		for(int i = 0; i < numPlayers; i++){
+			Log.i("Hand Created for", Integer.toString(i));
 			hands[i] = new Deck();					//create a deck for each players hand
 		}
 		playedPhase = new Deck[numPlayers][2];
@@ -88,7 +90,7 @@ public class P10State extends GameState
 		}
 
 		// randomly pick the player who starts
-		toPlay = (int)(numPlayers*Math.random());
+		toPlay = 0; //(int)(numPlayers*Math.random());
 
 		//initialize the draw pile
 		drawPile.add108(); 			//fill the deck with cards
@@ -237,7 +239,8 @@ public class P10State extends GameState
      * 		the index of the player whose move it now is
      */
     public void setToPlay(int idx) {
-    	toPlay = idx;
+    	Log.i("To Play is now", Integer.toString(idx));
+		toPlay = idx;
     }
 
     /**
