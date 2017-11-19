@@ -25,6 +25,8 @@ public class P10LocalGame extends LocalGame {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
         state = new P10State(6);
+		String myStateStr = Integer.toString(state.getHand(1).size());
+		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
     }
 
 
@@ -36,36 +38,13 @@ public class P10LocalGame extends LocalGame {
      */
     @Override
     protected String checkIfGameOver() {
-    	/*
-    	if (state.getDeck(2).size() > 0) {
-    		// there are cards in the middle pile
-    		//if (state.getDeck(0).size() == 0 &&
-    		//		state.getDeck(1).size() == 0 &&
-    				//state.getDeck(2).peekAtTopCard().getRank() != Rank.JACK) {
-    			// All the cards have ended up in the middle pile, and the top card
-    			// is not a Jack. This situation is a draw, since the only move a player
-    			// would would be to slap the top card, causing his opponent to win.
-    		//	return "game is a draw";
-    		//}
-    		//else {
-    			// there are either cards in at least two piles, or all cards are in the
-    			// middle pile with a Jack on top; return null, as the game is not over
-    			return null;
-    		///}
-    	}
-    	else if (state.getDeck(0).size() <= 0) {
-    		// player 1 has all the cards
-    		return this.playerNames[1]+" is the winner";
-    	}
-    	else if (state.getDeck(1).size() <= 0) {
-    		// player 0 has all the cards
-    		return this.playerNames[0]+" is the winner";
-    	}
-    	else {
-    		// each player has some cards: no winner yet
-    		return null;
-    	}
-    	*/
+    	//basic win check - sends message when someone has made the final phase
+    	for(int i : state.getPhases()){
+			if(state.getPhases()[i] == 11){
+				return this.playerNames[i]+" is the winner";
+			}
+		}
+		//if no player has won, return null
     	return null;
     }
 
@@ -79,20 +58,18 @@ public class P10LocalGame extends LocalGame {
      */
 	@Override
 	protected void sendUpdatedStateTo(GamePlayer p) {
-		/*
+
 		// if there is no state to send, ignore
 		if (state == null) {
 			return;
 		}
 
-		// make a copy of the state; null out all cards except for the
-		// top card in the middle deck
-		P10State stateForPlayer = new P10State(state); // copy of state
-		stateForPlayer.nullAllButTopOf2(); // put nulls except for visible card
+		// make a copy of the state; null out all cards except for what the player should see
+		P10State stateForPlayer = new P10State(state, getPlayerIdx(p)); // copy of state, obscuring some information
 		
 		// send the modified copy of the state to the player
 		p.sendInfo(stateForPlayer);
-		*/
+
 	}
 	
 	/**
@@ -102,18 +79,15 @@ public class P10LocalGame extends LocalGame {
 	 * 		the player-number of the player in question
 	 */
 	protected boolean canMove(int playerIdx) {
-		/*
-		if (playerIdx < 0 || playerIdx > 1) {
+
+		if (playerIdx < 0 || playerIdx > 5) {
 			// if our player-number is out of range, return false
 			return false;
 		}
 		else {
-			// player can move if it's their turn, or if the middle deck is non-empty
-			// so they can slap
-			return state.getDeck(2).size() > 0 || state.getToPlay() == playerIdx;
+			// player can move if it's their turn
+			return  state.getToPlay() == playerIdx;
 		}
-		*/
-		return false;
 	}
 
 	/**
@@ -127,7 +101,7 @@ public class P10LocalGame extends LocalGame {
 	@Override
 	protected boolean makeMove(GameAction action) {
 		
-		// check that we have slap-jack action; if so cast it
+		// check that we have phase 10action; if so cast it
 		if (!(action instanceof P10MoveAction)) {
 			return false;
 		} 
@@ -136,44 +110,31 @@ public class P10LocalGame extends LocalGame {
 		// get the index of the player making the move; return false
 		int thisPlayerIdx = getPlayerIdx(P10ma.getPlayer());
 		
-		if (thisPlayerIdx < 0) { // illegal player
+		if (thisPlayerIdx < 0 || thisPlayerIdx > 5) { // illegal player
 			return false;
 		}
 
 		if (P10ma.isMakePhase()) {
-			// if we have a slap 
+			// if we have a make phase
 
 		}
 		else if (P10ma.isPlay()) { // we have a "play" action
-			if (thisPlayerIdx != state.getToPlay()) {
-				// attempt to play when it's the other player's turn
-				return false;
-			}
-			//else {
-				// it's the correct player's turn: move the top card from the
-				// player's deck to the top of the middle deck
-			//	state.getDeck(thisPlayerIdx).moveTopCardTo(state.getDeck(2));
-				// if the opponent has any cards, make it the opponent's move
-				//if (state.getDeck(1-thisPlayerIdx).size() > 0) {
-				//	state.setToPlay(1-thisPlayerIdx);
-				//}
-			//}
+			//What is this action? We only need make phase, draw, discard, and hit
 		}
 		else if(P10ma.isHitCard()){
-
-
+			//if we have a hit card action
 		}
 		else if(P10ma.isDrawCard()){
-
+			//if we have a draw card action
 		}
 		else if(P10ma.isDiscardCard()){
-
+			//if we have a discard card action
 		}
 		else { // some unexpected action
 			return false;
 		}
 
-		// return true, because the move was successful if we get her
+		// return true, because the move was successful if we get here
 		return true;
 	}
 	

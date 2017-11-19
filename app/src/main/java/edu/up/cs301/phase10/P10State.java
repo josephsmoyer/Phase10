@@ -1,5 +1,7 @@
 package edu.up.cs301.phase10;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -167,6 +169,7 @@ public class P10State extends GameState
 	public P10State(P10State orig, int playerID) {
 		//copy number of players
 		numPlayers = orig.numPlayers;
+		//Log.i("Number Players", Integer.toString(numPlayers));
 
 		// set index of player whose turn it is
 		toPlay = orig.toPlay;
@@ -182,10 +185,8 @@ public class P10State extends GameState
 		hands = new Deck[numPlayers];
 		//fill the hands deck with info from orig
 		for(int i = 0; i < numPlayers; i++){
-			if(i == playerID) {
-				hands[i] = new Deck(orig.hands[i]);
-			}
-			else{
+			hands[i] = new Deck(orig.hands[i]);
+			if(i != playerID) {
 				hands[i].nullifyDeck(); // only give player access to his/her own hand
 			}
 		}
@@ -380,7 +381,12 @@ public class P10State extends GameState
      * @return the hand for a specific player
      */
     public Deck getHand(int playerID) {
-        return hands[playerID];
+		if(hands == null){
+			return null;
+		}
+		else {
+			return hands[playerID];
+		}
     }
 
     /**
