@@ -218,6 +218,21 @@ public class Deck implements Serializable {
 			return cards.get(cards.size()-1);
 		}
 	}
+
+	/**
+	 * @return
+	 * 		the card in the deck, without removing it; null
+	 * 		if the deck was empty
+	 */
+	public Card peekAt(int location) {
+		synchronized (this.cards) {
+			if (cards.isEmpty()) {return null;}
+			if(location < cards.size()) {
+				return cards.get(location);
+			}
+			return null;
+		}
+	}
 	
 	/**
 	 * creates a printable version of the object, a list
