@@ -68,8 +68,8 @@ public class P10MainActivity extends GameMainActivity {
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
 		defaultConfig.addPlayer("Computer", 2);
-		defaultConfig.addPlayer("Computer", 2);
-		defaultConfig.addPlayer("Computer", 2);
+		//defaultConfig.addPlayer("Computer", 2);
+		//defaultConfig.addPlayer("Computer", 2);
 		
 		// Set the initial information for the remote player
 		defaultConfig.setRemoteData("Guest", "", 1);

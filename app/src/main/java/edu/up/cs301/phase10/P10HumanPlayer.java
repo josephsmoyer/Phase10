@@ -170,6 +170,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the canvas on which we are to draw
 	 */
 	public void tick(Canvas g) {
+		if(state == null){
+			return;
+		}
 		int height = surface.getHeight();
 		int width = surface.getWidth();
 		if( state.getHand(1) == null)return;
@@ -185,6 +188,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			rects[1][3] = new RectF((float).701*height,(float).940*width,(float).736*height, (float).889*width);
 			rects[1][4] = new RectF((float).746*height,(float).940*width,(float).781*height, (float).889*width);
 		}
+		Deck testhand = state.getHand(1);
+
 		//int height = surface.getHeight();
 		//int width = surface.getWidth();
 
