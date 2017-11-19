@@ -20,7 +20,7 @@ public abstract class P10MoveAction extends GameAction {
      *
      * @param player the player making the move
      */
-    public P10MoveAction(GamePlayer player)
+    public P10MoveAction(GamePlayer player /*0State state*/)
     {
         // invoke superclass constructor to set source
         super(player);

@@ -1,7 +1,7 @@
 package edu.up.cs301.phase10;
 
 import android.util.Log;
-import edu.up.cs301.card.Rank;
+
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.LocalGame;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -145,10 +145,10 @@ public class P10LocalGame extends LocalGame {
 
 		}
 		else if (P10ma.isPlay()) { // we have a "play" action
-			//if (thisPlayerIdx != state.toPlay()) {
+			if (thisPlayerIdx != state.getToPlay()) {
 				// attempt to play when it's the other player's turn
 				return false;
-			//}
+			}
 			//else {
 				// it's the correct player's turn: move the top card from the
 				// player's deck to the top of the middle deck
@@ -160,6 +160,7 @@ public class P10LocalGame extends LocalGame {
 			//}
 		}
 		else if(P10ma.isHitCard()){
+
 
 		}
 		else if(P10ma.isDrawCard()){
