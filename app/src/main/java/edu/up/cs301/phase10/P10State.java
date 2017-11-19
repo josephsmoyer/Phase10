@@ -388,6 +388,15 @@ public class P10State extends GameState
 			return null;
 		}
 		else {
+            //Log.i("Hands is", "Valid");
+			//Log.i("Player id is", Integer.toString(playerID));
+			for(int i = 0; i < numPlayers; i++) {
+				if(hands[i] != null){
+					//Log.i("Valid hand at id", Integer.toString(i));
+				}
+				//Log.i("Hand size of player "+Integer.toString(i), Integer.toString(hands[i].size()));
+			}
+			//Log.i("Peek Card is", hands[playerID].peekAtTopCard().toString());
 			return hands[playerID];
 		}
     }

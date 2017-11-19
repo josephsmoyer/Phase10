@@ -214,7 +214,7 @@ public class Deck implements Serializable {
 	 */
 	public Card peekAtTopCard() {
 		synchronized (this.cards) {
-			if (cards.isEmpty()) return null;
+			if (cards.isEmpty()) {return null;}
 			return cards.get(cards.size()-1);
 		}
 	}

@@ -190,9 +190,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rects[1][4] = new RectF((float) .746 * height, (float) .940 * width, (float) .781 * height, (float) .889 * width);
 			}
 
-			drawCard(g, rects[0][0], state.getHand(playerNum).peekAtTopCard() );
+			Log.i("Hand size is", Integer.toString(state.getHand(playerNum).size()));
 
-
+			//drawCard(g, rects[0][0], state.getHand(playerNum).peekAtTopCard() );
 
 		/*
 		// ignore if we have not yet received the game state
