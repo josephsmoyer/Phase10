@@ -200,7 +200,7 @@ public class Card implements Serializable {
 			R.drawable.g_10, R.drawable.g_11, R.drawable.g_12,
     	},
 		{
-			R.drawable.w, R.drawable.s,
+			R.drawable.sw, R.drawable.ss,
 		},
 	};
     
