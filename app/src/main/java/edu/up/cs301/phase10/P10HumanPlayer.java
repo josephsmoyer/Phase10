@@ -71,7 +71,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 */
 	@Override
 	public void receiveInfo(GameInfo info) {
-		Log.i("P10ComputerPlayer", "receiving updated state ("+info.getClass()+")");
+		Log.i("P10HumanPlayer", "receiving updated state ("+info.getClass()+")");
 		if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
 			// if we had an out-of-turn or illegal move, flash the screen
 			surface.flash(Color.RED, 50);
@@ -189,15 +189,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rects[1][3] = new RectF((float) .701 * height, (float) .940 * width, (float) .736 * height, (float) .889 * width);
 				rects[1][4] = new RectF((float) .746 * height, (float) .940 * width, (float) .781 * height, (float) .889 * width);
 			}
-			//int height = surface.getHeight();
-			//int width = surface.getWidth();
+
+			drawCard(g, rects[0][0], state.getHand(playerNum).peekAtTopCard() );
 
 
-			Card c = state.getDrawCard();
-
-			if (c != null) {
-
-			}
 
 		/*
 		// ignore if we have not yet received the game state

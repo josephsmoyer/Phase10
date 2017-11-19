@@ -27,41 +27,30 @@ public class P10MainActivity extends GameMainActivity {
 
 		// Define the allowed player types
 		ArrayList<GamePlayerType> playerTypes = new ArrayList<GamePlayerType>();
+
+		//Create some custom background colors
+		final int backgroundGreen = Color.rgb(29, 207, 88);
 		
-		playerTypes.add(new GamePlayerType("human player (green)") {
+		playerTypes.add(new GamePlayerType("Human player (Green)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10HumanPlayer(name, Color.GREEN);
+				return new P10HumanPlayer(name, backgroundGreen);
 			}});
-		playerTypes.add(new GamePlayerType("human player (yellow)") {
+		playerTypes.add(new GamePlayerType("Human player (Yellow)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, Color.YELLOW);
 			}
 		});
-		playerTypes.add(new GamePlayerType("computer player (Dumb)") {
+		playerTypes.add(new GamePlayerType("Computer player (Dumb)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10DumbComputerPlayer(name);
 			}
 		});
-		playerTypes.add(new GamePlayerType("computer player (fast)") {
+		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name, 0.3);
+				return new P10ComputerPlayer(name);
 			}
 		});
-		playerTypes.add(new GamePlayerType("computer player (slow)") {
-			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name, 1.0);
-			}
-		});
-		playerTypes.add(new GamePlayerType("computer player (very fast)") {
-			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name, 0.15);
-			}
-		});
-		playerTypes.add(new GamePlayerType("computer player (very slow)") {
-			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name, 3.5);
-			}
-		});
+
 
 		// Create a game configuration class for Phase10
 		GameConfig defaultConfig = new GameConfig(playerTypes, 2, 6, "Phase10", PORT_NUMBER);
