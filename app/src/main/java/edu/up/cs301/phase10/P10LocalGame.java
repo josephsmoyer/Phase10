@@ -24,7 +24,7 @@ public class P10LocalGame extends LocalGame {
     public P10LocalGame() {
         Log.i("P10LocalGame", "creating game");
         // create the state for the beginning of the game
-        state = new P10State(players.length);
+        state = new P10State(/*players.length*/ 2);
     }
 
 
