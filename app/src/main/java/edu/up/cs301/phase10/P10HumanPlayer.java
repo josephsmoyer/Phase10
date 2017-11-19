@@ -48,7 +48,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	
 	// the background color
 	private int backgroundColor;
-	private RectF[][] rects = new RectF[2][4];
+	private RectF[][] rects = new RectF[2][5];
 	
 	/**
 	 * constructor
@@ -192,7 +192,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 			Log.i("Hand size is", Integer.toString(state.getHand(playerNum).size()));
 
-			//drawCard(g, rects[0][0], state.getHand(playerNum).peekAtTopCard() );
+			//Card c = state.getHand(playerNum).peekAtTopCard();
+			//Log.i("Card is", c.toString());
+
+			RectF loc = middlePileTopCardLocation();
+			drawCard(g, loc, state.getHand(playerNum).peekAtTopCard() );
 
 		/*
 		// ignore if we have not yet received the game state
