@@ -15,10 +15,10 @@ import edu.up.cs301.game.infoMsg.GameInfo;
 public class P10ComputerPlayer extends GameComputerPlayer
 {
 	// the minimum reaction time for this player, in milliseconds
-	private double minReactionTimeInMillis;
+	protected double minReactionTimeInMillis;
 	
 	// the most recent state of the game
-	private P10State savedState;
+	protected P10State savedState;
 	
     /**
      * Constructor for the P10ComputerPlayer class; creates an "average"

@@ -7,25 +7,20 @@ import edu.up.cs301.game.GamePlayer;
  */
 
 public class P10DrawCardAction extends P10MoveAction {
+
+    //will indicate which pile to draw from
+    public boolean drawPile;
     /**
      * Constructor for P10MoveAction
      *
      * @param player the player making the move
      */
-   // private P10State newState;
-    public P10DrawCardAction(GamePlayer player ){
+    public P10DrawCardAction(GamePlayer player, boolean whichPile){
         super(player);
-        //newState = state;
-
+        drawPile = whichPile;
     }
 
     public boolean isDrawCard() {
-
-        //if(newState.getShouldDraw() == true){
-         //   newState.getHand(player.)
-        //    return true;
-       // }
-       // else{
-        return false;//}
+        return true;
     }
 }

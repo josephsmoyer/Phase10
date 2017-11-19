@@ -28,7 +28,7 @@ public abstract class P10MoveAction extends GameAction {
     
     /**
      * @return
-     * 		whether the move was a slap
+     * 		whether the move was a make phase
      */
     public boolean isMakePhase() {
     	return false;
