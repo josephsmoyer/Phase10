@@ -30,7 +30,7 @@ public class P10MainActivity extends GameMainActivity {
 
 		//Create some custom background colors
 		final int backgroundGreen = Color.rgb(29, 207, 88);
-		
+
 		playerTypes.add(new GamePlayerType("Human player (Green)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, backgroundGreen);
