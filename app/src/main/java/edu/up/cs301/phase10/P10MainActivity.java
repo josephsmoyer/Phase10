@@ -36,9 +36,9 @@ public class P10MainActivity extends GameMainActivity {
 				return new P10HumanPlayer(name, Color.YELLOW);
 			}
 		});
-		playerTypes.add(new GamePlayerType("computer player (normal)") {
+		playerTypes.add(new GamePlayerType("computer player (Dumb)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name);
+				return new P10DumbComputerPlayer(name);
 			}
 		});
 		playerTypes.add(new GamePlayerType("computer player (fast)") {

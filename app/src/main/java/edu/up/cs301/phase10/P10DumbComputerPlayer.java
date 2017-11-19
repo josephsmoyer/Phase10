@@ -1,5 +1,7 @@
 package edu.up.cs301.phase10;
 
+import android.util.Log;
+
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -35,9 +37,11 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
 
             //if the next valid action is a draw
             if(savedState.getShouldDraw()){
+                Log.i("Drawing - Player", Integer.toString(this.playerNum));
                 myAction = new P10DrawCardAction(this, true);  //dumb player always draws from draw pile
             }
             else { //for now, if the player doesnt draw, discard
+                Log.i("Discarding - Player", Integer.toString(this.playerNum));
                 int cardLoc = (int)(Math.random()*9); //choose a random card to discard position 0-9
                 Deck myHand = savedState.getHand(this.playerNum);
                 Card c = myHand.removeCard(cardLoc);

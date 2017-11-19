@@ -159,7 +159,7 @@ public class P10LocalGame extends LocalGame {
 			if(nextIDX > state.getNumberPlayers()){
 				nextIDX = 0;				//if it was the last players turn, reset to player zero
 			}
-			state.setToPlay(nextIDX);
+			state.setToPlay(nextIDX);		//update\
 		}
 		else { // some unexpected action
 			return false;
