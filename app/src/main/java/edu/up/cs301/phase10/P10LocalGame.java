@@ -66,7 +66,7 @@ public class P10LocalGame extends LocalGame {
 		}
 
 		// make a copy of the state; null out all cards except for what the player should see
-		P10State stateForPlayer = new P10State(state, getPlayerIdx(p)); // copy of state, obscuring some information
+		P10State stateForPlayer = new P10State(state); //, getPlayerIdx(p)); // copy of state, obscuring some information
 		
 		// send the modified copy of the state to the player
 		p.sendInfo(stateForPlayer);

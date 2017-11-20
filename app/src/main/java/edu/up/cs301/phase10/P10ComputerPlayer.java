@@ -144,7 +144,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
                             Log.i("Total Matches", Integer.toString(count));
                         }
                     }
-                    if(count >= 2){                                 //if have a set of 3
+                    if(count >= 3){                                 //if have a set of 3
                         for(int l = 0; l < myCards.size(); l++){    //for all the cards in hand
                             if(match[l]) {                          //if they are part of the set
                                 if(toReturn.size() < 3) {           //if less than 3 cards have been put together
