@@ -149,6 +149,10 @@ public class P10LocalGame extends LocalGame {
 			state.setShouldDraw(false);
 		}
 		else if(P10ma.isDiscardCard()){
+			//if it is supposed to be a draw action
+			if(state.getShouldDraw()){
+				return false;
+			}
 			//if we have a discard card action
 			P10DiscardCardAction myAction = (P10DiscardCardAction) P10ma;
 			Card c = myAction.toDiscard;

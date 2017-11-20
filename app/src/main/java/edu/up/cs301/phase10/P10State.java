@@ -420,7 +420,12 @@ public class P10State extends GameState
      */
     public void discardFromHand(int playerID, Card myCard) {
         if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
-            hands[playerID].moveTopCardTo(discardPile);
+            for(int i = 0; i < hands[playerID].size(); i++){
+				if(hands[playerID].peekAt(i) == myCard){
+					Card temp = hands[playerID].removeCard(i);
+					discardPile.add(temp);
+				}
+			}
         }
     }
 

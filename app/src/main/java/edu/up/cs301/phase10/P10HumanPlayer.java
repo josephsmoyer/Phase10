@@ -198,6 +198,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			float rectBottom;
 
 			int length = state.getHand(playerNum).size();
+			//Log.i("Hand Length", Integer.toString(length));
 			float start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
 			for (int i = 0; i < length; i++) {
 				if (selectedCards[i] == -1) {
@@ -376,24 +377,55 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		
 		// determine whether the touch occurred on any of the players cards
 		int touchedCard = -1;
-		for(int i = 0; i < rects.length-1; i++){
+		for(int i = 0; i < state.getHand(playerNum).size(); i++){
+			//Log.i("Reached", Integer.toString(i));
 			if(rects[i].contains(x, y)){
 				touchedCard = i;
 			}
 		}
+		//if no card was selected
 		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
 			surface.flash(Color.RED, 50);
 		}
+		//If a card was selected
 		else {
 			selectedCards[touchedCard] = (selectedCards[touchedCard]+1)%2; //Toggle card selected/unselected
 		}
 
 		if(discardLocation.contains(x,y)){
-			//action contains player (this) and false to indicate discard pile
-			P10DrawCardAction myAction = new P10DrawCardAction(this, false);
-			//send action to the game
-			game.sendAction(myAction);
+			//boolean to determine if a single card was selected
+			boolean cardSelected = false;
+			//count how many cards are selected
+			int count = 0;
+			int loc = -1;
+			for(int i = 0; i < selectedCards.length; i++){
+				if(selectedCards[i] == 1){
+					count++;
+					loc = i;
+				}
+			}
+			//if and only if 1 card is selected then cardselected = true
+			if(count == 1){
+				cardSelected = true;
+			}
+			if(cardSelected){ //if one card was selected, when pressing the discard, discard that card
+				Card toDiscard = state.getHand(playerNum).peekAt(loc);
+				Log.i("Card discarding", toDiscard.toString());
+				P10DiscardCardAction myAction = new P10DiscardCardAction(this, toDiscard);
+				game.sendAction(myAction);
+				for(int i = 0; i < selectedCards.length; i++){
+					selectedCards[i] = 0; //deselect all cards
+				}
+			}
+			else if (count > 1) { //if more than 1 card is selected, flash
+			}
+			else{ //if no cards are selected then attempt to draw from the discard pile
+				//action contains player (this) and false to indicate discard pile
+				P10DrawCardAction myAction = new P10DrawCardAction(this, false);
+				//send action to the game
+				game.sendAction(myAction);
+			}
 		}
 		if(drawLocation.contains(x,y)){
 			//action contains player (this) and true to indicate draw pile
