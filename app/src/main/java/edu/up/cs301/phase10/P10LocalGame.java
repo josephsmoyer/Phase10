@@ -130,7 +130,12 @@ public class P10LocalGame extends LocalGame {
 					for(int j = 0; j < state.getHand(thisPlayerIdx).size(); j++){
 						if(myAction.getPhase().peekAt(i).equals(state.getHand(thisPlayerIdx).peekAt(j))){
 							Card c = state.getHand(thisPlayerIdx).removeCard(j);
-							state.getPlayedPhase()[thisPlayerIdx][0].add(c);
+							if(myAction.getSide()) {
+								state.getPlayedPhase()[thisPlayerIdx][0].add(c);
+							}
+							else{
+								state.getPlayedPhase()[thisPlayerIdx][1].add(c);
+							}
 						}
 					}
 				}
@@ -246,5 +251,7 @@ public class P10LocalGame extends LocalGame {
 
 		}
 		return false;
+
 	}
+
 }

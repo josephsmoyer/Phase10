@@ -15,16 +15,19 @@ public class P10MakePhaseAction extends P10MoveAction
 
     private Deck phase;
 
+    private boolean left;
+
 	/**
      * Constructor for the P10MakePhaseAction class.
      * 
      * @param player  the player making the move
      */
-    public P10MakePhaseAction(GamePlayer player, Deck myCards)
+    public P10MakePhaseAction(GamePlayer player, Deck myCards, boolean side)
     {
         // initialize the source with the superclass constructor
         super(player);
         phase = new Deck(myCards);
+        left = side;
     }
 
     /**
@@ -37,5 +40,7 @@ public class P10MakePhaseAction extends P10MoveAction
     public Deck getPhase(){
         return phase;
     }
+
+    public boolean getSide() { return left; }
     
 }

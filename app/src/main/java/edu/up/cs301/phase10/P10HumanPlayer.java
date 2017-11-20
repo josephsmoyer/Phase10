@@ -39,6 +39,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private final static float LEFT_BORDER_PERCENT = 2; // width of left border
 	private final static float RIGHT_BORDER_PERCENT = 2; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
+    private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
+    private final static float VER_OVERLAP = 4; //Vertical overlap to still see number
 	
 	// our game state
 	protected P10State state;
@@ -208,7 +210,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Log.i("Hand Length", Integer.toString(length));
 
 			//set up phase area (temporary)
-			for(int i = 0; i < 1; i++) { //expand to all phase areas later
+			for(int i = 0; i < 2; i++) { //expand to all phase areas later
 				phaseLocs[i] = getPhaseLoc(i);
 				Paint myPaint = new Paint();
 				myPaint.setColor(Color.YELLOW);
@@ -249,22 +251,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 			}
-			//Create the rects and locations for the players cards in the phases
-			for(int j = 0; j < 1 /*phaseLocs.length*/; j++){
+			//Create the rects and locations for the players cards in the played phases
+			for(int j = 0; j < 2 /*phaseLocs.length*/; j++){
 				rectLeft = phaseLocs[j].left;
 				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				rectTop = phaseLocs[j].top;
 				rectBottom = phaseLocs[j].bottom;
-				for(int k = 0; k < state.getPlayedPhase()[playerNum][0].size(); k++){
+				for(int k = 0; k < state.getPlayedPhase()[playerNum][j].size(); k++){
 					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, myRect, state.getPlayedPhase()[playerNum][0].peekAt(k));
+					drawCard(g, myRect, state.getPlayedPhase()[playerNum][j].peekAt(k));
 
-					rectLeft = rectLeft + width*(CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT)/100;
+					rectLeft = rectLeft + width*(CARD_WIDTH_PERCENT-HOR_OVERLAP)/100;
 					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				}
 			}
-
-
 		}
 	}
 	
@@ -284,8 +284,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		RectF phaseLoc;
 
 		if(spot == 0) {
-			rectLeft = (50 - LEFT_BORDER_PERCENT - CARD_WIDTH_PERCENT) * width / 100;
-			rectRight = rectLeft + 2 * width * (CARD_WIDTH_PERCENT + LEFT_BORDER_PERCENT) / 100;
+			rectLeft = (50 - 2*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
+			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		}
+		else if(spot == 1) {
+			rectLeft = (50 + LEFT_BORDER_PERCENT) * width / 100;
+			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
 			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
 			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
 			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
@@ -434,7 +441,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//send action to the game
 			game.sendAction(myAction);
 		}
-        for(int i = 0; i < 1; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
+        for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
         	//phaseLocs[i] = getPhaseLoc(i);
 			//Log.i("Reached", Integer.toString(i));
 			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
@@ -446,7 +453,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						myPhase.add(state.getHand(playerNum).peekAt(j));
 					}
 				}
-				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase);
+				boolean side = false;
+				if(i == 0){side = true;}		//true indicates the left component
+				else if (i == 1){side = false;} //false indicates right phase component
+				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase, side);
 				game.sendAction(myAction);
 				for(int z = 0; z < selectedCards.length; z++){
 					selectedCards[z] = 0; //deselect all cards
