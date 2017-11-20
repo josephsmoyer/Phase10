@@ -341,21 +341,14 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 		
-		// determine whether the touch occurred on the top-card of either
-		// the player's pile or the middle pile
-		RectF myTopCardLoc = thisPlayerTopCardLocation();
-		RectF middleTopCardLoc = middlePileTopCardLocation();
-		if (myTopCardLoc.contains(x, y)) {
-			// it's on my pile: we're playing a card: send action to
-			// the game
-			game.sendAction(new P10PlayAction(this));
+		// determine whether the touch occurred on any of the players cards
+		int touchedCard = -1;
+		for(int i = 0; i < rects.length-1; i++){
+			if(rects[i].contains(x, y)){
+				touchedCard = i;
+			}
 		}
-		else if (middleTopCardLoc.contains(x, y)) {
-			// it's on the middlel pile: we're slapping a card: send
-			// action to the game
-			game.sendAction(new P10MakePhaseAction(this));
-		}
-		else {
+		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
 			surface.flash(Color.RED, 50);
 		}
