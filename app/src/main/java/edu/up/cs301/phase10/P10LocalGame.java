@@ -129,7 +129,7 @@ public class P10LocalGame extends LocalGame {
 				if(myAction.getSide()){
 					if(state.getPlayedPhase()[thisPlayerIdx][0].size() != 0){ return false;} //if there is already something there
 				}
-				else if(myAction.getSide()){
+				else if(!myAction.getSide()){
 					if(state.getPlayedPhase()[thisPlayerIdx][1].size() != 0){ return false;}
 				}
 				for(int i = 0; i < myAction.getPhase().size(); i++){
@@ -221,6 +221,8 @@ public class P10LocalGame extends LocalGame {
 		int[] phases = state.getPhases();
 		int phaseNum = phases[playerNumber];
 
+		return true;
+		/*
 		if(phaseNum == 1){
 			if(myCards.size() != 3){ //both components of phase 1 are 3 cards
 				return false;
@@ -257,7 +259,6 @@ public class P10LocalGame extends LocalGame {
 
 		}
 		return false;
-
+		*/
 	}
-
 }

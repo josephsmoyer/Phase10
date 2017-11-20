@@ -284,14 +284,14 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		RectF phaseLoc;
 
 		if(spot == 0) {
-			rectLeft = (50 - 2*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
+			rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
 			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
 			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
 			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
 			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 		}
 		else if(spot == 1) {
-			rectLeft = (50 + LEFT_BORDER_PERCENT) * width / 100;
+			rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
 			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
 			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
 			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
