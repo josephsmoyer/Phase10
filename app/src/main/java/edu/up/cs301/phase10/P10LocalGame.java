@@ -126,6 +126,12 @@ public class P10LocalGame extends LocalGame {
 			// if we have a make phase
 			P10MakePhaseAction myAction = (P10MakePhaseAction) P10ma;
 			if(isValidPhase(thisPlayerIdx, myAction.getPhase())){
+				if(myAction.getSide()){
+					if(state.getPlayedPhase()[thisPlayerIdx][0].size() != 0){ return false;} //if there is already something there
+				}
+				else if(myAction.getSide()){
+					if(state.getPlayedPhase()[thisPlayerIdx][1].size() != 0){ return false;}
+				}
 				for(int i = 0; i < myAction.getPhase().size(); i++){
 					for(int j = 0; j < state.getHand(thisPlayerIdx).size(); j++){
 						if(myAction.getPhase().peekAt(i).equals(state.getHand(thisPlayerIdx).peekAt(j))){
