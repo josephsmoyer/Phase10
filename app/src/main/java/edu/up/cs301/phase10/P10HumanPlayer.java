@@ -220,8 +220,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
 			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
 			discardLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+			start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
+			rectLeft = (start+LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)*width/100;
+			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			drawLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 
 			drawCard(g, discardLocation, state.peekDiscardCard());
+			drawCard(g, drawLocation, null);
 
 
 		/*
