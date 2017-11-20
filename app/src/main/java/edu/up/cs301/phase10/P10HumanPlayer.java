@@ -55,8 +55,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private int[] selectedCards = new int[11];
 
 	//Nonchanging deck locations
-	RectF discardLocation;
-	RectF drawLocation;
+	private RectF discardLocation;
+	private RectF drawLocation;
+	//Nonchanging phase lay down locations
+	private RectF[] phaseLocs = new RectF[12]; //2 for each potential player
 
 	/**
 	 * constructor
@@ -75,6 +77,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//0: Card is unselected
 			//1: Card is selected
 			selectedCards[i] = -1;
+		}
+		for(int i = 0; i < phaseLocs.length; i++){
+			phaseLocs[i] = null;
 		}
 	}
 
@@ -191,7 +196,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		else {
 			int height = surface.getHeight();
 			int width = surface.getWidth();
-			if (state.getHand(1) == null) return;
+			//if the players hand is not initialized
+			if (state.getHand(playerNum) == null) return;
+			//variables for rect creation
 			float rectLeft;
 			float rectRight;
 			float rectTop;
@@ -199,6 +206,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 			int length = state.getHand(playerNum).size();
 			//Log.i("Hand Length", Integer.toString(length));
+			//Create the rects and locations for the players cards in hand
 			float start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
 			for (int i = 0; i < length; i++) {
 				if (selectedCards[i] == -1) {
@@ -211,10 +219,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 			}
+			//start of all the possible cards as neither selected or not
 			for (int i = length; i < 11; i++) {
 				selectedCards[i] = -1;
 			}
 
+			//set up discard/draw pile locations
 			start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
 			rectLeft = (start)*width/100;
 			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
@@ -231,7 +241,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			drawCard(g, discardLocation, state.peekDiscardCard());
 			drawCard(g, drawLocation, null);
 
-
+			//set up phase area (temporary)
+			for(int i = 1; i < 2; i++) { //expand to all phase areas later
+				RectF phaseLoc = getPhaseLoc(i);
+				Paint myPaint = new Paint();
+				myPaint.setColor(Color.YELLOW);
+				g.drawRect(phaseLoc, myPaint);
+			}
 		/*
 		// ignore if we have not yet received the game state
 		if (state == null) return;
@@ -281,18 +297,29 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	/**
 	 * @return
 	 * 		the rectangle that represents the location on the drawing
-	 * 		surface where the top card in the opponent's deck is to
-	 * 		be drawn
+	 * 		surface where the indicated phase location should go
 	 */
-	private RectF opponentTopCardLocation() {
-		// near the left-bottom of the drawing surface, based on the height
-		// and width, and the percentages defined above
+	private RectF getPhaseLoc(int spot) {
 		int width = surface.getWidth();
 		int height = surface.getHeight();
-		return new RectF(LEFT_BORDER_PERCENT*width/100f,
-				(100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f,
-				(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)*width/100f,
-				(100-VERTICAL_BORDER_PERCENT)*height/100f);
+
+		float rectLeft;
+		float rectRight;
+		float rectTop;
+		float rectBottom;
+		RectF phaseLoc;
+
+		if(spot == 1) {
+			rectLeft = (50 - LEFT_BORDER_PERCENT - CARD_WIDTH_PERCENT) * width / 100;
+			rectRight = rectLeft + 2 * width * (CARD_WIDTH_PERCENT + LEFT_BORDER_PERCENT) / 100;
+			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		}
+		else{
+			phaseLoc = null; //set up other locations later
+		}
+		return phaseLoc;
 	}
 	
 	/**

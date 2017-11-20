@@ -13,22 +13,29 @@ public class P10MakePhaseAction extends P10MoveAction
 {
 	private static final long serialVersionUID = 2134321631283669359L;
 
+    private Deck phase;
+
 	/**
-     * Constructor for the SJSlapMoveAction class.
+     * Constructor for the P10MakePhaseAction class.
      * 
      * @param player  the player making the move
      */
-    public P10MakePhaseAction(GamePlayer player)
+    public P10MakePhaseAction(GamePlayer player, Deck myCards)
     {
         // initialize the source with the superclass constructor
         super(player);
+        phase = new Deck(myCards);
     }
 
     /**
-	 * @return whether this action is a "slap" move
+	 * @return whether this action is a make phase
      */
     public boolean isMakePhase() {
         return true;
+    }
+
+    public Deck getPhase(){
+        return phase;
     }
     
 }
