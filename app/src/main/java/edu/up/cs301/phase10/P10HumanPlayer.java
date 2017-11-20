@@ -388,6 +388,19 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		else {
 			selectedCards[touchedCard] = (selectedCards[touchedCard]+1)%2; //Toggle card selected/unselected
 		}
+
+		if(discardLocation.contains(x,y)){
+			//action contains player (this) and false to indicate discard pile
+			P10DrawCardAction myAction = new P10DrawCardAction(this, false);
+			//send action to the game
+			game.sendAction(myAction);
+		}
+		if(drawLocation.contains(x,y)){
+			//action contains player (this) and true to indicate draw pile
+			P10DrawCardAction myAction = new P10DrawCardAction(this, true);
+			//send action to the game
+			game.sendAction(myAction);
+		}
 	}
 	
 	/**
