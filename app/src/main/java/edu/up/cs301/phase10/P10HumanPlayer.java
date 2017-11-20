@@ -8,6 +8,9 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+
 import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
 import edu.up.cs301.card.Card;
@@ -49,6 +52,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	// the background color
 	private int backgroundColor;
 	private RectF[] rects = new RectF[11];
+	private int[] selectedCards = new int[11];
 	
 	/**
 	 * constructor
@@ -61,6 +65,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	public P10HumanPlayer(String name, int bkColor) {
 		super(name);
 		backgroundColor = bkColor;
+		for (int i = 0; i < 11; i++) {
+			//selectedCards list of ints for each card in hand
+			//-1: Card doesn't exist in array
+			//0: Card is unselected
+			//1: Card is selected
+			selectedCards[i] = -1;
+		}
 	}
 
 	/**
@@ -185,12 +196,18 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			int length = state.getHand(playerNum).size();
 			float start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
 			for (int i = 0; i < length; i++) {
+				if (selectedCards[i] == -1) {
+					selectedCards[i]++;
+				}
 				rectLeft = (start+(i*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)))*width/100;
 				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
-				rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
-				rectBottom = (100-VERTICAL_BORDER_PERCENT)*height/100f;
+				rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT-(selectedCards[i]*5))*height/100f;
+				rectBottom = (100-VERTICAL_BORDER_PERCENT-(selectedCards[i]*5))*height/100f;
 				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
+			}
+			for (int i = length; i < 11; i++) {
+				selectedCards[i] = -1;
 			}
 
 			Log.i("Hand size is", Integer.toString(state.getHand(playerNum).size()));
@@ -351,6 +368,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
 			surface.flash(Color.RED, 50);
+		}
+		else {
+			selectedCards[touchedCard] = (selectedCards[touchedCard]+1)%2; //Toggle card selected/unselected
 		}
 	}
 	
