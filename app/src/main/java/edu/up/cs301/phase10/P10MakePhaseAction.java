@@ -20,7 +20,13 @@ public class P10MakePhaseAction extends P10MoveAction
 	/**
      * Constructor for the P10MakePhaseAction class.
      * 
-     * @param player  the player making the move
+     * @param player
+     *          the player making the move
+     * @param myCards
+     *          the cards consisting of the phase component
+     * @param side
+     *          which phase area to save the phase to
+     *
      */
     public P10MakePhaseAction(GamePlayer player, Deck myCards, boolean side)
     {
