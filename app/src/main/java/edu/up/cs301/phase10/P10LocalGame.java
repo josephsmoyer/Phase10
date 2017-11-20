@@ -119,13 +119,35 @@ public class P10LocalGame extends LocalGame {
 		}
 
 		if (P10ma.isMakePhase()) {
+			//if it is supposed to be a draw action
+			if(state.getShouldDraw()){
+				return false;
+			}
 			// if we have a make phase
 			P10MakePhaseAction myAction = (P10MakePhaseAction) P10ma;
+			if(isValidPhase(thisPlayerIdx, myAction.getPhase())){
+				for(int i = 0; i < myAction.getPhase().size(); i++){
+					for(int j = 0; j < state.getHand(thisPlayerIdx).size(); j++){
+						if(myAction.getPhase().peekAt(i).equals(state.getHand(thisPlayerIdx).peekAt(j))){
+							Card c = state.getHand(thisPlayerIdx).removeCard(j);
+							state.getPlayedPhase()[thisPlayerIdx][0].add(c);
+						}
+					}
+				}
+			}
+			else{
+				return false;
+			}
+			return true;
 		}
 		else if (P10ma.isPlay()) { // we have a "play" action
 			//What is this action? We only need make phase, draw, discard, and hit
 		}
 		else if(P10ma.isHitCard()){
+			//if it is supposed to be a draw action
+			if(state.getShouldDraw()){
+				return false;
+			}
 			//if we have a hit card action
 			P10HitCardAction myAction = (P10HitCardAction) P10ma;
 		}
@@ -176,22 +198,53 @@ public class P10LocalGame extends LocalGame {
 	}
 	
 	/**
-	 * helper method that gives all the cards in the middle deck to
-	 * a given player; also shuffles the target deck
+	 * helper method that determines if a phase component is valid
 	 * 
-	 * @param idx
-	 * 		the index of the player to whom the cards should be given
+	 * @param playerNumber
+	 * 		the player giving the cards
+	 *
+	 * @param myCards
+	 * 		the deck making up the suppossed phase
 	 */
-	private void giveMiddleCardsToPlayer(int idx) {
-		/*
-		// illegal player: ignore
-		if (idx < 0 || idx > 1) return;
-		
-		// move all cards from the middle deck to the target deck
-		state.getDeck(2).moveAllCardsTo(state.getDeck(idx));
-		
-		// shuffle the target deck
-		state.getDeck(idx).shuffle();
-		*/
+	private boolean isValidPhase(int playerNumber, Deck myCards) {
+		int[] phases = state.getPhases();
+		int phaseNum = phases[playerNumber];
+
+		if(phaseNum == 1){
+			if(myCards.size() != 3){ //both components of phase 1 are 3 cards
+				return false;
+			}
+			if(myCards.peekAt(0).getRank() == myCards.peekAt(1).getRank() && myCards.peekAt(1).getRank() == myCards.peekAt(2).getRank()){
+				return true; //returns true if all cards match value
+			}
+		}
+		else if (phaseNum == 2){
+
+		}
+		else if (phaseNum == 3){
+
+		}
+		else if (phaseNum == 4){
+
+		}
+		else if (phaseNum == 5){
+
+		}
+		else if (phaseNum == 6){
+
+		}
+		else if (phaseNum == 7){
+
+		}
+		else if (phaseNum == 8){
+
+		}
+		else if (phaseNum == 9){
+
+		}
+		else if (phaseNum == 10){
+
+		}
+		return false;
 	}
 }
