@@ -53,7 +53,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private int backgroundColor;
 	private RectF[] rects = new RectF[11];
 	private int[] selectedCards = new int[11];
-	
+
+	//Nonchanging deck locations
+	RectF discardLocation;
+	RectF drawLocation;
+
 	/**
 	 * constructor
 	 * 
@@ -210,10 +214,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				selectedCards[i] = -1;
 			}
 
-			Log.i("Hand size is", Integer.toString(state.getHand(playerNum).size()));
+			start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
+			rectLeft = (start)*width/100;
+			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			discardLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 
-			//Card c = state.getHand(playerNum).peekAtTopCard();
-			//Log.i("Card is", c.toString());
+			drawCard(g, discardLocation, state.peekDiscardCard());
+
 
 		/*
 		// ignore if we have not yet received the game state

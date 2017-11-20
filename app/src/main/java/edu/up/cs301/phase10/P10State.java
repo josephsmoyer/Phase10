@@ -264,6 +264,15 @@ public class P10State extends GameState
         return discardPile.removeTopCard();
     }
 
+	/**
+	 * shows the top card of the discard pile
+	 *
+	 * @return the top card from the discard pile. If no access to discard pile / empty pile, returns null
+	 */
+	public Card peekDiscardCard() {
+		return discardPile.peekAtTopCard();
+	}
+
     /**
      * 'Sets' the top card of the discard pile, by adding a card to it
      *
