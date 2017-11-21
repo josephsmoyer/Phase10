@@ -36,7 +36,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
             String turnIs = Integer.toString(savedState.getToPlay());
             Log.i("Players turn", turnIs);
             // delay for 2 seconds for debugging - remove this for true gameplay
-        	sleep(2000);
+        	sleep(500);
 
             //create an generic action to be set and sent later
             GameAction myAction = null;
@@ -54,24 +54,11 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                     Log.i("Phase Component Size", Integer.toString(phaseComponent.size()));
                     if (phaseComponent.size() > 0) {  //if there are cards in the attempted phase component
                         if (savedState.getPlayedPhase()[playerNum][0].size() == 0) {
-                            myAction = new P10MakePhaseAction(this, phaseComponent, false); //attempt to place phase component
-                        } else {
-                            myAction = new P10MakePhaseAction(this, phaseComponent, true);  //if full, try other spot
+                            myAction = new P10MakePhaseAction(this, phaseComponent); //attempt to place phase component
                         }
                     }
                 }
-                else if(savedState.getPlayedPhase()[playerNum][1].size() == 0) {
-                    Deck phaseComponent = validPhase(savedState.getHand(playerNum), savedState.getPhases()[playerNum]);
-                    Log.i("Phase Component Size", Integer.toString(phaseComponent.size()));
-                    if (phaseComponent.size() > 0) {  //if there are cards in the attempted phase component
-                        if (savedState.getPlayedPhase()[playerNum][0].size() == 0) {
-                            myAction = new P10MakePhaseAction(this, phaseComponent, false); //attempt to place phase component
-                        } else {
-                            myAction = new P10MakePhaseAction(this, phaseComponent, true);  //if full, try other spot
-                        }
-                    }
-                }
-                else if (savedState.getPlayedPhase()[playerNum][0].size() == 1 && savedState.getPlayedPhase()[playerNum][1].size() == 1) {
+                else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 && savedState.getPlayedPhase()[playerNum][1].size() != 0) {
                     //will put code for hitting cards here
                 }
 

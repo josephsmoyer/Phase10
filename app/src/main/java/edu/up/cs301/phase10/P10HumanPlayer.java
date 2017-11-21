@@ -453,10 +453,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						myPhase.add(state.getHand(playerNum).peekAt(j));
 					}
 				}
-				boolean side = false;
-				if(i == 0){side = true;}		//true indicates the left component
-				else if (i == 1){side = false;} //false indicates right phase component
-				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase, side);
+				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase);
 				game.sendAction(myAction);
 				for(int z = 0; z < selectedCards.length; z++){
 					selectedCards[z] = 0; //deselect all cards

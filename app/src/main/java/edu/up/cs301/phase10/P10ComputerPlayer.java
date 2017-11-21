@@ -127,6 +127,29 @@ public class P10ComputerPlayer extends GameComputerPlayer
         switch(myPhaseNumber){
             case 1:
                 for(int i = 0; i < myCards.size(); i++){ //for all cards
+                    int count = 0;
+                    for(int j = 0; j < myCards.size(); j++){ //compare to each subsequent card
+                        if(myCards.peekAt(i).equals(myCards.peekAt(j))){
+                            count++;                       //declare match that card
+                        }
+                    }
+                    if(count >= 3){ //if have a set of 3
+                        int subCount = 0;
+                        for(int l = 0; l < myCards.size(); l++){    //for all the cards in hand
+                            if(subCount < 3) {  //for the first three cards in the set
+                                if(myCards.peekAt(i).equals(myCards.peekAt(l))) {
+                                    toReturn.add(myCards.removeCard(l)); //add card to return pile
+                                    subCount++;
+                                }
+                            }
+                            else{
+                                break;                          //if 3 cards are put together, break
+                            }
+                        }
+                    }
+                }
+                /*
+                for(int i = 0; i < myCards.size(); i++){ //for all cards
                     boolean[] match = new boolean[myCards.size()]; //holds which cards match that value
                     for(int k = 0; k < match.length; k++){
                         match[k] = false;
@@ -157,6 +180,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
                         }
                     }
                 }
+                */
                 break;
             case 2:
                 break;
