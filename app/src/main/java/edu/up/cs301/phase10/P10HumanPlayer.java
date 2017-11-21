@@ -251,7 +251,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT-(selectedCards[i]*5))*height/100f;
 				rectBottom = (100-VERTICAL_BORDER_PERCENT-(selectedCards[i]*5))*height/100f;
 				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-				drawCard(g, rects[i], state.getHand(1-playerNum).peekAt(i));
+				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 			}
 			//Create the rects and locations for the players cards in the played phases
 			for(int j = 0; j < 2 /*phaseLocs.length*/; j++){
@@ -259,9 +259,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				rectTop = phaseLocs[j].top;
 				rectBottom = phaseLocs[j].bottom;
-				for(int k = 0; k < state.getPlayedPhase()[1-playerNum][j].size(); k++){
+				for(int k = 0; k < state.getPlayedPhase()[playerNum][j].size(); k++){
 					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, myRect, state.getPlayedPhase()[1-playerNum][j].peekAt(k));
+					drawCard(g, myRect, state.getPlayedPhase()[playerNum][j].peekAt(k));
 
 					rectLeft = rectLeft + width*(CARD_WIDTH_PERCENT-HOR_OVERLAP)/100;
 					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
