@@ -245,4 +245,80 @@ public class P10ComputerPlayer extends GameComputerPlayer
         }
         return variety;
     }
+
+    protected P10HitCardAction generateHitCardAction(){
+        P10HitCardAction myAction = null;
+        for(int u = 0; u < savedState.getHand(playerNum).size(); u++) { //for each card in the hand
+            Card c = savedState.getHand(playerNum).peekAt(u);
+            for (int i = 0; i < savedState.getNumberPlayers(); i++) {   //for every player
+                for (int j = 0; j < 2; j++) {                           //for each phase component
+                    if(savedState.getPlayedPhase()[i][j].size() != 0) {
+                        if (isValidHit(c, i, j)) {                            //if its valid to hit that card at that location
+                            myAction = new P10HitCardAction(this, c, i, j);
+                        }
+                    }
+                }
+            }
+        }
+        return myAction;
+    }
+
+    private boolean isValidHit(Card myCard, int playerToHit, int phaseToHit){
+        //return true; //always assume valid hit for now
+
+        if(savedState.getPlayedPhase()[playerNum][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
+            return false;
+        }
+
+        if(savedState.getPhases()[playerToHit] == 8) { //on phase 8 color is the only thing that matters
+            if(savedState.getPlayedPhase()[playerToHit][0].size() != 0){ //if that player has played a phase
+                if(savedState.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit() == myCard.getSuit()){
+                    return true; //return true if colors match
+                }
+            }
+            return false; //otherwise return false if trying to hit on someones phase 8
+        }
+        else { //if trying to hit on any phase except phase 8
+            Deck myDeck = null;
+            if(phaseToHit < 2 && phaseToHit >= 0){
+                myDeck = savedState.getPlayedPhase()[playerToHit][phaseToHit];
+                myDeck.sortNumerical();
+                boolean set = true;
+                boolean run = true;
+                for(int i = 0; i < myDeck.size()-1; i++){
+                    if(myDeck.peekAt(i).getRank().value(1) != myDeck.peekAt(i+1).getRank().value(1)){
+                        set = false;
+                    }
+                    else if(myDeck.peekAt(i).getRank().value(1) != (myDeck.peekAt(i+1).getRank().value(1)-1)){
+                        run = false;
+                    }
+                }
+                if(set){
+                    if(myCard.getRank().value(1) == myDeck.peekAt(0).getRank().value(1)){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else if(run){
+                    int size = myDeck.size();
+                    if(myCard.getRank().value(1) == (myDeck.peekAt(0).getRank().value(1))-1){
+                        return true;
+                    }
+                    else if(myCard.getRank().value(1) == (myDeck.peekAt(size).getRank().value(1))+1){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            }
+            else{
+                return false;	//maximum two phase components - return false for bad input
+            }
+        }
+        return false;
+
+    }
 }

@@ -35,7 +35,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
     	if (savedState.getToPlay() == this.playerNum) {
             String turnIs = Integer.toString(savedState.getToPlay());
             Log.i("Players turn", turnIs);
-            // delay for 2 seconds for debugging - remove this for true gameplay
+            // delay for 0.5 seconds
         	sleep(500);
 
             //create an generic action to be set and sent later
@@ -60,9 +60,13 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 && savedState.getPlayedPhase()[playerNum][1].size() != 0) {
                     //will put code for hitting cards here
+                    P10HitCardAction temp = generateHitCardAction();
+                    if(temp != null){
+                        myAction = temp;
+                    }
                 }
 
-                if(myAction == null){
+                if(myAction == null){   //if didnt make phase or hit
                     Log.i("Discarding - Player", Integer.toString(this.playerNum));
                     Card c = toDiscard(savedState.getHand(playerNum), savedState.getPhases()[playerNum]);
                     myAction = new P10DiscardCardAction(this, c);

@@ -144,7 +144,8 @@ public class P10LocalGame extends LocalGame {
 					}
 					state.getPlayedPhase()[thisPlayerIdx][1].add(c);
 				}
-			} else {
+			}
+			else {
 				return false;
 			}
 			return true;
@@ -282,7 +283,6 @@ public class P10LocalGame extends LocalGame {
 
 		}
 		return false;
-
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class P10LocalGame extends LocalGame {
 	 * 		which component of the phase
 	 */
 	protected Deck getPhaseComp(int phaseComp, int playerNumber, Deck myCards){
-		Deck toReturn = new Deck();
+		Deck toReturn;
 
 		int myPhaseNumber = state.getPhases()[playerNumber];
 		Deck comp0 = new Deck();
