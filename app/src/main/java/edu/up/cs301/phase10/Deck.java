@@ -273,4 +273,21 @@ public class Deck implements Serializable {
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;
 	}
+
+	public void sortNumerical(){
+		for(int i = 0; i < size(); i++){
+			int minPos = i;
+			for(int j = i + 1; j < size(); j++){
+				if(cards.get(minPos).getRank().value(1) > cards.get(j).getRank().value(1)){
+					minPos = j;
+				}
+			}
+			if(minPos != i){
+				Card temp = cards.get(i);
+				Card minCard = cards.get(minPos);
+				cards.set(i, minCard);
+				cards.set(minPos, temp);
+			}
+		}
+	}
 }

@@ -369,6 +369,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			}
 			//Create the rects and locations for the players cards in hand
 			start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
+			state.getHand(playerNum).sortNumerical();
 			for (int i = 0; i < length; i++) {
 				if (selectedCards[i] == -1) {
 					selectedCards[i]++;

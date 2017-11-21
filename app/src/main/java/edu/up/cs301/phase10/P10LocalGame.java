@@ -157,7 +157,7 @@ public class P10LocalGame extends LocalGame {
 			}
 			//if we have a hit card action
 			P10HitCardAction myAction = (P10HitCardAction) P10ma;
-			if(isValidHit(thisPlayerIdx, myAction.getHitCard())) {
+			if(isValidHit(thisPlayerIdx, myAction.getHitCard(), myAction.getPlayerToHit(), myAction.getPhaseToHit())) {
 				Card c = myAction.getHitCard();
 				for (int i = 0; i < state.getHand(thisPlayerIdx).size(); i++) {
 					for (int j = 0; j < state.getHand(thisPlayerIdx).size(); j++) {
@@ -351,7 +351,62 @@ public class P10LocalGame extends LocalGame {
 		return toReturn;
 	}
 
-	private boolean isValidHit(int playerID, Card myCard){
-		return true; //always assume valid hit for now
+	private boolean isValidHit(int playerID, Card myCard, int playerToHit, int phaseToHit){
+		//return true; //always assume valid hit for now
+
+		if(state.getPlayedPhase()[playerID][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
+			return false;
+		}
+
+		if(state.getPhases()[playerToHit] == 8) { //on phase 8 color is the only thing that matters
+			if(state.getPlayedPhase()[playerToHit][0].size() != 0){ //if that player has played a phase
+				if(state.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit() == myCard.getSuit()){
+					return true; //return true if colors match
+				}
+			}
+			return false; //otherwise return false if trying to hit on someones phase 8
+		}
+		else { //if trying to hit on any phase except phase 8
+			Deck myDeck = null;
+			if(phaseToHit < 2 && phaseToHit >= 0){
+				myDeck = state.getPlayedPhase()[playerToHit][phaseToHit];
+				myDeck.sortNumerical();
+				boolean set = true;
+				boolean run = true;
+				for(int i = 0; i < myDeck.size()-1; i++){
+					if(myDeck.peekAt(i).getRank().value(1) != myDeck.peekAt(i+1).getRank().value(1)){
+						set = false;
+					}
+					else if(myDeck.peekAt(i).getRank().value(1) != (myDeck.peekAt(i+1).getRank().value(1)-1)){
+						run = false;
+					}
+				}
+				if(set){
+					if(myCard.getRank().value(1) == myDeck.peekAt(0).getRank().value(1)){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+				else if(run){
+					int size = myDeck.size();
+					if(myCard.getRank().value(1) == (myDeck.peekAt(0).getRank().value(1))-1){
+						return true;
+					}
+					else if(myCard.getRank().value(1) == (myDeck.peekAt(size).getRank().value(1))+1){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+			}
+			else{
+				return false;	//maximum two phase components - return false for bad input
+			}
+		}
+		return false;
+
 	}
 }
