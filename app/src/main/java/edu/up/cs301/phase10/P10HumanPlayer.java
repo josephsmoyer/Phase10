@@ -549,7 +549,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		//if no card was selected
 		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
-			surface.flash(Color.RED, 50);
+			//surface.flash(Color.RED, 50);
 		}
 		//If a card was selected
 		else {
@@ -582,6 +582,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 			}
 			else if (count > 1) { //if more than 1 card is selected, flash
+                surface.flash(Color.RED, 50);
 			}
 			else{ //if no cards are selected then attempt to draw from the discard pile
 				//action contains player (this) and false to indicate discard pile
@@ -601,6 +602,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Log.i("Reached", Integer.toString(i));
 			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
 			if(phaseLocs[i].contains(x, y)){
+
 				//Log.i("Phase clicked", "yeah");
 				Deck myPhase = new Deck();
 				for(int j = 0; j < selectedCards.length; j++){
