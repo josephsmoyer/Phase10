@@ -251,22 +251,22 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				//left card
 				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
 				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-				rectTop = (40)*height/100f;
+				rectTop = (25)*height/100f;
 				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
 				RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				g.save();
-				g.rotate(90, 0, (50)*height/100);
+				g.rotate(90, 0, (35)*height/100);
 				drawCard(g, myRect, Card.fromString("1x"));
 				g.restore();
 
 				//right card
 				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
 				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-				rectTop = (40)*height/100f;
+				rectTop = (25)*height/100f;
 				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
 				myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				g.save();
-				g.rotate(-90, width, (50)*height/100);
+				g.rotate(-90, width, (35)*height/100);
 				drawCard(g, myRect, Card.fromString("1x"));
 				g.restore();
 			}
