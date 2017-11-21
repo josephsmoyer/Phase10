@@ -41,6 +41,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
     private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
     private final static float VER_OVERLAP = 4; //Vertical overlap to still see number
+	private final static float SMALL_CARD_HEIGHT_PERCENT = 5;
+	private final static float SMALL_CARD_WIDTH_PERCENT = 2.1246f;
 	
 	// our game state
 	protected P10State state;
@@ -264,6 +266,62 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectLeft = rectLeft + width*(CARD_WIDTH_PERCENT-HOR_OVERLAP)/100;
 					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				}
+			}
+			//Create AI hands
+			int players = state.getNumberPlayers();
+			if (players < 5) {
+				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
+				for (int i = 0; i < players-1; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					rectTop = (5)*height/100f;
+					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					drawCard(g, myRect, null);
+				}
+			}
+			if (players < 5) {
+				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
+				for (int i = 0; i < players-1; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					rectTop = (5)*height/100f;
+					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					drawCard(g, myRect, null);
+				}
+			}
+			else {
+				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
+				for (int i = 0; i < players-3; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					rectTop = (5)*height/100f;
+					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					drawCard(g, myRect, null);
+				}
+				//left card
+				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (40)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(90, 0, (50)*height/100);
+				drawCard(g, myRect, null);
+				g.restore();
+
+				//right card
+				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (40)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(-90, width, (50)*height/100);
+				drawCard(g, myRect, null);
+				g.restore();
 			}
 		}
 	}

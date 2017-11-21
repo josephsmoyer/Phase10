@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 /**
  * A playing card in the standard Phase10 deck. The images, which have been
@@ -200,6 +201,10 @@ public class Card implements Serializable {
 			R.drawable.g_10, R.drawable.g_11, R.drawable.g_12,
     	},
 		{
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
 			R.drawable.w, R.drawable.s,
 		},
 	};
@@ -225,6 +230,7 @@ public class Card implements Serializable {
     	for (int i = 0; i < resIdx.length; i++) {
     		// create an inner array
     		cardImages[i] = new Bitmap[resIdx[i].length];
+			Log.i("Bitmap Length", String.valueOf(resIdx[i].length));
     		for (int j = 0; j < resIdx[i].length; j++) {
     			// create the bitmap from the corresponding image
     			// resource, and set the corresponding array element

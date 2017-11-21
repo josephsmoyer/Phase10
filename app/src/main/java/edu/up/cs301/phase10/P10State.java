@@ -100,7 +100,8 @@ public class P10State extends GameState
 		for(int i = 0; i < 10; i++){						//10 cards each
 			int playerIDX = toPlay;
 			for (int j = 0; j < numPlayers; j++){
-				drawPile.moveTopCardTo(hands[playerIDX]);	//deal first card to player starting the game
+				drawPile.moveTopCardTo(hands[playerIDX]);//deal first card to player starting the game
+				//Log.i("Dealing", drawPile.peekAtTopCard().getRank().toString());
 				playerIDX++;								//increment the player to give cards to
 				if(playerIDX >= numPlayers){
 					playerIDX = 0;							//if reached last player, cycle back to player 0

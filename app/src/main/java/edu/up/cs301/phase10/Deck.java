@@ -59,12 +59,18 @@ public class Deck implements Serializable {
 				this.add(Card.fromString(""+r+s));
 			}
 		}
-		/*this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zw"));
-		this.add(Card.fromString("zw"));*/
+		/*this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));*/
 		// return the deck
 		return this;
 	}
