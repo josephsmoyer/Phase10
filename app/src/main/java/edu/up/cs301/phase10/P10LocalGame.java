@@ -208,6 +208,9 @@ public class P10LocalGame extends LocalGame {
 			return false;
 		}
 
+		if(checkIfRoundOver()){
+			roundAdjustment();
+		}
 		// return true, because the move was successful if we get here
 		return true;
 	}
@@ -408,5 +411,66 @@ public class P10LocalGame extends LocalGame {
 		}
 		return false;
 
+	}
+
+	/*
+	 * Checks if the round has ended
+	 */
+	protected boolean checkIfRoundOver(){
+		for(int i = 0; i < state.getNumberPlayers(); i++){
+			if(state.getHand(i).size() == 0){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/*
+	 * Code to run to reset state, when the round ends
+	 */
+	protected void roundAdjustment(){
+		for(int i = 0; i < state.getNumberPlayers(); i++){
+			Card c = null;
+			//Empty the hands for each player, and score
+			for(int j = 0; j < state.getHand(i).size(); j++){
+				c = state.getHand(i).removeTopCard();				//actually remove cards from players hands
+				if(c.getRank().value(1) < 10){
+					int temp = state.getScores()[i] + 5;
+					state.setScore(i, temp); //low rank cards
+				}
+				else if(c.getRank().value(1) > 10 && c.getRank().value(1) < 13){
+					int temp = state.getScores()[i] + 10;
+					state.setScore(i, temp); //high rank cards
+				}
+				else if(c.getRank().value(1) == 13){
+					int temp = state.getScores()[i] + 15;
+					state.setScore(i, temp);	//skip cards
+				}
+				else if(c.getRank().value(1) == 14){
+					int temp = state.getScores()[i] + 25;
+					state.setScore(i, temp);	//wild cards
+				}
+			}
+			//Update Phase information
+			if(state.getPlayedPhase()[i][0].size() != 0){
+				int playerPhase = state.getPhases()[i];
+				state.setPhase(i, playerPhase+1);
+			}
+			//empty the played phase locations
+			for(int j = 0; j < 2; j++){
+				for(int k = 0; k < state.getPlayedPhase()[i][j].size(); k++) {
+					state.getPlayedPhase()[i][j].removeTopCard();
+				}
+			}
+			//reset skip information
+			state.setToSkip(i, false);
+			state.setAlreadySkip(i, false);
+		}
+		//Reset "the Dealer" to be player 0
+		state.setToPlay(0);
+		//Start with a draw action
+		state.setShouldDraw(true);
+		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
+		state.cleanDeck();
 	}
 }

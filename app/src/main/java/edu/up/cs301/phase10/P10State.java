@@ -451,4 +451,30 @@ public class P10State extends GameState
         discardPile.add(top);                               //return the top card to the discard pile
     }
 
+    public void cleanDeck(){
+		for(int i = 0; i < discardPile.size(); i++){
+			discardPile.removeTopCard();
+		}
+		for(int i = 0; i < drawPile.size(); i++){
+			drawPile.removeTopCard();
+		}
+		drawPile.add108();
+		drawPile.shuffle();
+
+		//Deal the cards to the players hands
+		for(int i = 0; i < 10; i++){						//10 cards each
+			int playerIDX = toPlay;
+			for (int j = 0; j < numPlayers; j++){
+				drawPile.moveTopCardTo(hands[playerIDX]);//deal first card to player starting the game
+				//Log.i("Dealing", drawPile.peekAtTopCard().getRank().toString());
+				playerIDX++;								//increment the player to give cards to
+				if(playerIDX >= numPlayers){
+					playerIDX = 0;							//if reached last player, cycle back to player 0
+				}
+			}
+		}
+
+		drawPile.moveTopCardTo(discardPile);
+	}
+
 }
