@@ -8,6 +8,9 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+
 import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
 import edu.up.cs301.card.Card;
@@ -31,11 +34,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	// sizes and locations of card decks and cards, expressed as percentages
 	// of the screen height and width
-	private final static float CARD_HEIGHT_PERCENT = 40; // height of a card
-	private final static float CARD_WIDTH_PERCENT = 17; // width of a card
-	private final static float LEFT_BORDER_PERCENT = 4; // width of left border
-	private final static float RIGHT_BORDER_PERCENT = 20; // width of right border
+	private final static float CARD_HEIGHT_PERCENT = 15; // height of a card
+	private final static float CARD_WIDTH_PERCENT = 6.375f; // width of a card
+	private final static float LEFT_BORDER_PERCENT = 2; // width of left border
+	private final static float RIGHT_BORDER_PERCENT = 2; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
+    private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
+    private final static float VER_OVERLAP = 4; //Vertical overlap to still see number
 	
 	// our game state
 	protected P10State state;
@@ -48,8 +53,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	
 	// the background color
 	private int backgroundColor;
-	private RectF[][] rects = new RectF[2][4];
-	
+	private RectF[] rects = new RectF[11];
+	private int[] selectedCards = new int[11];
+
+	//Nonchanging deck locations
+	private RectF discardLocation;
+	private RectF drawLocation;
+	//Nonchanging phase lay down locations
+	private RectF[] phaseLocs = new RectF[12]; //2 for each potential player
+
 	/**
 	 * constructor
 	 * 
@@ -61,6 +73,16 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	public P10HumanPlayer(String name, int bkColor) {
 		super(name);
 		backgroundColor = bkColor;
+		for (int i = 0; i < 11; i++) {
+			//selectedCards list of ints for each card in hand
+			//-1: Card doesn't exist in array
+			//0: Card is unselected
+			//1: Card is selected
+			selectedCards[i] = -1;
+		}
+		for(int i = 0; i < phaseLocs.length; i++){
+			phaseLocs[i] = null;
+		}
 	}
 
 	/**
@@ -71,7 +93,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 */
 	@Override
 	public void receiveInfo(GameInfo info) {
-		Log.i("P10ComputerPlayer", "receiving updated state ("+info.getClass()+")");
+		Log.i("P10HumanPlayer", "receiving updated state ("+info.getClass()+")");
 		if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
 			// if we had an out-of-turn or illegal move, flash the screen
 			surface.flash(Color.RED, 50);
@@ -173,93 +195,112 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		if(state == null){
 			return;
 		}
-		int height = surface.getHeight();
-		int width = surface.getWidth();
-		if( state.getHand(1) == null)return;
-		if(rects == null){
-			rects[0][0] = new RectF((float).566*height,width,(float).601*height,(float).947*width) ;
-			rects[0][1] = new RectF((float).611*height,width,(float).646*height, (float).947*width);
-			rects[0][2] = new RectF((float).656*height,width,(float).691*height, (float).947*width);
-			rects[0][3] = new RectF((float).701*height,width,(float).736*height, (float).947*width);
-			rects[0][4] = new RectF((float).746*height,width,(float).781*height, (float).947*width);
-			rects[1][0] = new RectF((float).566*height,(float).940*width,(float).601*height, (float).889*width);
-			rects[1][1] = new RectF((float).611*height,(float).940*width,(float).646*height, (float).889*width);
-			rects[1][2] = new RectF((float).656*height,(float).940*width,(float).691*height, (float).889*width);
-			rects[1][3] = new RectF((float).701*height,(float).940*width,(float).736*height, (float).889*width);
-			rects[1][4] = new RectF((float).746*height,(float).940*width,(float).781*height, (float).889*width);
+		else {
+			int height = surface.getHeight();
+			int width = surface.getWidth();
+			//if the players hand is not initialized
+			if (state.getHand(playerNum) == null) return;
+			//variables for rect creation
+			float rectLeft;
+			float rectRight;
+			float rectTop;
+			float rectBottom;
+
+			int length = state.getHand(playerNum).size();
+			//Log.i("Hand Length", Integer.toString(length));
+
+			//set up phase area (temporary)
+			for(int i = 0; i < 2; i++) { //expand to all phase areas later
+				phaseLocs[i] = getPhaseLoc(i);
+				Paint myPaint = new Paint();
+				myPaint.setColor(Color.YELLOW);
+				g.drawRect(phaseLocs[i], myPaint);
+			}
+
+			//set up discard/draw pile locations
+			float start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
+			rectLeft = (start)*width/100;
+			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			discardLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+			start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
+			rectLeft = (start+LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)*width/100;
+			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			drawLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+
+			drawCard(g, discardLocation, state.peekDiscardCard());
+			drawCard(g, drawLocation, null);
+
+			//start of all the possible cards as neither selected or not
+			for (int i = length; i < 11; i++) {
+				selectedCards[i] = -1;
+			}
+			//Create the rects and locations for the players cards in hand
+			start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
+			for (int i = 0; i < length; i++) {
+				if (selectedCards[i] == -1) {
+					selectedCards[i]++;
+				}
+				rectLeft = (start+(i*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)))*width/100;
+				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+				rectTop = (100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT-(selectedCards[i]*5))*height/100f;
+				rectBottom = (100-VERTICAL_BORDER_PERCENT-(selectedCards[i]*5))*height/100f;
+				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
+			}
+			//Create the rects and locations for the players cards in the played phases
+			for(int j = 0; j < 2 /*phaseLocs.length*/; j++){
+				rectLeft = phaseLocs[j].left;
+				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+				rectTop = phaseLocs[j].top;
+				rectBottom = phaseLocs[j].bottom;
+				for(int k = 0; k < state.getPlayedPhase()[playerNum][j].size(); k++){
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					drawCard(g, myRect, state.getPlayedPhase()[playerNum][j].peekAt(k));
+
+					rectLeft = rectLeft + width*(CARD_WIDTH_PERCENT-HOR_OVERLAP)/100;
+					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
+				}
+			}
 		}
-		Deck testhand = state.getHand(1);
-
-		//int height = surface.getHeight();
-		//int width = surface.getWidth();
-
-
-		Card c = state.getDrawCard();
-
-		if(c!=null){
-
-		}
-
-		/*
-		// ignore if we have not yet received the game state
-		if (state == null) return;
-
-		// get the height and width of the animation surface
-		int height = surface.getHeight();
-		int width = surface.getWidth();
-
-		// draw the middle card-pile
-		Card c = state.getDeck(2).peekAtTopCard(); // top card in pile
-		if (c != null) {
-			// if middle card is not empty, draw a set of N card-backs
-			// behind the middle card, so that the user can see the size of
-			// the pile
-			RectF midTopLocation = middlePileTopCardLocation();
-			drawCardBacks(g, midTopLocation,
-					0.0025f*width, -0.01f*height, state.getDeck(2).size());
-			// draw the top card, face-up
-			drawCard(g, midTopLocation, c);
-		}
-		
-		// draw the opponent's cards, face down
-		RectF oppTopLocation = opponentTopCardLocation(); // drawing size/location
-		drawCardBacks(g, oppTopLocation,
-				0.0025f*width, -0.01f*height, state.getDeck(1-this.playerNum).size());
-
-		// draw my cards, face down
-		RectF thisTopLocation = thisPlayerTopCardLocation(); // drawing size/location
-		drawCardBacks(g, thisTopLocation,
-				0.0025f*width, -0.01f*height, state.getDeck(this.playerNum).size());
-		
-		// draw a red bar to denote which player is to play (flip) a card
-		RectF currentPlayerRect =
-				state.toPlay() == this.playerNum ? thisTopLocation : oppTopLocation;
-		RectF turnIndicator =
-				new RectF(currentPlayerRect.left,
-						currentPlayerRect.bottom,
-						currentPlayerRect.right,
-					height);
-		Paint paint = new Paint();
-		paint.setColor(Color.RED);
-		g.drawRect(turnIndicator, paint);
-		*/
 	}
 	
 	/**
 	 * @return
 	 * 		the rectangle that represents the location on the drawing
-	 * 		surface where the top card in the opponent's deck is to
-	 * 		be drawn
+	 * 		surface where the indicated phase location should go
 	 */
-	private RectF opponentTopCardLocation() {
-		// near the left-bottom of the drawing surface, based on the height
-		// and width, and the percentages defined above
+	private RectF getPhaseLoc(int spot) {
 		int width = surface.getWidth();
 		int height = surface.getHeight();
-		return new RectF(LEFT_BORDER_PERCENT*width/100f,
-				(100-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f,
-				(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)*width/100f,
-				(100-VERTICAL_BORDER_PERCENT)*height/100f);
+
+		float rectLeft;
+		float rectRight;
+		float rectTop;
+		float rectBottom;
+		RectF phaseLoc;
+
+		if(spot == 0) {
+			rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
+			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		}
+		else if(spot == 1) {
+			rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
+			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		}
+		else{
+			phaseLoc = null; //set up other locations later
+		}
+		return phaseLoc;
 	}
 	
 	/**
@@ -342,23 +383,85 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 		
-		// determine whether the touch occurred on the top-card of either
-		// the player's pile or the middle pile
-		RectF myTopCardLoc = thisPlayerTopCardLocation();
-		RectF middleTopCardLoc = middlePileTopCardLocation();
-		if (myTopCardLoc.contains(x, y)) {
-			// it's on my pile: we're playing a card: send action to
-			// the game
-			game.sendAction(new P10PlayAction(this));
+		// determine whether the touch occurred on any of the players cards
+		int touchedCard = -1;
+		for(int i = 0; i < state.getHand(playerNum).size(); i++){
+			//Log.i("Reached", Integer.toString(i));
+			if(rects[i].contains(x, y)){
+				touchedCard = i;
+			}
 		}
-		else if (middleTopCardLoc.contains(x, y)) {
-			// it's on the middlel pile: we're slapping a card: send
-			// action to the game
-			game.sendAction(new P10MakePhaseAction(this));
-		}
-		else {
+		//if no card was selected
+		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
 			surface.flash(Color.RED, 50);
+		}
+		//If a card was selected
+		else {
+			selectedCards[touchedCard] = (selectedCards[touchedCard]+1)%2; //Toggle card selected/unselected
+		}
+
+		if(discardLocation.contains(x,y)){
+			//boolean to determine if a single card was selected
+			boolean cardSelected = false;
+			//count how many cards are selected
+			int count = 0;
+			int loc = -1;
+			for(int i = 0; i < selectedCards.length; i++){
+				if(selectedCards[i] == 1){
+					count++;
+					loc = i;
+				}
+			}
+			//if and only if 1 card is selected then cardselected = true
+			if(count == 1){
+				cardSelected = true;
+			}
+			if(cardSelected){ //if one card was selected, when pressing the discard, discard that card
+				Card toDiscard = state.getHand(playerNum).peekAt(loc);
+				Log.i("Card discarding", toDiscard.toString());
+				P10DiscardCardAction myAction = new P10DiscardCardAction(this, toDiscard);
+				game.sendAction(myAction);
+				for(int i = 0; i < selectedCards.length; i++){
+					selectedCards[i] = 0; //deselect all cards
+				}
+			}
+			else if (count > 1) { //if more than 1 card is selected, flash
+			}
+			else{ //if no cards are selected then attempt to draw from the discard pile
+				//action contains player (this) and false to indicate discard pile
+				P10DrawCardAction myAction = new P10DrawCardAction(this, false);
+				//send action to the game
+				game.sendAction(myAction);
+			}
+		}
+		if(drawLocation.contains(x,y)){
+			//action contains player (this) and true to indicate draw pile
+			P10DrawCardAction myAction = new P10DrawCardAction(this, true);
+			//send action to the game
+			game.sendAction(myAction);
+		}
+        for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
+        	//phaseLocs[i] = getPhaseLoc(i);
+			//Log.i("Reached", Integer.toString(i));
+			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
+			if(phaseLocs[i].contains(x, y)){
+				//Log.i("Phase clicked", "yeah");
+				Deck myPhase = new Deck();
+				for(int j = 0; j < selectedCards.length; j++){
+					if(selectedCards[j] == 1){
+						myPhase.add(state.getHand(playerNum).peekAt(j));
+					}
+				}
+				boolean side = false;
+				if(i == 0){side = true;}		//true indicates the left component
+				else if (i == 1){side = false;} //false indicates right phase component
+				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase, side);
+				game.sendAction(myAction);
+				for(int z = 0; z < selectedCards.length; z++){
+					selectedCards[z] = 0; //deselect all cards
+				}
+			}
 		}
 	}
 	

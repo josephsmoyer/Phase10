@@ -1,5 +1,7 @@
 package edu.up.cs301.phase10;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,7 +10,7 @@ import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
- * Contains the state of a Slapjack game.  Sent by the game when
+ * Contains the state of a Phase10 game.  Sent by the game when
  * a player wants to enquire about the state of the game.  (E.g., to display
  * it, or to help figure out its next move.)
  * 
@@ -67,7 +69,9 @@ public class P10State extends GameState
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
 		hands = new Deck[numPlayers];
+		Log.i("NUmberPlayers", Integer.toString(numPlayers));
 		for(int i = 0; i < numPlayers; i++){
+			Log.i("Hand Created for", Integer.toString(i));
 			hands[i] = new Deck();					//create a deck for each players hand
 		}
 		playedPhase = new Deck[numPlayers][2];
@@ -86,7 +90,7 @@ public class P10State extends GameState
 		}
 
 		// randomly pick the player who starts
-		toPlay = (int)(numPlayers*Math.random());
+		toPlay = 0; //(int)(numPlayers*Math.random());
 
 		//initialize the draw pile
 		drawPile.add108(); 			//fill the deck with cards
@@ -167,6 +171,7 @@ public class P10State extends GameState
 	public P10State(P10State orig, int playerID) {
 		//copy number of players
 		numPlayers = orig.numPlayers;
+		//Log.i("Number Players", Integer.toString(numPlayers));
 
 		// set index of player whose turn it is
 		toPlay = orig.toPlay;
@@ -182,10 +187,8 @@ public class P10State extends GameState
 		hands = new Deck[numPlayers];
 		//fill the hands deck with info from orig
 		for(int i = 0; i < numPlayers; i++){
-			if(i == playerID) {
-				hands[i] = new Deck(orig.hands[i]);
-			}
-			else{
+			hands[i] = new Deck(orig.hands[i]);
+			if(i != playerID) {
 				hands[i].nullifyDeck(); // only give player access to his/her own hand
 			}
 		}
@@ -236,7 +239,8 @@ public class P10State extends GameState
      * 		the index of the player whose move it now is
      */
     public void setToPlay(int idx) {
-    	toPlay = idx;
+    	Log.i("To Play is now", Integer.toString(idx));
+		toPlay = idx;
     }
 
     /**
@@ -259,6 +263,15 @@ public class P10State extends GameState
     public Card getDiscardCard() {
         return discardPile.removeTopCard();
     }
+
+	/**
+	 * shows the top card of the discard pile
+	 *
+	 * @return the top card from the discard pile. If no access to discard pile / empty pile, returns null
+	 */
+	public Card peekDiscardCard() {
+		return discardPile.peekAtTopCard();
+	}
 
     /**
      * 'Sets' the top card of the discard pile, by adding a card to it
@@ -380,7 +393,21 @@ public class P10State extends GameState
      * @return the hand for a specific player
      */
     public Deck getHand(int playerID) {
-        return hands[playerID];
+		if(hands == null){
+			return null;
+		}
+		else {
+            //Log.i("Hands is", "Valid");
+			//Log.i("Player id is", Integer.toString(playerID));
+			for(int i = 0; i < numPlayers; i++) {
+				if(hands[i] != null){
+					//Log.i("Valid hand at id", Integer.toString(i));
+				}
+				//Log.i("Hand size of player "+Integer.toString(i), Integer.toString(hands[i].size()));
+			}
+			//Log.i("Peek Card is", hands[playerID].peekAtTopCard().toString());
+			return hands[playerID];
+		}
     }
 
     /**
@@ -393,7 +420,12 @@ public class P10State extends GameState
      */
     public void discardFromHand(int playerID, Card myCard) {
         if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
-            hands[playerID].moveTopCardTo(discardPile);
+            for(int i = 0; i < hands[playerID].size(); i++){
+				if(hands[playerID].peekAt(i) == myCard){
+					Card temp = hands[playerID].removeCard(i);
+					discardPile.add(temp);
+				}
+			}
         }
     }
 
