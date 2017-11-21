@@ -602,18 +602,36 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Log.i("Reached", Integer.toString(i));
 			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
 			if(phaseLocs[i].contains(x, y)){
-
-				//Log.i("Phase clicked", "yeah");
-				Deck myPhase = new Deck();
-				for(int j = 0; j < selectedCards.length; j++){
-					if(selectedCards[j] == 1){
-						myPhase.add(state.getHand(playerNum).peekAt(j));
+				if(state.getPlayedPhase()[playerNum][0].size() == 0) {
+					//Log.i("Phase clicked", "yeah");
+					Deck myPhase = new Deck();
+					for (int j = 0; j < selectedCards.length; j++) {
+						if (selectedCards[j] == 1) {
+							myPhase.add(state.getHand(playerNum).peekAt(j));
+						}
+					}
+					P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase);
+					game.sendAction(myAction);
+					for (int z = 0; z < selectedCards.length; z++) {
+						selectedCards[z] = 0; //deselect all cards
 					}
 				}
-				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase);
-				game.sendAction(myAction);
-				for(int z = 0; z < selectedCards.length; z++){
-					selectedCards[z] = 0; //deselect all cards
+				else {
+					int count = 0;
+					Card myCard = null;
+					for(int j = 0; j < selectedCards.length; j++){
+						if(selectedCards[j] == 1){
+							count++;
+							myCard = state.getHand(playerNum).peekAt(j);
+						}
+					}
+					if(count == 1){
+						P10HitCardAction myAction = new P10HitCardAction(this, myCard, playerNum, i);
+						game.sendAction(myAction);
+						for (int k = 0; k < selectedCards.length; k++) {
+							selectedCards[k] = 0; //deselect all cards
+						}
+					}
 				}
 			}
 		}
@@ -631,21 +649,31 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						myCard = state.getHand(playerNum).peekAt(j);
 					}
 				}
-				if(count == 1) {
-					if (computerPhaseLocs[i - offset][0].contains(x, y)) {
+
+				if (computerPhaseLocs[i - offset][0].contains(x, y)) {
+					if(count == 1) {
 						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
 						game.sendAction(myAction);
-						for(int k = 0; k < selectedCards.length; k++){
-							selectedCards[k] = 0; //deselect all cards
-						}
-					} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
-						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
-						game.sendAction(myAction);
-						for(int k = 0; k < selectedCards.length; k++){
+						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
 					}
+					else{
+						surface.flash(Color.RED, 50);
+					}
+				} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
+					if(count == 1) {
+						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
+						game.sendAction(myAction);
+						for (int k = 0; k < selectedCards.length; k++) {
+							selectedCards[k] = 0; //deselect all cards
+						}
+					}
+					else{
+						surface.flash(Color.RED, 50);
+					}
 				}
+
 			}
 		}
 	}
