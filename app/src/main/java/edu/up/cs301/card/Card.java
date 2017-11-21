@@ -207,6 +207,9 @@ public class Card implements Serializable {
 			0, 0, 0,
 			R.drawable.w, R.drawable.s,
 		},
+        {
+			R.drawable.backside
+        }
 	};
     
     // the array of card images

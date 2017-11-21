@@ -219,6 +219,58 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				g.drawRect(phaseLocs[i], myPaint);
 			}
 
+			//Create AI hands
+			int players = state.getNumberPlayers();
+			if (players < 5) {
+				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
+				rectTop = (-10)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				for (int i = 0; i < players-1; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					g.save();
+					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
+					drawCard(g, myRect, Card.fromString("1x"));
+					g.restore();
+				}
+			}
+			else {
+				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
+				rectTop = (-10)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				for (int i = 0; i < players-3; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					g.save();
+					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
+					drawCard(g, myRect, Card.fromString("1x"));
+					g.restore();
+				}
+				//left card
+				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (40)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(90, 0, (50)*height/100);
+				drawCard(g, myRect, Card.fromString("1x"));
+				g.restore();
+
+				//right card
+				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (40)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(-90, width, (50)*height/100);
+				drawCard(g, myRect, Card.fromString("1x"));
+				g.restore();
+			}
+
 			//set up discard/draw pile locations
 			float start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
 			rectLeft = (start)*width/100;
@@ -234,7 +286,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			drawLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 
 			drawCard(g, discardLocation, state.peekDiscardCard());
-			drawCard(g, drawLocation, null);
+			drawCard(g, drawLocation, Card.fromString("1x"));
 
 			//start of all the possible cards as neither selected or not
 			for (int i = length; i < 11; i++) {
@@ -267,62 +319,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				}
 			}
-			//Create AI hands
-			int players = state.getNumberPlayers();
-			if (players < 5) {
-				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
-				for (int i = 0; i < players-1; i++) {
-					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
-					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-					rectTop = (5)*height/100f;
-					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, myRect, null);
-				}
-			}
-			if (players < 5) {
-				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
-				for (int i = 0; i < players-1; i++) {
-					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
-					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-					rectTop = (5)*height/100f;
-					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, myRect, null);
-				}
-			}
-			else {
-				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
-				for (int i = 0; i < players-3; i++) {
-					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
-					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-					rectTop = (5)*height/100f;
-					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, myRect, null);
-				}
-				//left card
-				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
-				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-				rectTop = (40)*height/100f;
-				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-				RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-				g.save();
-				g.rotate(90, 0, (50)*height/100);
-				drawCard(g, myRect, null);
-				g.restore();
 
-				//right card
-				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
-				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-				rectTop = (40)*height/100f;
-				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-				myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-				g.save();
-				g.rotate(-90, width, (50)*height/100);
-				drawCard(g, myRect, null);
-				g.restore();
-			}
 		}
 	}
 	
@@ -341,24 +338,27 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		float rectBottom;
 		RectF phaseLoc;
 
-		if(spot == 0) {
-			rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
-			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
-			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		switch(spot) {
+			case 0:
+				rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
+				rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+				rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				return phaseLoc;
+
+			case 1:
+				rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
+				rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+				rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				return phaseLoc;
+
+			default:
+				phaseLoc = null; //set up other locations later
+				return phaseLoc;
 		}
-		else if(spot == 1) {
-			rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
-			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
-			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-		}
-		else{
-			phaseLoc = null; //set up other locations later
-		}
-		return phaseLoc;
 	}
 	
 	/**

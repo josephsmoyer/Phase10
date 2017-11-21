@@ -20,11 +20,14 @@ public enum Color implements Serializable {
 	// Yellow
 	Yellow,
 	
-	// green
+	// Green
 	Green,
 
-	// black
-	Black
+	// Black
+	Black,
+
+	//Backside
+	Backside
 	;
 
 	// to satisfy the Serializable interface
@@ -39,6 +42,9 @@ public enum Color implements Serializable {
 	public char shortName() {
 		if (longName() == Black.toString()){
 			return 'z'; 						//z to indicate black, since blue is using 'b'
+		}
+		if (longName() == Backside.toString()){
+			return 'x'; 						//z to indicate black, since blue is using 'b'
 		}
 		else {
 			return longName().charAt(0);		//otherwise use the first letter for the color shortname
