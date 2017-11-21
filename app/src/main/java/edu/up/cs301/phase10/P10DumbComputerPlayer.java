@@ -76,27 +76,57 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
 
     @Override
     protected Card toDiscard(Deck myCards, int myPhaseNumber){
-        for(int i = 0; i < myCards.size(); i++){ //for all cards
-            boolean[] match = new boolean[myCards.size()]; //holds which cards match that value
-            for(int k = 0; k < match.length; k++){
-                match[k] = false;
-            }
-            for(int j = 0; j < myCards.size(); j++){ //compare to each subsequent card
-                if(myCards.peekAt(i).equals(myCards.peekAt(j))){
-                    match[j] = true;                        //declare match that card
+        int count[] = cardsCount(myCards);                      //returns array with count of each rank of card
+        int valueToDiscard = -1;
+        Card toDiscard = null;
+
+        switch(myPhaseNumber){
+            case 1:
+                for(int i = 0; i < count.length; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
                 }
-            }
-            int count = 0;
-            for(int k = i; k < match.length; k++){
-                if(match[k]){
-                    count++;                                //count how many matched cards
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length; i++){
+                        if(count[i] != 0){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
                 }
-            }
-            if(count == 1){                                 //if there is not a match, discard
-                Log.i("Player "+Integer.toString(playerNum)+" discarding", Integer.toString(i));
-                return myCards.peekAt(i);
-            }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random = (int)Math.random()*myCards.size();     //pick a random card
+                    toDiscard = myCards.peekAt(random);
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
         }
-        return myCards.peekAt((int)Math.random()*myCards.size());
+
+
+        return toDiscard;
     }
 }

@@ -126,6 +126,49 @@ public class P10ComputerPlayer extends GameComputerPlayer
 
         switch(myPhaseNumber){
             case 1:
+                int cards[] = cardsCount(myCards);
+                int numSets = 0;
+                boolean sets[] = new boolean[cards.length];
+                for(int i = 0; i < cards.length; i++){
+                    sets[i] = false;
+                    if(cards[i] >= 3){
+                        numSets++;                              //count the number of sets
+                        sets[i] = true;                         //change that value to be true
+                    }
+                }
+                if(numSets >= 2){                               //if there are two sets
+                    int set1 = -1;      //value of set 1 cards
+                    int added1 = 0;     //how many set 1 cards were added
+                    int set2 = -1;
+                    int added2 = 0;
+                    for(int j = 0; j < sets.length; j++){
+                        if(sets[j]){
+                            if(set1 == -1){
+                                set1 = j;
+                            }
+                            else if (set2 == -1){
+                                set2 = j;
+                            }
+                        }
+                    }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 6){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == set1){
+                                if(added1 < 3) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added1++;
+                                }
+                            }
+                            else if(myCards.peekAt(j).getRank().value(1) == set2){
+                                if(added2 < 3) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
+                }
+                /*
                 for(int i = 0; i < myCards.size(); i++){ //for all cards
                     int count = 0;
                     for(int j = 0; j < myCards.size(); j++){ //compare to each subsequent card
@@ -144,38 +187,6 @@ public class P10ComputerPlayer extends GameComputerPlayer
                             }
                             else{
                                 break;                          //if 3 cards are put together, break
-                            }
-                        }
-                    }
-                }
-                /*
-                for(int i = 0; i < myCards.size(); i++){ //for all cards
-                    boolean[] match = new boolean[myCards.size()]; //holds which cards match that value
-                    for(int k = 0; k < match.length; k++){
-                        match[k] = false;
-                    }
-                    match[i] = true;
-                    for(int j = 0; j < myCards.size(); j++){ //compare to each subsequent card
-                        if(myCards.peekAt(i).equals(myCards.peekAt(j))){
-                            match[j] = true;                        //declare match that card
-                        }
-                    }
-                    int count = 0;
-                    for(int k = 0; k < match.length; k++){
-                        if(match[k]){
-                            count++;                                //count how many similar cards
-                            Log.i("Total Matches", Integer.toString(count));
-                        }
-                    }
-                    if(count >= 3){                                 //if have a set of 3
-                        for(int l = 0; l < myCards.size(); l++){    //for all the cards in hand
-                            if(match[l]) {                          //if they are part of the set
-                                if(toReturn.size() < 3) {           //if less than 3 cards have been put together
-                                    toReturn.add(myCards.peekAt(l)); //add card
-                                }
-                                else{
-                                    break;                          //if 3 cards are put together, break
-                                }
                             }
                         }
                     }
@@ -220,5 +231,18 @@ public class P10ComputerPlayer extends GameComputerPlayer
         toReturn = myCards.peekAt((int)Math.random()*myCards.size());
 
         return toReturn;
+    }
+
+    protected int[] cardsCount(Deck myCards){
+        int variety[] = new int[14]; //indicator of if a card is used in the phase
+        for(int i = 0; i < variety.length; i++){
+            variety[i] = 0;			//initialized to zero
+        }
+        for(int i = 0; i < myCards.size(); i++){
+            int val = myCards.peekAt(i).getRank().value(1);
+            Log.i("Incrementing variety at", Integer.toString(val));
+            variety[val]++; //increment the variety at a specific location
+        }
+        return variety;
     }
 }
