@@ -1,5 +1,6 @@
 package edu.up.cs301.phase10;
 
+import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
 
 /**
@@ -7,15 +8,34 @@ import edu.up.cs301.game.GamePlayer;
  */
 
 public class P10HitCardAction extends P10MoveAction {
+
+    private Card hitCard;
+    private int playerToHit;
+    private int phaseToHit;
     /**
      * Constructor for P10MoveAction
      *
      * @param player the player making the move
      */
-    public P10HitCardAction(GamePlayer player) {
+    public P10HitCardAction(GamePlayer player, Card myCard, int playa, int phase) {
         super(player);
+        hitCard = myCard;
+        playerToHit = playa;
+        phaseToHit = phase;
     }
     public boolean isHitCard() {
         return true;
+    }
+
+    public Card getHitCard(){
+        return hitCard;
+    }
+
+    public int getPlayerToHit(){
+        return playerToHit;
+    }
+
+    public int getPhaseToHit(){
+        return phaseToHit;
     }
 }

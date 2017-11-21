@@ -157,6 +157,17 @@ public class P10LocalGame extends LocalGame {
 			}
 			//if we have a hit card action
 			P10HitCardAction myAction = (P10HitCardAction) P10ma;
+			if(isValidHit(thisPlayerIdx, myAction.getHitCard())) {
+				Card c = myAction.getHitCard();
+				for (int i = 0; i < state.getHand(thisPlayerIdx).size(); i++) {
+					for (int j = 0; j < state.getHand(thisPlayerIdx).size(); j++) {
+						if (c.equals(state.getHand(thisPlayerIdx).peekAt(j))) {
+							state.getHand(thisPlayerIdx).removeCard(j);
+						}
+					}
+				}
+				state.getPlayedPhase()[myAction.getPlayerToHit()][myAction.getPhaseToHit()].add(c);
+			}
 		} else if (P10ma.isDrawCard()) {
 			//if it is not supposed to be a draw action
 			if (!state.getShouldDraw()) {
@@ -338,5 +349,9 @@ public class P10LocalGame extends LocalGame {
 			toReturn = new Deck (comp1);
 		}
 		return toReturn;
+	}
+
+	private boolean isValidHit(int playerID, Card myCard){
+		return true; //always assume valid hit for now
 	}
 }
