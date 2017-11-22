@@ -257,40 +257,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 			}
 			else {
-				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
-				rectTop = (-10)*height/100f;
-				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-
 				float rectTop1;
 				float rectBottom1;
 				float rectLeft1;
 				float rectRight1;
 
-				for (int i = 0; i < players-3; i++) {
-					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
-					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
-					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					g.save();
-					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
-					drawCard(g, myRect, Card.fromString("1x"));
-					g.restore();
-
-					rectTop1 = rectTop + 3*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
-					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
-					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
-					RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[i][0] = myLoc;
-
-					rectTop1 = rectTop + 4*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
-					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
-					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
-					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
-					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[i][1] = myLoc;
-				}
 				//left card
 				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
 				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
@@ -317,6 +288,38 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 				g.drawRect(myLoc, myPaint);
 				computerPhaseLocs[players-3][1] = myLoc;
+
+				//Spacing for top row
+				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
+				rectTop = (-10)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+
+				//Top row cards
+				for (int i = 0; i < players-3; i++) {
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					g.save();
+					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
+					drawCard(g, myRect, Card.fromString("1x"));
+					g.restore();
+
+					rectTop1 = rectTop + 3*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][0] = myLoc;
+
+					rectTop1 = rectTop + 4*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][1] = myLoc;
+				}
 
 				//right card
 				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
