@@ -71,7 +71,7 @@ public class P10LocalGame extends LocalGame {
 			int winScore = -1;
 			for(int i = 0; i < state.getNumberPlayers(); i++){
 				if(completed.contains(i)){
-					if(state.getScores()[i] > winScore) {
+					if(state.getScores()[i] < winScore) {
 						winner = i;
 						winScore = state.getScores()[i];
 					}
