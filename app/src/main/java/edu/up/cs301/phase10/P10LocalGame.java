@@ -81,6 +81,32 @@ public class P10LocalGame extends LocalGame {
 		}
 		//if no player has won, return null
 		return null;
+
+		/*//basic win check - sends message when someone has made the final phase
+		ArrayList<Integer> completed = new ArrayList<Integer>();
+		for (int i = 0; i < state.getNumberPlayers(); i++) {
+			if (state.getPhases()[i] == 3) {	//change to 10 for full game play
+				completed.add(i);
+			}
+		}
+		if(completed.size() == 1){
+			return "The winner was Player " + Integer.toString(completed.get(0));
+		}
+		if(completed.size() > 1){
+			int winner = -1;
+			int winScore = -1;
+			for(int i = 0; i < state.getNumberPlayers(); i++){
+				if(completed.contains(i)){
+					if(state.getScores()[i] < winScore) {
+						winner = i;
+						winScore = state.getScores()[i];
+					}
+				}
+			}
+			return "Player "+Integer.toString(winner)+" won with "+Integer.toString(winScore)+" points!";
+		}
+		//if no player has won, return null
+		return null;*/
 	}
 
 	/**
