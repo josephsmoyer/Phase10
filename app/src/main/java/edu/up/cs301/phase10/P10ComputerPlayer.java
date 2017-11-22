@@ -123,19 +123,30 @@ public class P10ComputerPlayer extends GameComputerPlayer
      */
     protected Deck validPhase(Deck myCards, int myPhaseNumber){
         Deck toReturn = new Deck();
+        int cards[] = cardsCount(myCards);
+
+        int numSets = 0;
+        boolean sets[] = new boolean[cards.length];
+        for(int i = 0; i < cards.length; i++){
+            sets[i] = false;
+            if(cards[i] >= 3){
+                numSets++;                              //count the number of sets
+                sets[i] = true;                         //change that value to be true
+            }
+        }
+
+        int numRuns = 0;
+        boolean runStart[] = new boolean[cards.length];
+        for(int i = 0; i < cards.length-3; i++){
+            runStart[i] = false;
+            if(cards[i] >= 1 && cards[i+1] >= 1 && cards[i+2] >= 1 && cards[i+3] >= 1){ //if 4 consecutive cards
+                numRuns++;
+                runStart[i] = true;                         //change that value to be true
+            }
+        }
 
         switch(myPhaseNumber){
             case 1:
-                int cards[] = cardsCount(myCards);
-                int numSets = 0;
-                boolean sets[] = new boolean[cards.length];
-                for(int i = 0; i < cards.length; i++){
-                    sets[i] = false;
-                    if(cards[i] >= 3){
-                        numSets++;                              //count the number of sets
-                        sets[i] = true;                         //change that value to be true
-                    }
-                }
                 if(numSets >= 2){                               //if there are two sets
                     int set1 = -1;      //value of set 1 cards
                     int added1 = 0;     //how many set 1 cards were added
@@ -170,6 +181,95 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 2:
+                if(numRuns >= 1 && numSets >= 1){
+                    for(int i = 0; i < sets.length; i++){ //for all possible set values
+                        if(sets[i]){                        //if there is a set
+                            for(int j = 0; j < runStart.length; j++){ //for all possible run starts
+                                if(runStart[j]){ //if there is a run
+                                    if(i != j && i != j+1 &&i != j+2 &&i != j+3) { //if set is not inside run
+                                        int added1 = 0;
+                                        int added2 = 0;
+                                        for(int k = 0; k < myCards.size(); k++){    //for all cards
+                                            if(toReturn.size() < 7){                //if the phase isnt complete already
+                                                if(myCards.peekAt(k).getRank().value(1) == i){
+                                                    if(added1 < 3) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added1++;
+                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j){
+                                                    if(added2 < 4) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+1){
+                                                    if(added2 < 4) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+2){
+                                                    if(added2 < 4) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+3){
+                                                    if(added2 < 4) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    /*
+                                    else{
+                                        if(cards[i] >= 4){
+                                            int added1 = 0;
+                                            int added2 = 0;
+                                            for(int k = 0; k < myCards.size(); k++){    //for all cards
+                                                if(toReturn.size() < 7){                //if the phase isnt complete already
+                                                    if(myCards.peekAt(k).getRank().value(1) == i){
+                                                        if(added1 < 3) {
+                                                            toReturn.add(myCards.peekAt(k));
+                                                            added1++;
+                                                        }
+                                                    }
+                                                    if(myCards.peekAt(k).getRank().value(1) == j){
+                                                        if(added2 < 4) {
+                                                            toReturn.add(myCards.peekAt(k));
+                                                            added2++;
+                                                        }
+                                                    }
+                                                    if(myCards.peekAt(k).getRank().value(1) == j+1){
+                                                        if(added2 < 4) {
+                                                            toReturn.add(myCards.peekAt(k));
+                                                            added2++;
+                                                        }
+                                                    }
+                                                    if(myCards.peekAt(k).getRank().value(1) == j+2){
+                                                        if(added2 < 4) {
+                                                            toReturn.add(myCards.peekAt(k));
+                                                            added2++;
+                                                        }
+                                                    }
+                                                    if(myCards.peekAt(k).getRank().value(1) == j+3){
+                                                        if(added2 < 4) {
+                                                            toReturn.add(myCards.peekAt(k));
+                                                            added2++;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } */
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case 3:
                 break;
@@ -189,6 +289,11 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 break;
 
         }
+        Log.i("Card List", "Start");
+        for(int i = 0; i < toReturn.size(); i++){
+            Log.i("Sending Cards", toReturn.peekAt(i).toString());
+        }
+        Log.i("Card List", "End");
 
         return toReturn;
     }
@@ -285,7 +390,6 @@ public class P10ComputerPlayer extends GameComputerPlayer
                     }
                 }
                 else if(run){
-                    Log.i("Fucking Null Pointer", myCard.toString());
                     if(myCard.getRank().value(1) == (myDeck.maxMin(false)-1)){
                         return true;
                     }

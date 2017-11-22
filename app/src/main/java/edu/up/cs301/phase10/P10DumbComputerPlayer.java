@@ -2,6 +2,8 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.actionMsg.GameAction;
@@ -85,6 +87,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         int count[] = cardsCount(myCards);                      //returns array with count of each rank of card
         int valueToDiscard = -1;
         Card toDiscard = null;
+        ArrayList<Integer> toSave = new ArrayList<Integer>();
 
         switch(myPhaseNumber){
             case 1:
@@ -113,6 +116,58 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 break;
             case 2:
+                boolean hasSet = false;
+                for(int i = 0; i < count.length; i++){
+                    if(count[i] == 3){
+                        hasSet = true;
+                    }
+                }
+                if(!hasSet){        //if no set yet
+                    for(int i = 0; i < count.length; i++){
+                        if(count[i] == 1){
+                            valueToDiscard = i;     //chooses to discard the highest value card not in a group
+                        }
+                    }
+                    for(int i = 0; i < myCards.size(); i++){
+                        if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                            toDiscard = myCards.peekAt(i);
+                        }
+                    }
+
+                }
+                if(hasSet){
+                    for(int i = 0; i < count.length; i++){
+                        if(count[i] >= 3){
+                            toSave.add(i);
+                        }
+                    }
+                    for(int i = 0; i < count.length-3; i++){
+                        if(count[i] > 1 && count[i+1] > 1 && count[i+2] > 1 && count[i+3] > 1){
+                            toSave.add(i);
+                        }
+                    }
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 1 && count[i+1] > 1 && count[i+2] > 1){
+                            toSave.add(i);
+                        }
+                    }
+                    for(int i = 0; i < count.length-1; i++){
+                        if(count[i] > 1 && count[i+1] > 1){
+                            toSave.add(i);
+                        }
+                    }
+                    for(int i = 0; i < count.length-1; i++){
+                        if(count[i] > 1 && count[i+1] == 0){
+                            toSave.add(i);
+                        }
+                    }
+                    valueToDiscard = toSave.get(toSave.size()-1);
+                    for(int i = 0; i < myCards.size(); i++){
+                        if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                            toDiscard = myCards.peekAt(i);
+                        }
+                    }
+                }
                 if(toDiscard == null){                                  //if discard card never got set
                     int random = (int)Math.random()*myCards.size();     //pick a random card
                     toDiscard = myCards.peekAt(random);
