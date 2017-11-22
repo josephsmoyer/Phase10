@@ -189,6 +189,10 @@ public class P10ComputerPlayer extends GameComputerPlayer
                                     if(i != j && i != j+1 &&i != j+2 &&i != j+3) { //if set is not inside run
                                         int added1 = 0;
                                         int added2 = 0;
+                                        int[] added2vals = new int[5];
+                                        for(int q = 0; q < added2vals.length; q++){
+                                            added2vals[q] = 0;
+                                        }
                                         for(int k = 0; k < myCards.size(); k++){    //for all cards
                                             if(toReturn.size() < 7){                //if the phase isnt complete already
                                                 if(myCards.peekAt(k).getRank().value(1) == i){
@@ -198,73 +202,78 @@ public class P10ComputerPlayer extends GameComputerPlayer
                                                     }
                                                 }
                                                 if(myCards.peekAt(k).getRank().value(1) == j){
-                                                    if(added2 < 4) {
+                                                    if(added2 < 4 && added2vals[1] != 1) {
                                                         toReturn.add(myCards.peekAt(k));
                                                         added2++;
-                                                    }
+                                                        added2vals[1] = 1;                                                    }
                                                 }
                                                 if(myCards.peekAt(k).getRank().value(1) == j+1){
-                                                    if(added2 < 4) {
+                                                    if(added2 < 4 && added2vals[2] != 1) {
                                                         toReturn.add(myCards.peekAt(k));
                                                         added2++;
-                                                    }
+                                                        added2vals[2]= 1;                                                    }
                                                 }
                                                 if(myCards.peekAt(k).getRank().value(1) == j+2){
-                                                    if(added2 < 4) {
+                                                    if(added2 < 4 && added2vals[3] != 1) {
                                                         toReturn.add(myCards.peekAt(k));
                                                         added2++;
+                                                        added2vals[3]= 1;
                                                     }
                                                 }
                                                 if(myCards.peekAt(k).getRank().value(1) == j+3){
-                                                    if(added2 < 4) {
+                                                    if(added2 < 4 && added2vals[4] != 1) {
                                                         toReturn.add(myCards.peekAt(k));
                                                         added2++;
+                                                        added2vals[4]= 1;
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    /*
                                     else{
-                                        if(cards[i] >= 4){
-                                            int added1 = 0;
-                                            int added2 = 0;
-                                            for(int k = 0; k < myCards.size(); k++){    //for all cards
-                                                if(toReturn.size() < 7){                //if the phase isnt complete already
-                                                    if(myCards.peekAt(k).getRank().value(1) == i){
-                                                        if(added1 < 3) {
-                                                            toReturn.add(myCards.peekAt(k));
-                                                            added1++;
-                                                        }
+                                        int added1 = 0;
+                                        int added2 = 0;
+                                        int[] added2vals = new int[5];
+                                        for(int q = 0; q < added2vals.length; q++){
+                                            added2vals[q] = 0;
+                                        }
+                                        for(int k = 0; k < myCards.size(); k++){    //for all cards
+                                            if(toReturn.size() < 7){                //if the phase isnt complete already
+                                                if(myCards.peekAt(k).getRank().value(1) == i){
+                                                    if(added1 < 3) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added1++;
                                                     }
-                                                    if(myCards.peekAt(k).getRank().value(1) == j){
-                                                        if(added2 < 4) {
-                                                            toReturn.add(myCards.peekAt(k));
-                                                            added2++;
-                                                        }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j){
+                                                    if(added2 < 4 && added2vals[1] != 1) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                        added2vals[1] = 1;                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+1){
+                                                    if(added2 < 4 && added2vals[2] != 1) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                        added2vals[2]= 1;                                                    }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+2){
+                                                    if(added2 < 4 && added2vals[3] != 1) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                        added2vals[3]= 1;
                                                     }
-                                                    if(myCards.peekAt(k).getRank().value(1) == j+1){
-                                                        if(added2 < 4) {
-                                                            toReturn.add(myCards.peekAt(k));
-                                                            added2++;
-                                                        }
-                                                    }
-                                                    if(myCards.peekAt(k).getRank().value(1) == j+2){
-                                                        if(added2 < 4) {
-                                                            toReturn.add(myCards.peekAt(k));
-                                                            added2++;
-                                                        }
-                                                    }
-                                                    if(myCards.peekAt(k).getRank().value(1) == j+3){
-                                                        if(added2 < 4) {
-                                                            toReturn.add(myCards.peekAt(k));
-                                                            added2++;
-                                                        }
+                                                }
+                                                if(myCards.peekAt(k).getRank().value(1) == j+3){
+                                                    if(added2 < 4 && added2vals[4] != 1) {
+                                                        toReturn.add(myCards.peekAt(k));
+                                                        added2++;
+                                                        added2vals[4]= 1;
                                                     }
                                                 }
                                             }
                                         }
-                                    } */
+                                    }
                                 }
                             }
                         }

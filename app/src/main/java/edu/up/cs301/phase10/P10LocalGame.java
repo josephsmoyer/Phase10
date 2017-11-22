@@ -64,11 +64,18 @@ public class P10LocalGame extends LocalGame {
 			}
 		}
 		if(completed.size() == 1){
-			return "The winner was Player " + Integer.toString(completed.get(0));
+			//win message with player name
+			return "The winner was Player " + playerNames[completed.get(0)]; // Integer.toString(completed.get(0));
+			//win message with player number
+			//return "The winner was Player " + Integer.toString(completed.get(0));
 		}
 		if(completed.size() > 1){
-			int winner = -1;
-			int winScore = -1;
+			int winner = -1;	//lower than any portential player number
+			int winScore = 1000000000; //higher than any potential score
+			for(int i = 0; i < completed.size(); i++){
+				String playerNum = Integer.toString(completed.get(i));
+				Log.i("Player completed phase", playerNum);
+			}
 			for(int i = 0; i < state.getNumberPlayers(); i++){
 				if(completed.contains(i)){
 					if(state.getScores()[i] < winScore) {
@@ -77,7 +84,11 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 			}
-			return "Player "+Integer.toString(completed.get(winner))+" won with "+Integer.toString(winScore)+" points!";
+			String winName = playerNames[completed.get(winner)];
+			//return message with input player name
+			return winName +" won with "+Integer.toString(winScore)+" points!";
+			//return message with player number
+			//return "Player "+Integer.toString(completed.get(winner))+" won with "+Integer.toString(winScore)+" points!";
 		}
 		//if no player has won, return null
 		return null;
@@ -427,6 +438,9 @@ public class P10LocalGame extends LocalGame {
 					if(myCards.peekAt(i).getRank().value(1) == valueSet){
 						if(comp0.size()< 3) {
 							comp0.add(myCards.peekAt(i));
+						}
+						else{
+							comp1.add(myCards.peekAt(i)); //add to run if already have set of 3
 						}
 					}
 					else{
