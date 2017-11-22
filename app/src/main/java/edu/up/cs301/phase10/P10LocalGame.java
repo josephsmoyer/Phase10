@@ -471,6 +471,6 @@ public class P10LocalGame extends LocalGame {
 		//Start with a draw action
 		state.setShouldDraw(true);
 		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
-		state.cleanDeck();
+		state.cleanDecks();
 	}
 }

@@ -451,13 +451,15 @@ public class P10State extends GameState
         discardPile.add(top);                               //return the top card to the discard pile
     }
 
-    public void cleanDeck(){
-		for(int i = 0; i < discardPile.size(); i++){
-			discardPile.removeTopCard();
-		}
-		for(int i = 0; i < drawPile.size(); i++){
-			drawPile.removeTopCard();
-		}
+    public void cleanDecks(){
+        playedPhase = new Deck[numPlayers][2];
+        for(int i = 0; i < numPlayers; i++){
+            for(int j = 0; j < 2; j ++) {
+                playedPhase[i][j] = new Deck();		//create a deck for each possible phase component (2 max per player)
+            }
+        }
+        drawPile = new Deck();
+        discardPile = new Deck();
 		drawPile.add108();
 		drawPile.shuffle();
 
