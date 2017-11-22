@@ -35,21 +35,21 @@ public class P10MainActivity extends GameMainActivity {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, backgroundGreen);
 			}});
-		playerTypes.add(new GamePlayerType("Human player (Yellow)") {
+		/*playerTypes.add(new GamePlayerType("Human player (Yellow)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, Color.YELLOW);
 			}
-		});
+		});*/
 		playerTypes.add(new GamePlayerType("Computer player (Dumb)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10DumbComputerPlayer(name);
 			}
 		});
-		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
+		/*playerTypes.add(new GamePlayerType("Computer player (Smart)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10ComputerPlayer(name);
 			}
-		});
+		});*/
 
 
 		// Create a game configuration class for Phase10
@@ -57,10 +57,10 @@ public class P10MainActivity extends GameMainActivity {
 
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
-		defaultConfig.addPlayer("Computer", 2);
-		defaultConfig.addPlayer("Computer", 2);
-		defaultConfig.addPlayer("Computer", 2);
-		defaultConfig.addPlayer("Computer", 2);
+		defaultConfig.addPlayer("Computer", 1);
+		defaultConfig.addPlayer("Computer", 1);
+		defaultConfig.addPlayer("Computer", 1);
+		defaultConfig.addPlayer("Computer", 1);
 		
 		// Set the initial information for the remote player
 		defaultConfig.setRemoteData("Guest", "", 1);
@@ -72,8 +72,9 @@ public class P10MainActivity extends GameMainActivity {
 	@Override
 	public LocalGame createLocalGame() {
 		int number = this.scrapeData().getNumPlayers();
+		//String[] names = this.scrapeData().getSelNames();
 		String numbers = Integer.toString(number);
-		Log.i("NUmberPlayers", numbers);
+		Log.i("NumberPlayers", numbers);
 		return new P10LocalGame(number, this);
 	}
 }

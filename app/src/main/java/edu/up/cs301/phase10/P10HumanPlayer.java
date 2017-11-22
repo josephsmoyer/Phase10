@@ -1,10 +1,14 @@
 package edu.up.cs301.phase10;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -72,6 +76,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	//Changing turn indicator locations
 	private RectF turnLocation = new RectF();
 	private RectF[] computerTurnLocation = new RectF[5];
+	Bitmap[] imgBitmap = new Bitmap[1];
+	int[] imgArr = new int[1];
 
 	//indicator for if score/phase info shoudl be shown
 	private boolean showScores;
@@ -99,6 +105,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			phaseLocs[i] = null;
 		}
 		showScores = false;
+		imgArr[0] = R.mipmap.cog;
+		//for (int i = 0; i < imgArr.length; i++) {
+		//imgBitmap[0] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[0]);
+		//}
 	}
 
 	/**
@@ -221,6 +231,19 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			return;
 		}
 		else {
+
+			/*if (imgBitmap[0] != null) {
+				//for bitmap drawings
+				Rect r = new Rect(0,0,imgBitmap[0].getWidth(),imgBitmap[0].getHeight());
+				//settings box (can be changed after)
+				RectF s = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
+				//placeholder paint
+				Paint p = new Paint();
+				p.setColor(Color.BLACK);
+				//draw the settings icon
+				g.drawBitmap(imgBitmap[0], r, s, p);
+			}*/
+
 			int height = surface.getHeight();
 			int width = surface.getWidth();
 			//if the players hand is not initialized
@@ -524,19 +547,21 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				RectF coverRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(coverRect, coverPaint);
 
-				float myX = width/8;
+				float myX = width/16;
 				float myY = height/14;
+				//float scoreX = width/8;
 				Paint textPaint = new Paint();
 				textPaint.setColor(Color.BLACK);
 				textPaint.setTextSize(80);
 				for(int i = 0; i < state.getNumberPlayers(); i++) {
-					g.drawText("Player "+Integer.toString(i)+" Score: "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+					g.drawText(""+allPlayerNames[i]+" Score: "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+					//scoreX = Math.max(scoreX,);
 					myY = myY + height/14;
 				}
-				myX = width*2/4;
+				myX = width/2;
 				myY = height/14;
 				for(int i = 0; i < state.getNumberPlayers(); i++) {
-					g.drawText("Player "+Integer.toString(i)+" Phase: "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
+					g.drawText(""+allPlayerNames[i]+" Phase: "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
 					myY = myY + height/14;
 				}
 			}

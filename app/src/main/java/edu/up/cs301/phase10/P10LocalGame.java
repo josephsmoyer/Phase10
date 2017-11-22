@@ -77,7 +77,7 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 			}
-			return "Player "+Integer.toString(winner)+" won with "+Integer.toString(winScore)+" points!";
+			return "Player "+Integer.toString(completed.get(winner))+" won with "+Integer.toString(winScore)+" points!";
 		}
 		//if no player has won, return null
 		return null;
