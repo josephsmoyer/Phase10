@@ -73,6 +73,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private RectF turnLocation = new RectF();
 	private RectF[] computerTurnLocation = new RectF[5];
 
+	//indicator for if score/phase info shoudl be shown
+	private boolean showScores;
+	private RectF scoreRect;
+
 	/**
 	 * constructor
 	 * 
@@ -94,6 +98,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		for(int i = 0; i < phaseLocs.length; i++){
 			phaseLocs[i] = null;
 		}
+		showScores = false;
 	}
 
 	/**
@@ -205,6 +210,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	public void tick(Canvas g) {
 		Paint myPaint = new Paint();
 		myPaint.setColor(Color.YELLOW);
+
+		Paint scorePaint = new Paint();
+		scorePaint.setColor(Color.CYAN);
+
+		Paint coverPaint = new Paint();
+		coverPaint.setColor(Color.GRAY);
 
 		if(state == null){
 			return;
@@ -495,7 +506,42 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					}
 				}
 			}
+
+			//Location for Score Info Toggler
+			float rectL = width - CARD_WIDTH_PERCENT*width/100;
+			float rectR = width;
+			float rectT = 0;
+			float rectB = height*CARD_HEIGHT_PERCENT/100/2;
+			scoreRect = new RectF(rectL, rectT, rectR, rectB);
+			g.drawRect(scoreRect, scorePaint);
+
+			//draw scores on top of everything else if user wants to see them
+			if(showScores){
+				rectL = width;
+				rectR = 0;
+				rectT = 0;
+				rectB = height;
+				RectF coverRect = new RectF(rectL, rectT, rectR, rectB);
+				g.drawRect(coverRect, coverPaint);
+
+				float myX = width/8;
+				float myY = height/14;
+				Paint textPaint = new Paint();
+				textPaint.setColor(Color.BLACK);
+				textPaint.setTextSize(80);
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					g.drawText("Player "+Integer.toString(i)+" Score: "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+					myY = myY + height/14;
+				}
+				myX = width*2/4;
+				myY = height/14;
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					g.drawText("Player "+Integer.toString(i)+" Phase: "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
+					myY = myY + height/14;
+				}
+			}
 		}
+
 	}
 	
 	/**
@@ -611,11 +657,22 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		
 		// ignore everything except down-touch events
 		if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+		//if showing scores, any touch will hide scores
+		if (showScores){
+			showScores = false;
+			return;
+		}
 
 		// get the location of the touch on the surface
 		int x = (int) event.getX();
 		int y = (int) event.getY();
-		
+		//Log.i("Xloc, yLoc", Integer.toString(x)+", "+Integer.toString(y));
+
+		//determine if player wants to see score info
+		if(scoreRect.contains(x, y)){
+			Log.i("Score","Logged");
+			showScores = true;
+		}
 		// determine whether the touch occurred on any of the players cards
 		int touchedCard = -1;
 		for(int i = 0; i < state.getHand(playerNum).size(); i++){
