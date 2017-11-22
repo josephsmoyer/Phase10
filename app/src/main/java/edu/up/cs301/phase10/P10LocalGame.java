@@ -118,6 +118,14 @@ public class P10LocalGame extends LocalGame {
 		}
 		P10MoveAction P10ma = (P10MoveAction) action;
 
+		for(int i = 0; i < state.getNumberPlayers(); i++){
+			for(int j = 0; j < 2; j++){
+				if(state.getPlayedPhase()[i][j].size() != 0){
+					state.getPlayedPhase()[i][j].sortNumerical();
+				}
+			}
+		}
+
 		// get the index of the player making the move; return false
 		int thisPlayerIdx = getPlayerIdx(P10ma.getPlayer());
 
@@ -143,18 +151,22 @@ public class P10LocalGame extends LocalGame {
 				Deck phaseComp1 = getPhaseComp(1, thisPlayerIdx, myAction.getPhase());
 				for (int i = 0; i < phaseComp0.size(); i++) {
 					Card c = phaseComp0.peekAt(i);
+					boolean foundC = false;
 					for(int j = 0; j < state.getHand(thisPlayerIdx).size(); j++){
-						if(c.equals(state.getHand(thisPlayerIdx).peekAt(j))){
+						if(c.equals(state.getHand(thisPlayerIdx).peekAt(j)) && !foundC){
 							state.getHand(thisPlayerIdx).removeCard(j);
+							foundC = true;
 						}
 					}
 					state.getPlayedPhase()[thisPlayerIdx][0].add(c);
 				}
 				for (int i = 0; i < phaseComp1.size(); i++) {
 					Card c = phaseComp1.peekAt(i);
+					boolean foundC = false;
 					for(int j = 0; j < state.getHand(thisPlayerIdx).size(); j++){
-						if(c.equals(state.getHand(thisPlayerIdx).peekAt(j))){
+						if(c.equals(state.getHand(thisPlayerIdx).peekAt(j)) && !foundC){
 							state.getHand(thisPlayerIdx).removeCard(j);
+							foundC = true;
 						}
 					}
 					state.getPlayedPhase()[thisPlayerIdx][1].add(c);
@@ -405,8 +417,10 @@ public class P10LocalGame extends LocalGame {
 		return toReturn;
 	}
 
-	private boolean isValidHit(int playerID, Card myCard, int playerToHit, int phaseToHit){
+	private boolean isValidHit(int playerID, Card myC, int playerToHit, int phaseToHit){
 		//return true; //always assume valid hit for now
+
+		Card myCard = new Card(myC.getRank(), myC.getSuit());
 
 		if(state.getPlayedPhase()[playerID][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
 			return false;
@@ -447,11 +461,10 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 				else if(run){
-					int size = myDeck.size();
-					if(myCard.getRank().value(1) == (myDeck.peekAt(0).getRank().value(1))-1){
+					if(myCard.getRank().value(1) == (myDeck.maxMin(false)-1)){
 						return true;
 					}
-					else if(myCard.getRank().value(1) == (myDeck.peekAt(size).getRank().value(1))+1){
+					if(myCard.getRank().value(1) == (myDeck.maxMin(true))+1){
 						return true;
 					}
 					else{
@@ -486,26 +499,27 @@ public class P10LocalGame extends LocalGame {
 		for(int i = 0; i < state.getNumberPlayers(); i++){
 			Card c = null;
 			//Empty the hands for each player, and score
-			for(int j = 0; j < state.getHand(i).size(); j++){
-				c = state.getHand(i).peekAtTopCard();
-				state.discardFromHand(i, c); 		//actually remove cards from players hands
-				if(c.getRank().value(1) < 10){
-					int temp = state.getScores()[i] + 5;
-					state.setScore(i, temp); //low rank cards
-				}
-				else if(c.getRank().value(1) > 10 && c.getRank().value(1) < 13){
+			do{
+				if(state.getHand(i).size() != 0) {
+					c = state.getHand(i).removeTopCard();
+					if (c.getRank().value(1) < 10) {
+						int temp = state.getScores()[i] + 5;
+						state.setScore(i, temp); //low rank cards
+					}
+					else if (c.getRank().value(1) == 13) {
+						int temp = state.getScores()[i] + 15;
+						state.setScore(i, temp);    //skip cards
+					}
+					else if (c.getRank().value(1) == 14) {
+						int temp = state.getScores()[i] + 25;
+						state.setScore(i, temp);    //wild cards
+					}
+					else {
 					int temp = state.getScores()[i] + 10;
 					state.setScore(i, temp); //high rank cards
+					}
 				}
-				else if(c.getRank().value(1) == 13){
-					int temp = state.getScores()[i] + 15;
-					state.setScore(i, temp);	//skip cards
-				}
-				else if(c.getRank().value(1) == 14){
-					int temp = state.getScores()[i] + 25;
-					state.setScore(i, temp);	//wild cards
-				}
-			}
+			} while (state.getHand(i).size() != 0);
 			//Update Phase information
 			if(state.getPlayedPhase()[i][0].size() != 0){
 				int playerPhase = state.getPhases()[i];

@@ -226,11 +226,13 @@ public class P10ComputerPlayer extends GameComputerPlayer
         P10HitCardAction myAction = null;
         for(int u = 0; u < savedState.getHand(playerNum).size(); u++) { //for each card in the hand
             Card c = savedState.getHand(playerNum).peekAt(u);
-            for (int i = 0; i < savedState.getNumberPlayers(); i++) {   //for every player
-                for (int j = 0; j < 2; j++) {                           //for each phase component
-                    if(savedState.getPlayedPhase()[i][j].size() != 0) {
-                        if (isValidHit(c, i, j)) {                            //if its valid to hit that card at that location
-                            myAction = new P10HitCardAction(this, c, i, j);
+            if(c != null) {
+                for (int i = 0; i < savedState.getNumberPlayers(); i++) {   //for every player
+                    for (int j = 0; j < 2; j++) {                           //for each phase component
+                        if (savedState.getPlayedPhase()[i][j].size() != 0) {
+                            if (isValidHit(c, i, j)) {                            //if its valid to hit that card at that location
+                                myAction = new P10HitCardAction(this, c, i, j);
+                            }
                         }
                     }
                 }
@@ -239,8 +241,13 @@ public class P10ComputerPlayer extends GameComputerPlayer
         return myAction;
     }
 
-    private boolean isValidHit(Card myCard, int playerToHit, int phaseToHit){
+    private boolean isValidHit(Card myC, int playerToHit, int phaseToHit){
         //return true; //always assume valid hit for now
+        if(myC == null){
+            return false;
+        }
+
+        Card myCard = new Card(myC.getRank(), myC.getSuit());
 
         if(savedState.getPlayedPhase()[playerNum][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
             return false;
@@ -278,11 +285,11 @@ public class P10ComputerPlayer extends GameComputerPlayer
                     }
                 }
                 else if(run){
-                    int size = myDeck.size();
-                    if(myCard.getRank().value(1) == (myDeck.peekAt(0).getRank().value(1))-1){
+                    Log.i("Fucking Null Pointer", myCard.toString());
+                    if(myCard.getRank().value(1) == (myDeck.maxMin(false)-1)){
                         return true;
                     }
-                    else if(myCard.getRank().value(1) == (myDeck.peekAt(size).getRank().value(1))+1){
+                    if(myCard.getRank().value(1) == (myDeck.maxMin(true))+1){
                         return true;
                     }
                     else{

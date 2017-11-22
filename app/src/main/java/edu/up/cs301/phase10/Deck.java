@@ -290,4 +290,23 @@ public class Deck implements Serializable {
 			}
 		}
 	}
+
+	public int maxMin(boolean big){
+		int max = -1; //smaller than any card value
+		int min = 50; //bigger than any card value
+		for(int i = 0; i < cards.size(); i++){
+			if(cards.get(i).getRank().value(1) > max){
+				max = cards.get(i).getRank().value(1);
+			}
+			if(cards.get(i).getRank().value(1) < min){
+				min = cards.get(i).getRank().value(1);
+			}
+		}
+		if(big){
+			return max;
+		}
+		else{
+			return min;
+		}
+	}
 }
