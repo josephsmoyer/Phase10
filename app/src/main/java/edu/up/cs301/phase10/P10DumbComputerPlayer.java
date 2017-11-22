@@ -68,6 +68,8 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
 
                 if(myAction == null){   //if didnt make phase or hit
                     Log.i("Discarding - Player", Integer.toString(this.playerNum));
+                    //sleeps for half a second before discarding
+                    sleep(500);
                     Card c = toDiscard(savedState.getHand(playerNum), savedState.getPhases()[playerNum]);
                     myAction = new P10DiscardCardAction(this, c);
                 }
@@ -111,6 +113,10 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 break;
             case 2:
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random = (int)Math.random()*myCards.size();     //pick a random card
+                    toDiscard = myCards.peekAt(random);
+                }
                 break;
             case 3:
                 break;

@@ -58,7 +58,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	// the background color
 	private int backgroundColor;
 	private RectF[] rects = new RectF[11];
-	private int[] selectedCards = new int[11];
+	private int[] selectedCards = new int[12]; //change to 11 but array out of bounds
 
 	//Nonchanging deck locations
 	private RectF discardLocation;

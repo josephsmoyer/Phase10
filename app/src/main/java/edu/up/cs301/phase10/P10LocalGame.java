@@ -1,6 +1,8 @@
 package edu.up.cs301.phase10;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import edu.up.cs301.card.Card;
 import edu.up.cs301.game.GamePlayer;
@@ -20,6 +22,8 @@ public class P10LocalGame extends LocalGame {
 	// the game's state
 	P10State state;
 
+	Context myContext;
+
 	/**
 	 * Constructor for the P10LocalGame.
 	 */
@@ -29,6 +33,17 @@ public class P10LocalGame extends LocalGame {
 		state = new P10State(number);
 		String myStateStr = Integer.toString(state.getHand(1).size());
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
+	}
+	/**
+	 * Constructor for the P10LocalGame.
+	 */
+	public P10LocalGame(int number, Context context) {
+		Log.i("P10LocalGame", "creating game");
+		// create the state for the beginning of the game
+		state = new P10State(number);
+		String myStateStr = Integer.toString(state.getHand(1).size());
+		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
+		myContext = context;
 	}
 
 
@@ -40,8 +55,8 @@ public class P10LocalGame extends LocalGame {
 	@Override
 	protected String checkIfGameOver() {
 		//basic win check - sends message when someone has made the final phase
-		for (int i : state.getPhases()) {
-			if (state.getPhases()[i] == 11) {
+		for (int i = 0; i < state.getNumberPlayers(); i++) {
+			if (state.getPhases()[i] == 3) {
 				return this.playerNames[i] + " is the winner";
 			}
 		}
@@ -210,6 +225,7 @@ public class P10LocalGame extends LocalGame {
 
 		if(checkIfRoundOver()){
 			roundAdjustment();
+			Toast.makeText(myContext, "Round Ended - Player ran out of cards", Toast.LENGTH_LONG).show();
 		}
 		// return true, because the move was successful if we get here
 		return true;
@@ -225,65 +241,83 @@ public class P10LocalGame extends LocalGame {
 		int[] phases = state.getPhases();
 		int phaseNum = phases[playerNumber];
 
-		if(phaseNum == 1){
-			if(myCards.size() != 6){ //both components of phase 1 are 3 cards
-				Log.i("Amount of Cards given", Integer.toString(myCards.size()));
-				return false;
-			}
-			int variety[] = new int[14]; //indicator of if a card is used in the phase
-			for(int i = 0; i < variety.length; i++){
-				variety[i] = 0;			//initialized to zero
-			}
-			for(int i = 0; i < myCards.size(); i++){
-				int val = myCards.peekAt(i).getRank().value(1);
-				Log.i("Incrementing variety at", Integer.toString(val));
-				variety[val]++; //increment the variety at a specific location
-			}
-			int count = 0;
-			boolean shouldPass = true;
-			for(int i = 0; i < variety.length; i++){
-				if(variety[i] != 0){
-					count++;
+		int[] countCards = cardsCount(myCards);
+
+		switch(phaseNum) {
+			case 1:
+				if (myCards.size() != 6) { //both components of phase 1 are 3 cards
+					Log.i("Amount of Cards given", Integer.toString(myCards.size()));
+					return false;
 				}
-				if(variety[i] != 3 && variety[i] != 0){	//if there are not 3 of each variety
-					shouldPass = false;
+				int variety[] = new int[14]; //indicator of if a card is used in the phase
+				for (int i = 0; i < variety.length; i++) {
+					variety[i] = 0;            //initialized to zero
 				}
-			}
-			Log.i("Count of variety", Integer.toString(count));
-			if(count == 1){ //all 6 of the same card
-				return true;
-			}
-			else if(count != 2){
-				return false;
-			}
-			return shouldPass;
-		}
-		else if (phaseNum == 2){
-
-		}
-		else if (phaseNum == 3){
-
-		}
-		else if (phaseNum == 4){
-
-		}
-		else if (phaseNum == 5){
-
-		}
-		else if (phaseNum == 6){
-
-		}
-		else if (phaseNum == 7){
-
-		}
-		else if (phaseNum == 8){
-
-		}
-		else if (phaseNum == 9){
-
-		}
-		else if (phaseNum == 10){
-
+				for (int i = 0; i < myCards.size(); i++) {
+					int val = myCards.peekAt(i).getRank().value(1);
+					Log.i("Incrementing variety at", Integer.toString(val));
+					variety[val]++; //increment the variety at a specific location
+				}
+				int count = 0;
+				boolean shouldPass = true;
+				for (int i = 0; i < variety.length; i++) {
+					if (variety[i] != 0) {
+						count++;
+					}
+					if (variety[i] != 3 && variety[i] != 0) {    //if there are not 3 of each variety
+						shouldPass = false;
+					}
+				}
+				Log.i("Count of variety", Integer.toString(count));
+				if (count == 1) { //all 6 of the same card
+					return true;
+				} else if (count != 2) {
+					return false;
+				}
+				return shouldPass;
+			case 2:
+				boolean comp1 = false;
+				boolean comp2 = false;
+				if(myCards.size() != 7){
+					return false;
+				}
+				int groups = 0;
+				for(int i = 0; i < countCards.length; i++){
+					if(countCards[i] >= 3){	//need at least one set of three cards
+						comp1 = true;
+					}
+					if(countCards[i] > 1){
+						groups++;
+					}
+				}
+				if(groups != 1){
+					return false;
+				}
+				for(int i = 0; i < countCards.length-3; i++){
+					if(countCards[i] >= 1 && countCards[i+1] >= 1 && countCards[i+2] >= 1 && countCards[i+3] >= 1){	//need at least one run of 4 cards
+						comp2 = true;
+					}
+				}
+				if(comp1 && comp2){
+					return true;
+				}
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			case 6:
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
+			case 10:
+				break;
 		}
 		return false;
 	}
@@ -306,6 +340,8 @@ public class P10LocalGame extends LocalGame {
 		Deck comp0 = new Deck();
 		Deck comp1 = new Deck();
 
+		int[] countCards = cardsCount(myCards);
+
 		switch(myPhaseNumber){
 			case 1:
 				Card c = myCards.peekAt(0);
@@ -322,9 +358,24 @@ public class P10LocalGame extends LocalGame {
 					comp0.moveTopCardTo(comp1);
 					comp0.moveTopCardTo(comp1);
 				}
-
 				break;
 			case 2:
+				int valueSet = -1;
+				for(int i = 0; i < countCards.length; i++){
+					if(countCards[i] >= 3){
+						valueSet = i;
+					}
+				}
+				for(int i = 0; i < myCards.size(); i++){
+					if(myCards.peekAt(i).getRank().value(1) == valueSet){
+						if(comp0.size()< 3) {
+							comp0.add(myCards.peekAt(i));
+						}
+					}
+					else{
+						comp1.add(myCards.peekAt(i));
+					}
+				}
 				break;
 			case 3:
 				break;
@@ -358,6 +409,9 @@ public class P10LocalGame extends LocalGame {
 		//return true; //always assume valid hit for now
 
 		if(state.getPlayedPhase()[playerID][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
+			return false;
+		}
+		if(myCard == null){
 			return false;
 		}
 
@@ -433,7 +487,8 @@ public class P10LocalGame extends LocalGame {
 			Card c = null;
 			//Empty the hands for each player, and score
 			for(int j = 0; j < state.getHand(i).size(); j++){
-				c = state.getHand(i).removeTopCard();				//actually remove cards from players hands
+				c = state.getHand(i).peekAtTopCard();
+				state.discardFromHand(i, c); 		//actually remove cards from players hands
 				if(c.getRank().value(1) < 10){
 					int temp = state.getScores()[i] + 5;
 					state.setScore(i, temp); //low rank cards
@@ -472,5 +527,21 @@ public class P10LocalGame extends LocalGame {
 		state.setShouldDraw(true);
 		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
 		state.cleanDecks();
+	}
+
+	/*
+	 * Returns the count of how many of each rank of cards there are
+	 */
+	protected int[] cardsCount(Deck myCards){
+		int variety[] = new int[14]; //indicator of if a card is used in the phase
+		for(int i = 0; i < variety.length; i++){
+			variety[i] = 0;			//initialized to zero
+		}
+		for(int i = 0; i < myCards.size(); i++){
+			int val = myCards.peekAt(i).getRank().value(1);
+			Log.i("Incrementing variety at", Integer.toString(val));
+			variety[val]++; //increment the variety at a specific location
+		}
+		return variety;
 	}
 }

@@ -74,6 +74,6 @@ public class P10MainActivity extends GameMainActivity {
 		int number = this.scrapeData().getNumPlayers();
 		String numbers = Integer.toString(number);
 		Log.i("NUmberPlayers", numbers);
-		return new P10LocalGame(number);
+		return new P10LocalGame(number, this);
 	}
 }
