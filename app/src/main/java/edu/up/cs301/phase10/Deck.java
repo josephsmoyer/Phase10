@@ -309,4 +309,12 @@ public class Deck implements Serializable {
 			return min;
 		}
 	}
+
+	/* deckSize
+	 * returns deck length
+	 * Kaitlin Larson
+	 */
+	public int deckSize() {
+		return cards.size();
+	}
 }

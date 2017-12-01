@@ -102,9 +102,18 @@ public class P10SmartComputerPlayer extends P10ComputerPlayer {
 
                 // if they haven't played a phase
                 else {
-                    switch (currentPhase) {
-                        // on Phase 1 (two runs of three), check cards for matches of two
-                        case 1:
+                    // for each other player's phase
+                    for (int i=0;i<savedState.getPlayedPhase().length;i++) {
+                        // for each of their two phases
+                        for (int j=0;j<2;j++) {
+                            // if phase exists:
+                            if (savedState.getPlayedPhase()[i][j] != null) {
+                                // check every card in deck:
+                                for (int k = 1; k<savedState.getPlayedPhase()[i][j].deckSize(); k++) {
+                                    // first by rank:
+                                }
+                            }
+                        }
                     }
                 }
 
