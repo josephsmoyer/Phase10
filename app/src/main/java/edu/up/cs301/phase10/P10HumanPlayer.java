@@ -409,13 +409,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				g.drawRect(myLoc, myPaint);
 				computerPhaseLocs[players-2][1] = myLoc;
 
-				//turn indicator
 				rectTop1 = rectTop + (7.5f*height/100f);										//Lots of really bad use of variables
 				rectBottom1 = rectTop1 + (2.5f*height/100f);									//Will update and comment later
 				rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
 				rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
 				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);		//Rush for alpha code
 				computerTurnLocation[players-2] = myLoc;
+
 			}
 
 			//set up discard/draw pile locations

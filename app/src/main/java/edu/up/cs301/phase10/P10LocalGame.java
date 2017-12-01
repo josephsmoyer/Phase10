@@ -70,7 +70,7 @@ public class P10LocalGame extends LocalGame {
 			//return "The winner was Player " + Integer.toString(completed.get(0));
 		}
 		if(completed.size() > 1){
-			int winner = -1;	//lower than any portential player number
+			int winner = -1;	//lower than any potential player number
 			int winScore = 1000000000; //higher than any potential score
 			for(int i = 0; i < completed.size(); i++){
 				String playerNum = Integer.toString(completed.get(i));
@@ -84,7 +84,8 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 			}
-			String winName = playerNames[completed.get(winner)];
+			//Log.i("Bad input", Integer.toString(completed.get(winner)));
+			String winName = playerNames[winner];
 			//return message with input player name
 			return winName +" won with "+Integer.toString(winScore)+" points!";
 			//return message with player number

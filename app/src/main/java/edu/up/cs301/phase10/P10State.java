@@ -83,7 +83,7 @@ public class P10State extends GameState
 
 		//Initialize the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 1;							//start all players on phase 1
+			phases[i] = 2;							//start all players on phase 1
 			scores[i] = 0;							//start all players with a score of zero
 			toSkip[i] = false;						//start no players with a skip pending
 			alreadySkip[i] = false;					//start no players marked as already been skipped
