@@ -409,6 +409,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				g.drawRect(myLoc, myPaint);
 				computerPhaseLocs[players-2][1] = myLoc;
 
+
+				//turn indicator
 				rectTop1 = rectTop + (7.5f*height/100f);										//Lots of really bad use of variables
 				rectBottom1 = rectTop1 + (2.5f*height/100f);									//Will update and comment later
 				rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
@@ -513,7 +515,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 								g.drawRect(computerTurnLocation[j-offset], turnPaint);
 								g.restore();
 							}
-							else if (j-offset == 4) {
+							else if (j-offset == players-2) {
 								g.save();
 								g.rotate(-90, width, (35)*height/100);
 								g.drawRect(computerTurnLocation[j-offset], turnPaint);
