@@ -227,6 +227,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		Paint coverPaint = new Paint();
 		coverPaint.setColor(Color.GRAY);
 
+		Paint phaseTextPaint = new Paint();
+		phaseTextPaint.setColor(Color.BLACK);
+		phaseTextPaint.setTextSize(40);
+
 		if(state == null){
 			return;
 		}
@@ -261,6 +265,48 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			for(int i = 0; i < 2; i++) { //expand to all phase areas later
 				phaseLocs[i] = getPhaseLoc(i);
 				g.drawRect(phaseLocs[i], myPaint);
+
+				// draw phase number and instructions for phase
+				int p = Integer.parseInt( Integer.toString(state.getPhases()[playerNum] ) );
+                if (i==0) { g.drawText("Phase "+p,phaseLocs[i].left,phaseLocs[i].top,phaseTextPaint); }
+				switch( p ) {
+					case 1:
+					    g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+					    break;
+                    case 2:
+                        if (i==0) { g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Run of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 3:
+                        if (i==0) { g.drawText("Set of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Run of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 4:
+                        if (i==0) { g.drawText("Run of Seven",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 5:
+                        if (i==0) { g.drawText("Run of Eight",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 6:
+                        if (i==0) { g.drawText("Run of Nine",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 7:
+                        g.drawText("Set of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+                        break;
+                    case 8:
+                        if (i==0) { g.drawText("Seven of One Color",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 9:
+                        if (i==0) { g.drawText("Set of Five",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Set of Two",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 10:
+                        if (i==0) { g.drawText("Set of Five",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+					default:
+                        g.drawText("ERROR",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+				}
 			}
 
 			//Create AI hands
