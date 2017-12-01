@@ -244,10 +244,14 @@ public class P10LocalGame extends LocalGame {
 			P10HitCardAction myAction = (P10HitCardAction) P10ma;
 			if(isValidHit(thisPlayerIdx, myAction.getHitCard(), myAction.getPlayerToHit(), myAction.getPhaseToHit())) {
 				Card c = myAction.getHitCard();
+				int hitCount = 0;
 				for (int i = 0; i < state.getHand(thisPlayerIdx).size(); i++) {
 					for (int j = 0; j < state.getHand(thisPlayerIdx).size(); j++) {
 						if (c.equals(state.getHand(thisPlayerIdx).peekAt(j))) {
-							state.getHand(thisPlayerIdx).removeCard(j);
+							if(hitCount == 0) {
+								state.getHand(thisPlayerIdx).removeCard(j);
+								hitCount++;
+							}
 						}
 					}
 				}
