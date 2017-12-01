@@ -2,11 +2,7 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import edu.up.cs301.card.Card;
-import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
@@ -97,10 +93,12 @@ public class P10State extends GameState
 		drawPile.shuffle(); 		//shuffle the deck
 
 		//Deal the cards to the players hands
-		for(int i = 0; i < 10; i++){						//10 cards each
+		for(int i = 0; i < 10; i++){		//10 cards each
+
 			int playerIDX = toPlay;
 			for (int j = 0; j < numPlayers; j++){
-				drawPile.moveTopCardTo(hands[playerIDX]);	//deal first card to player starting the game
+				drawPile.moveTopCardTo(hands[playerIDX]);//deal first card to player starting the game
+
 				playerIDX++;								//increment the player to give cards to
 				if(playerIDX >= numPlayers){
 					playerIDX = 0;							//if reached last player, cycle back to player 0

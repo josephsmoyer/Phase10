@@ -222,6 +222,7 @@ public class P10LocalGame extends LocalGame {
 		int phaseNum = phases[playerNumber];
 
 		return true;
+
 		/*
 		if(phaseNum == 1){
 			if(myCards.size() != 3){ //both components of phase 1 are 3 cards
@@ -232,6 +233,19 @@ public class P10LocalGame extends LocalGame {
 			}
 		}
 		else if (phaseNum == 2){
+			if(myCards.size() != 3){
+				return false;
+			}
+			else{
+			for(int i=4; i>0; i--)
+			{
+				for(int j = 4; j>0 ; j--)
+				{
+
+				}
+			}
+
+			}
 
 		}
 		else if (phaseNum == 3){

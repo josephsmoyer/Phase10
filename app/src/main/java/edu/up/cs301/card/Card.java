@@ -1,8 +1,5 @@
 package edu.up.cs301.card;
 
-import java.io.Serializable;
-
-import edu.up.cs301.game.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
+import java.io.Serializable;
+
+import edu.up.cs301.game.R;
 
 /**
  * A playing card in the standard Phase10 deck. The images, which have been
@@ -25,7 +26,7 @@ import android.graphics.RectF;
  * @author Trenton Langer
  * @version November 2017
  */
-public class Card implements Serializable {
+public class Card implements  Serializable {
 
 	// to satisfy the Serializable interface
 	private static final long serialVersionUID = 893542931190030342L;
@@ -42,6 +43,7 @@ public class Card implements Serializable {
 	 */
 	public Card(Rank r, Color s) {
 		rank = r;
+
 		suit = s;
 	}
 
@@ -235,5 +237,6 @@ public class Card implements Serializable {
     		}
     	}
     }
+
 
 }

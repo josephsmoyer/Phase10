@@ -20,7 +20,8 @@ public class Deck implements Serializable {
 	// the cards in our deck; the last card in the ArrayList is the top card
 	// in the deck
 	private ArrayList<Card> cards;
-	
+
+
 	/**
 	 * constructor, creating an empty deck
 	 */
@@ -267,4 +268,11 @@ public class Deck implements Serializable {
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;
 	}
+	//public Deck sortHand(){
+
+	//	synchronized(this.cards){
+
+	//	}
+	///	return null;
+	//}
 }
