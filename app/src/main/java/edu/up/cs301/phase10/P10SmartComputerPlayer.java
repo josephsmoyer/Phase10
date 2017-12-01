@@ -255,5 +255,7 @@ public class P10SmartComputerPlayer extends P10ComputerPlayer {
 
 
         return toDiscard;
+
+
     }
 }
