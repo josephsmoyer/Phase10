@@ -35,7 +35,7 @@ import edu.up.cs301.game.infoMsg.GameInfo;
  * - Phase 10 (SET OF FIVE, SET OF THREE):
  *
  * if phase has been played OR no matches in hand,
- * check if other players have made phases.
+ * check all ready made phases.
  * if discard matches set, run, or color (PHASE 8 only),
  * draw from discard (return FALSE, break).
  *
@@ -73,6 +73,12 @@ public class P10SmartComputerPlayer extends P10ComputerPlayer {
         if (savedState.getToPlay() == this.playerNum) {
             String turnIs = Integer.toString(savedState.getToPlay());
 
+            // get phase.
+            int myPhase = savedState.getPhases()[playerNum];
+
+            // get cards
+            Deck myHand = savedState.getHand(playerNum);
+
             // delay for 0.5 seconds
             sleep(500);
 
@@ -82,42 +88,54 @@ public class P10SmartComputerPlayer extends P10ComputerPlayer {
             //if the next valid action is a draw
             if(savedState.getShouldDraw()){
 
-                // get phase.
-                int currentPhase = savedState.getPhases()[playerNum];
+                Log.i("Smart Player","drawing");
 
-                // find if their own phase is completed
-                boolean phasePlayed;
-                if ( savedState.getPlayedPhase()[playerNum] == null ) {
-                    phasePlayed = false;
-                } else {
-                    phasePlayed = true;
-                }
+                // look at top discard card
+                Card discardCard = savedState.peekDiscardCard();
 
-                // if they have played a phase
-                if ( phasePlayed ) {
-                    switch (currentPhase) {
-                        case 1:
-                    }
-                }
+                // unless the following checks return anything, the ai will pull from draw pile by default
+                boolean chooseDrawPile = true;
 
-                // if they haven't played a phase
-                else {
-                    // for each other player's phase
-                    for (int i=0;i<savedState.getPlayedPhase().length;i++) {
-                        // for each of their two phases
-                        for (int j=0;j<2;j++) {
-                            // if phase exists:
-                            if (savedState.getPlayedPhase()[i][j] != null) {
-                                // check every card in deck:
-                                for (int k = 1; k<savedState.getPlayedPhase()[i][j].deckSize(); k++) {
-                                    // first by rank:
+                Log.i("Smart Player",""+savedState.getPlayedPhase()[playerNum][0]);
+                // if they have not played a phase
+                if ( savedState.getPlayedPhase()[playerNum][0].peekAt(0) == null ) {
+
+                    Log.i("Smart Player","no phase played");
+
+                    // if phase is already in hand, forget about this
+                    if ( validPhase(myHand, myPhase) != null ) {
+
+                        Log.i("Smart Player","phase in hand");
+
+                        // check cards with phase
+                        switch (myPhase) {
+                            case 1:
+                                // check hand for sets of two
+                                for ( int i = 0; i < myHand.deckSize(); i++ ) {
+                                    // compare each card in hand --
+                                    Card check = myHand.peekAt(i);
+                                    for ( int j = 0; j < myHand.deckSize(); j++ ) {
+                                        // -- to each other card in hand, except itself
+                                        if ( j == i ) {
+                                            break;
+                                        }
+                                        if ( check.getRank() == myHand.peekAt(j).getRank() ) {
+                                            // if they have the same rank, check discard
+                                            if ( check.getRank() == discardCard.getRank() ) {
+                                                chooseDrawPile = false;
+                                                Log.i("Smart Player","discard matches hand");
+                                            }
+                                        }
+                                    }
                                 }
-                            }
+                                break;
                         }
                     }
                 }
 
-                myAction = new P10DrawCardAction(this, true);  //dumb player always draws from draw pile
+                myAction = new P10DrawCardAction(this, chooseDrawPile);  //dumb player always draws from draw pile
+
+                Log.i("Smart Player","chooseDrawPile = "+chooseDrawPile);
             }
             else { //if its not time to draw
                 //if neither phase component has been made

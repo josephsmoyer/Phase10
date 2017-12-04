@@ -45,11 +45,9 @@ public class P10MainActivity extends GameMainActivity {
 				return new P10DumbComputerPlayer(name);
 			}
 		});
-		/*playerTypes.add(new GamePlayerType("Computer player (Smart)") {
-			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name);
-			}
-		});*/
+		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
+			public GamePlayer createPlayer(String name) { return new P10SmartComputerPlayer(name); }
+		});
 
 
 		// Create a game configuration class for Phase10
