@@ -1,10 +1,14 @@
 package edu.up.cs301.phase10;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +24,8 @@ import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
 import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
 import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
+
+import static edu.up.cs301.game.R.color.red;
 
 /**
  * A GUI that allows a human to play Slapjack. Moves are made by clicking
@@ -40,7 +46,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private final static float RIGHT_BORDER_PERCENT = 2; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
     private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
-    private final static float VER_OVERLAP = 4; //Vertical overlap to still see number
+    private final static float VER_OVERLAP = 2; //Vertical overlap to still see number
+	private final static float SMALL_CARD_HEIGHT_PERCENT = 5;
+	private final static float SMALL_CARD_WIDTH_PERCENT = 2.1246f;
+	private final static float SMALL_HOR_OVERLAP = 2; //horizontal overlap to still see number
+	private final static float SMALL_VER_OVERLAP = 2; //Vertical overlap to still see number
 	
 	// our game state
 	protected P10State state;
@@ -54,13 +64,24 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	// the background color
 	private int backgroundColor;
 	private RectF[] rects = new RectF[11];
-	private int[] selectedCards = new int[11];
+	private int[] selectedCards = new int[12]; //change to 11 but array out of bounds
 
 	//Nonchanging deck locations
 	private RectF discardLocation;
 	private RectF drawLocation;
 	//Nonchanging phase lay down locations
-	private RectF[] phaseLocs = new RectF[12]; //2 for each potential player
+	private RectF[] phaseLocs = new RectF[2]; //2 for the human player
+	//Changing Phase lay down locations
+	private RectF[][] computerPhaseLocs = new RectF[5][2];
+	//Changing turn indicator locations
+	private RectF turnLocation = new RectF();
+	private RectF[] computerTurnLocation = new RectF[5];
+	Bitmap[] imgBitmap = new Bitmap[1];
+	int[] imgArr = new int[1];
+
+	//indicator for if score/phase info shoudl be shown
+	private boolean showScores;
+	private RectF scoreRect;
 
 	/**
 	 * constructor
@@ -83,6 +104,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		for(int i = 0; i < phaseLocs.length; i++){
 			phaseLocs[i] = null;
 		}
+		showScores = false;
+		imgArr[0] = R.mipmap.cog;
+		//for (int i = 0; i < imgArr.length; i++) {
+		//imgBitmap[0] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[0]);
+		//}
 	}
 
 	/**
@@ -192,10 +218,36 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the canvas on which we are to draw
 	 */
 	public void tick(Canvas g) {
+		Paint myPaint = new Paint();
+		myPaint.setColor(Color.YELLOW);
+
+		Paint scorePaint = new Paint();
+		scorePaint.setColor(Color.CYAN);
+
+		Paint coverPaint = new Paint();
+		coverPaint.setColor(Color.GRAY);
+
+		Paint phaseTextPaint = new Paint();
+		phaseTextPaint.setColor(Color.BLACK);
+		phaseTextPaint.setTextSize(40);
+
 		if(state == null){
 			return;
 		}
 		else {
+
+			/*if (imgBitmap[0] != null) {
+				//for bitmap drawings
+				Rect r = new Rect(0,0,imgBitmap[0].getWidth(),imgBitmap[0].getHeight());
+				//settings box (can be changed after)
+				RectF s = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
+				//placeholder paint
+				Paint p = new Paint();
+				p.setColor(Color.BLACK);
+				//draw the settings icon
+				g.drawBitmap(imgBitmap[0], r, s, p);
+			}*/
+
 			int height = surface.getHeight();
 			int width = surface.getWidth();
 			//if the players hand is not initialized
@@ -212,27 +264,224 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//set up phase area (temporary)
 			for(int i = 0; i < 2; i++) { //expand to all phase areas later
 				phaseLocs[i] = getPhaseLoc(i);
-				Paint myPaint = new Paint();
-				myPaint.setColor(Color.YELLOW);
 				g.drawRect(phaseLocs[i], myPaint);
+
+				// draw phase number and instructions for phase
+				int p = Integer.parseInt( Integer.toString(state.getPhases()[playerNum] ) );
+                if (i==0) { g.drawText("Phase "+p,phaseLocs[i].left,phaseLocs[i].top,phaseTextPaint); }
+				switch( p ) {
+					case 1:
+					    g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+					    break;
+                    case 2:
+                        if (i==0) { g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Run of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 3:
+                        if (i==0) { g.drawText("Set of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Run of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 4:
+                        if (i==0) { g.drawText("Run of Seven",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 5:
+                        if (i==0) { g.drawText("Run of Eight",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 6:
+                        if (i==0) { g.drawText("Run of Nine",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 7:
+                        g.drawText("Set of Four",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+                        break;
+                    case 8:
+                        if (i==0) { g.drawText("Seven of One Color",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 9:
+                        if (i==0) { g.drawText("Set of Five",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Set of Two",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+                    case 10:
+                        if (i==0) { g.drawText("Set of Five",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        if (i==1) { g.drawText("Set of Three",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint); }
+                        break;
+					default:
+                        g.drawText("ERROR",phaseLocs[i].centerX(),phaseLocs[i].centerY(),phaseTextPaint);
+				}
+			}
+
+			//Create AI hands
+			int players = state.getNumberPlayers();
+			if (players < 5) {
+				float padding = (100-(players-1)*(SMALL_CARD_WIDTH_PERCENT))/players;
+				rectTop = (-10)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				for (int i = 0; i < players-1; i++) {
+					//Card
+					rectLeft = (padding+(i*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					g.save();
+					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
+					drawCard(g, myRect, Card.fromString("1x"));
+					g.restore();
+
+					//phase location backgrounds
+					float rectTop1 = rectTop + 3*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					float rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					float rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					float rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][0] = myLoc;
+					rectTop1 = rectTop + 4*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][1] = myLoc;
+
+					//turn indicator
+					rectTop1 = rectTop + (10*height/100f);
+					rectBottom1 = rectTop1 + (2.5f*height/100f);
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					computerTurnLocation[i] = myLoc;
+				}
+			}
+			else {
+				float rectTop1;
+				float rectBottom1;
+				float rectLeft1;
+				float rectRight1;
+
+				//left card
+				rectLeft = (-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (25)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(90, 0, (35)*height/100);
+				drawCard(g, myRect, Card.fromString("1x"));
+				g.restore();
+
+				//phase location
+				rectTop1 = rectTop + height*(SMALL_CARD_HEIGHT_PERCENT+2*SMALL_VER_OVERLAP)/100;
+				rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				rectLeft1 = rectLeft +width*5*(SMALL_CARD_WIDTH_PERCENT)/100;
+				rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+				g.drawRect(myLoc, myPaint);
+				computerPhaseLocs[0][0] = myLoc;
+				rectTop1 = rectTop + 1.75f*height*(SMALL_CARD_HEIGHT_PERCENT+2*SMALL_VER_OVERLAP)/100;
+				rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				rectLeft1 = rectLeft +width*5*(SMALL_CARD_WIDTH_PERCENT)/100;
+				rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+				g.drawRect(myLoc, myPaint);
+				computerPhaseLocs[0][1] = myLoc;
+
+				//turn indicator
+				rectTop1 = rectTop + (7.5f*height/100f);									//Lots of really bad use of variables
+				rectBottom1 = rectTop1 + (2.5f*height/100f);							//Will update and comment later
+				rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+				rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);		//Rush for alpha code
+				computerTurnLocation[0] = myLoc;
+
+				//Spacing for top row
+				float padding = (100-(players-3)*(SMALL_CARD_WIDTH_PERCENT))/(players-2);
+				rectTop = (-10)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+
+				//Top row cards
+				for (int i = 1; i < players-2; i++) {
+					//card
+					rectLeft = (padding+((i-1)*(SMALL_CARD_WIDTH_PERCENT+padding)))*width/100;
+					rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+					myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					g.save();
+					g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT/2)*width/100, 0);
+					drawCard(g, myRect, Card.fromString("1x"));
+					g.restore();
+
+					//phase location
+					rectTop1 = rectTop + 3*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][0] = myLoc;
+					rectTop1 = rectTop + 4*(SMALL_CARD_HEIGHT_PERCENT+SMALL_VER_OVERLAP)*height/100f;
+					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+					rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+					rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					g.drawRect(myLoc, myPaint);
+					computerPhaseLocs[i][1] = myLoc;
+
+					//turn indicator
+					rectTop1 = rectTop + (10*height/100f);
+					rectBottom1 = rectTop1 + (2.5f*height/100f);
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+					computerTurnLocation[i] = myLoc;
+				}
+
+				//right card
+				rectLeft = (100-SMALL_CARD_WIDTH_PERCENT/2)*width/100;
+				rectRight = rectLeft + width*SMALL_CARD_WIDTH_PERCENT/100;
+				rectTop = (25)*height/100f;
+				rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				g.save();
+				g.rotate(-90, width, (35)*height/100);
+				drawCard(g, myRect, Card.fromString("1x"));
+				g.restore();
+
+				//phase location
+				rectTop1 = rectTop + height*(SMALL_CARD_HEIGHT_PERCENT+2*SMALL_VER_OVERLAP)/100;
+				rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				rectRight1 = rectRight - width*5*(SMALL_CARD_WIDTH_PERCENT)/100;
+				rectLeft1 = rectRight1 - 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+				g.drawRect(myLoc, myPaint);
+				computerPhaseLocs[players-2][0] = myLoc;
+				rectTop1 = rectTop + 1.75f*height*(SMALL_CARD_HEIGHT_PERCENT+2*SMALL_VER_OVERLAP)/100;
+				rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT)*height/100f;
+				rectRight1 = rectRight - width*5*(SMALL_CARD_WIDTH_PERCENT)/100;
+				rectLeft1 = rectRight1 - 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
+				g.drawRect(myLoc, myPaint);
+				computerPhaseLocs[players-2][1] = myLoc;
+
+
+				//turn indicator
+				rectTop1 = rectTop + (7.5f*height/100f);										//Lots of really bad use of variables
+				rectBottom1 = rectTop1 + (2.5f*height/100f);									//Will update and comment later
+				rectLeft1 = rectLeft - width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP)/2)/10 - width*3.5f/100;
+				rectRight1 = rectLeft1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT-SMALL_HOR_OVERLAP))/10;
+				myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);		//Rush for alpha code
+				computerTurnLocation[players-2] = myLoc;
+
 			}
 
 			//set up discard/draw pile locations
 			float start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
 			rectLeft = (start)*width/100;
 			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
-			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
-			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT/2)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT+CARD_HEIGHT_PERCENT/2)*height/100f;
 			discardLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 			start = (100-(2*CARD_WIDTH_PERCENT+LEFT_BORDER_PERCENT))/2;
 			rectLeft = (start+LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)*width/100;
 			rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
-			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT)*height/100f;
-			rectBottom = (50-VERTICAL_BORDER_PERCENT)*height/100f;
+			rectTop = (50-VERTICAL_BORDER_PERCENT-CARD_HEIGHT_PERCENT/2)*height/100f;
+			rectBottom = (50-VERTICAL_BORDER_PERCENT+CARD_HEIGHT_PERCENT/2)*height/100f;
 			drawLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 
 			drawCard(g, discardLocation, state.peekDiscardCard());
-			drawCard(g, drawLocation, null);
+			drawCard(g, drawLocation, Card.fromString("1x"));
 
 			//start of all the possible cards as neither selected or not
 			for (int i = length; i < 11; i++) {
@@ -240,6 +489,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			}
 			//Create the rects and locations for the players cards in hand
 			start = (100-(length*(LEFT_BORDER_PERCENT+CARD_WIDTH_PERCENT)-LEFT_BORDER_PERCENT))/2;
+			state.getHand(playerNum).sortNumerical();
 			for (int i = 0; i < length; i++) {
 				if (selectedCards[i] == -1) {
 					selectedCards[i]++;
@@ -251,7 +501,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 				drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 			}
-			//Create the rects and locations for the players cards in the played phases
+			//Create the rects and locations for the players cards in the played phases for Human
 			for(int j = 0; j < 2 /*phaseLocs.length*/; j++){
 				rectLeft = phaseLocs[j].left;
 				rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
@@ -265,7 +515,106 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight = rectLeft + width*CARD_WIDTH_PERCENT/100;
 				}
 			}
+			//draw cards in the rects for computer phase locations as neccessary
+			//also draws turn indicator
+			int offset = 0;
+			Paint turnPaint = new Paint();
+			turnPaint.setColor(Color.RED);
+			rectLeft = 0;
+			rectRight = width;
+			rectTop = 97.5f*height/100;
+			rectBottom = height;
+			turnLocation = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+			for(int j = 0; j < players; j++){
+				if(j == playerNum) { //the human player
+					offset++;
+					//turn indicator
+					if (j == state.getToPlay()) {
+						g.drawRect(turnLocation, turnPaint);
+					}
+				}
+				else {
+					//phase locations
+					for (int k = 0; k < 2; k++) {
+						//Log.i("Crashing Player", Integer.toString(j));
+						rectLeft = computerPhaseLocs[j-offset][k].left;
+						rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
+						rectTop = computerPhaseLocs[j-offset][k].top;
+						rectBottom = computerPhaseLocs[j-offset][k].bottom;
+
+						//cards in phase locations
+						for (int l = 0; l < state.getPlayedPhase()[j][k].size(); l++) {
+							RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+							drawCard(g, myRect, state.getPlayedPhase()[j][k].peekAt(l));
+
+							rectLeft = rectLeft + width * (2*SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 100;
+							rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
+						}
+					}
+
+					//turn indicator
+					if (j == state.getToPlay()) {
+						if (players > 4) {
+							if (j-offset == 0) {
+								g.save();
+								g.rotate(90, 0, (35)*height/100);
+								g.drawRect(computerTurnLocation[j-offset], turnPaint);
+								g.restore();
+							}
+							else if (j-offset == players-2) {
+								g.save();
+								g.rotate(-90, width, (35)*height/100);
+								g.drawRect(computerTurnLocation[j-offset], turnPaint);
+								g.restore();
+							}
+							else {
+								g.drawRect(computerTurnLocation[j-offset], turnPaint);
+							}
+						}
+						else {
+							g.drawRect(computerTurnLocation[j-offset], turnPaint);
+						}
+					}
+				}
+			}
+
+			//Location for Score Info Toggler
+			float rectL = width - CARD_WIDTH_PERCENT*width/100;
+			float rectR = width;
+			float rectT = 0;
+			float rectB = height*CARD_HEIGHT_PERCENT/100/2;
+			scoreRect = new RectF(rectL, rectT, rectR, rectB);
+			g.drawRect(scoreRect, scorePaint);
+
+			//draw scores on top of everything else if user wants to see them
+			if(showScores){
+				rectL = width;
+				rectR = 0;
+				rectT = 0;
+				rectB = height;
+				RectF coverRect = new RectF(rectL, rectT, rectR, rectB);
+				g.drawRect(coverRect, coverPaint);
+
+				float myX = width/16;
+				float myY = height/14;
+				//float scoreX = width/8;
+				Paint textPaint = new Paint();
+				textPaint.setColor(Color.BLACK);
+				textPaint.setTextSize(80);
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					g.drawText(""+allPlayerNames[i]+" Score: "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+					//scoreX = Math.max(scoreX,);
+					myY = myY + height/14;
+				}
+				myX = width/2;
+				myY = height/14;
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					g.drawText(""+allPlayerNames[i]+" Phase: "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
+					myY = myY + height/14;
+				}
+			}
 		}
+
 	}
 	
 	/**
@@ -283,24 +632,27 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		float rectBottom;
 		RectF phaseLoc;
 
-		if(spot == 0) {
-			rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
-			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
-			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+		switch(spot) {
+			case 0:
+				rectLeft = (50 - 2.5f*LEFT_BORDER_PERCENT - 7*(CARD_WIDTH_PERCENT-HOR_OVERLAP)) * width / 100;
+				rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+				rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				return phaseLoc;
+
+			case 1:
+				rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
+				rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
+				rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
+				phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+				return phaseLoc;
+
+			default:
+				phaseLoc = null; //set up other locations later
+				return phaseLoc;
 		}
-		else if(spot == 1) {
-			rectLeft = (50 + 0.5f*LEFT_BORDER_PERCENT) * width / 100;
-			rectRight = rectLeft + width * (7*(CARD_WIDTH_PERCENT-HOR_OVERLAP) + 2*LEFT_BORDER_PERCENT) / 100;
-			rectTop = (100 - VERTICAL_BORDER_PERCENT - 2.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			rectBottom = (100 - VERTICAL_BORDER_PERCENT - 1.5f * CARD_HEIGHT_PERCENT) * height / 100f;
-			phaseLoc = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-		}
-		else{
-			phaseLoc = null; //set up other locations later
-		}
-		return phaseLoc;
 	}
 	
 	/**
@@ -378,11 +730,22 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		
 		// ignore everything except down-touch events
 		if (event.getAction() != MotionEvent.ACTION_DOWN) return;
+		//if showing scores, any touch will hide scores
+		if (showScores){
+			showScores = false;
+			return;
+		}
 
 		// get the location of the touch on the surface
 		int x = (int) event.getX();
 		int y = (int) event.getY();
-		
+		//Log.i("Xloc, yLoc", Integer.toString(x)+", "+Integer.toString(y));
+
+		//determine if player wants to see score info
+		if(scoreRect.contains(x, y)){
+			Log.i("Score","Logged");
+			showScores = true;
+		}
 		// determine whether the touch occurred on any of the players cards
 		int touchedCard = -1;
 		for(int i = 0; i < state.getHand(playerNum).size(); i++){
@@ -394,7 +757,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		//if no card was selected
 		if(touchedCard == -1){
 			// illegal touch-location: flash for 1/20 second
-			surface.flash(Color.RED, 50);
+			//surface.flash(Color.RED, 50);
 		}
 		//If a card was selected
 		else {
@@ -427,6 +790,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 			}
 			else if (count > 1) { //if more than 1 card is selected, flash
+                surface.flash(Color.RED, 50);
 			}
 			else{ //if no cards are selected then attempt to draw from the discard pile
 				//action contains player (this) and false to indicate discard pile
@@ -446,21 +810,78 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Log.i("Reached", Integer.toString(i));
 			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
 			if(phaseLocs[i].contains(x, y)){
-				//Log.i("Phase clicked", "yeah");
-				Deck myPhase = new Deck();
-				for(int j = 0; j < selectedCards.length; j++){
-					if(selectedCards[j] == 1){
-						myPhase.add(state.getHand(playerNum).peekAt(j));
+				if(state.getPlayedPhase()[playerNum][0].size() == 0) {
+					//Log.i("Phase clicked", "yeah");
+					Deck myPhase = new Deck();
+					for (int j = 0; j < selectedCards.length; j++) {
+						if (selectedCards[j] == 1) {
+							myPhase.add(state.getHand(playerNum).peekAt(j));
+						}
+					}
+					P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase);
+					game.sendAction(myAction);
+					for (int z = 0; z < selectedCards.length; z++) {
+						selectedCards[z] = 0; //deselect all cards
 					}
 				}
-				boolean side = false;
-				if(i == 0){side = true;}		//true indicates the left component
-				else if (i == 1){side = false;} //false indicates right phase component
-				P10MakePhaseAction myAction = new P10MakePhaseAction(this, myPhase, side);
-				game.sendAction(myAction);
-				for(int z = 0; z < selectedCards.length; z++){
-					selectedCards[z] = 0; //deselect all cards
+				else {
+					int count = 0;
+					Card myCard = null;
+					for(int j = 0; j < selectedCards.length; j++){
+						if(selectedCards[j] == 1){
+							count++;
+							myCard = state.getHand(playerNum).peekAt(j);
+						}
+					}
+					if(count == 1){
+						P10HitCardAction myAction = new P10HitCardAction(this, myCard, playerNum, i);
+						game.sendAction(myAction);
+						for (int k = 0; k < selectedCards.length; k++) {
+							selectedCards[k] = 0; //deselect all cards
+						}
+					}
 				}
+			}
+		}
+		int offset = 0;
+		for(int i = 0; i < state.getNumberPlayers(); i++){
+			if(i == playerNum){
+				offset++;
+			}
+			else{
+				Card myCard = null;
+				int count = 0;
+				for(int j = 0; j < selectedCards.length; j++){
+					if(selectedCards[j] == 1){
+						count++;
+						myCard = state.getHand(playerNum).peekAt(j);
+					}
+				}
+
+				if (computerPhaseLocs[i - offset][0].contains(x, y)) {
+					if(count == 1) {
+						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
+						game.sendAction(myAction);
+						for (int k = 0; k < selectedCards.length; k++) {
+							selectedCards[k] = 0; //deselect all cards
+						}
+					}
+					else{
+						surface.flash(Color.RED, 50);
+					}
+				} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
+					if(count == 1) {
+						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
+						game.sendAction(myAction);
+						for (int k = 0; k < selectedCards.length; k++) {
+							selectedCards[k] = 0; //deselect all cards
+						}
+					}
+					else{
+						surface.flash(Color.RED, 50);
+					}
+				}
+
 			}
 		}
 	}
@@ -498,6 +919,18 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			c.drawOn(g, rect);
 		}
 	}
+
+	/*private static void drawIndicator(Canvas g, RectF[] blocks, int turn, int players) {
+		if (blocks != null) {
+			Paint red = new Paint();
+			red.setColor(Color.RED);
+			switch(turn) {
+				case 0:
+
+			}
+			g.drawRect(blocks[turn], red);
+		}
+	}*/
 	
 	/**
 	 * scales a rectangle, moving all edges with respect to its center

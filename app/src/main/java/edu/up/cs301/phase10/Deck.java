@@ -20,8 +20,7 @@ public class Deck implements Serializable {
 	// the cards in our deck; the last card in the ArrayList is the top card
 	// in the deck
 	private ArrayList<Card> cards;
-
-
+	
 	/**
 	 * constructor, creating an empty deck
 	 */
@@ -60,12 +59,18 @@ public class Deck implements Serializable {
 				this.add(Card.fromString(""+r+s));
 			}
 		}
-		/*this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zs"));
-		this.add(Card.fromString("zw"));
-		this.add(Card.fromString("zw"));*/
+		/*this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));
+		this.add(Card.fromString("wz"));*/
 		// return the deck
 		return this;
 	}
@@ -268,11 +273,40 @@ public class Deck implements Serializable {
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;
 	}
-	//public Deck sortHand(){
 
-	//	synchronized(this.cards){
+	public void sortNumerical(){
+		for(int i = 0; i < size(); i++){
+			int minPos = i;
+			for(int j = i + 1; j < size(); j++){
+				if(cards.get(minPos).getRank().value(1) > cards.get(j).getRank().value(1)){
+					minPos = j;
+				}
+			}
+			if(minPos != i){
+				Card temp = cards.get(i);
+				Card minCard = cards.get(minPos);
+				cards.set(i, minCard);
+				cards.set(minPos, temp);
+			}
+		}
+	}
 
-	//	}
-	//	return null;
-	//}
+	public int maxMin(boolean big){
+		int max = -1; //smaller than any card value
+		int min = 50; //bigger than any card value
+		for(int i = 0; i < cards.size(); i++){
+			if(cards.get(i).getRank().value(1) > max){
+				max = cards.get(i).getRank().value(1);
+			}
+			if(cards.get(i).getRank().value(1) < min){
+				min = cards.get(i).getRank().value(1);
+			}
+		}
+		if(big){
+			return max;
+		}
+		else{
+			return min;
+		}
+	}
 }

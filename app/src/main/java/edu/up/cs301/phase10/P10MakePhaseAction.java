@@ -6,8 +6,8 @@ import edu.up.cs301.game.GamePlayer;
  * A P10MakePhaseAction is an action that represents slapping the card that is
  * on the "up" pile.
  * 
- * @author Steven R. Vegdahl
- * @version 31 July 2002
+ * @author Trenton Langer
+ * @version November 2017
  */
 public class P10MakePhaseAction extends P10MoveAction
 {
@@ -15,7 +15,6 @@ public class P10MakePhaseAction extends P10MoveAction
 
     private Deck phase;
 
-    private boolean left;
 
 	/**
      * Constructor for the P10MakePhaseAction class.
@@ -24,16 +23,12 @@ public class P10MakePhaseAction extends P10MoveAction
      *          the player making the move
      * @param myCards
      *          the cards consisting of the phase component
-     * @param side
-     *          which phase area to save the phase to
-     *
      */
-    public P10MakePhaseAction(GamePlayer player, Deck myCards, boolean side)
+    public P10MakePhaseAction(GamePlayer player, Deck myCards)
     {
         // initialize the source with the superclass constructor
         super(player);
         phase = new Deck(myCards);
-        left = side;
     }
 
     /**
@@ -47,6 +42,5 @@ public class P10MakePhaseAction extends P10MoveAction
         return phase;
     }
 
-    public boolean getSide() { return left; }
     
 }
