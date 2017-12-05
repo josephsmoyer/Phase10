@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.infoMsg.GameInfo;
 
@@ -284,5 +285,29 @@ public class P10SmartComputerPlayer extends P10ComputerPlayer {
         return toDiscard;
 
 
+    }
+
+    /* possibleSets(), possibleRanks(), possibleColors()
+     * finds which sets/ranks/color combos are most likely to be made
+     */
+
+    private int[] possibleSets(int setLength, Deck playerDeck) {
+        int[] ranks = { 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0};
+                        // { 1, 2, 3, etc
+        if (setLength>1) {
+            for(int i = 0;i<playerDeck.size();i++) {
+
+            }
+        }
+        return null;
+    }
+
+    private int[][] possibleRanks(int rankLength, Deck playerDeck) {
+        return null;
+    }
+
+    private int[] possibleColors(int colorLength, Deck playerDeck) {
+        return null;
     }
 }
