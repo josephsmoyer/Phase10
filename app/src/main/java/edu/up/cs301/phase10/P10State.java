@@ -236,18 +236,18 @@ public class P10State extends GameState
 		Card twelve = new Card(Rank.TWELVE, Color.Green);
 		Card wild = new Card(Rank.WILD, Color.Black);
 		for(int i = 0; i < 1; i++) {	//cards to add once
-			myDeck.add(one);
+			//myDeck.add(one);
 			//myDeck.add(two);
-			myDeck.add(three);
-			myDeck.add(four);
+			//myDeck.add(three);
+			//myDeck.add(four);
 			myDeck.add(five);
-			myDeck.add(six);
-			//myDeck.add(seven);
-			myDeck.add(eight);
-			//myDeck.add(nine);
-			//myDeck.add(ten);
-			//myDeck.add(eleven);
-			//myDeck.add(twelve);
+			//myDeck.add(six);
+			myDeck.add(seven);
+			//myDeck.add(eight);
+			myDeck.add(nine);
+			myDeck.add(ten);
+			myDeck.add(eleven);
+			myDeck.add(twelve);
 			myDeck.add(wild);
 		}
 		for(int i = 0; i < 2; i++) {	//cards to add twice
@@ -267,7 +267,7 @@ public class P10State extends GameState
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
-			//myDeck.add(two);
+			myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
 			//myDeck.add(five);
@@ -275,7 +275,7 @@ public class P10State extends GameState
 			//myDeck.add(seven);
 			//myDeck.add(eight);
 			//myDeck.add(nine);
-			myDeck.add(ten);
+			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
 			//myDeck.add(wild);
