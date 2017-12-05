@@ -34,6 +34,8 @@ public class Card implements Serializable {
 	// instance variables: the card's rank and the suit
     private Rank rank;
     private Color suit;
+	private int wildValue;
+	private int skipValue;
 
 	/**
 	 * Constructor for class card
@@ -44,6 +46,8 @@ public class Card implements Serializable {
 	public Card(Rank r, Color s) {
 		rank = r;
 		suit = s;
+		wildValue = r.value(1);
+		skipValue = -1;
 	}
 
 	/**
@@ -54,6 +58,8 @@ public class Card implements Serializable {
 	public Card(Card orig) {
 		rank = orig.rank;
 		suit = orig.suit;
+		wildValue = orig.getWildValue();
+		skipValue = orig.getSkipValue();
 	}
 
     /**
@@ -244,5 +250,22 @@ public class Card implements Serializable {
     		}
     	}
     }
+
+    public int getWildValue(){
+		return wildValue;
+	}
+	public void setWildValue(int value){
+		if(rank.value(1) == 13) {			//only allow changes if wildcard
+			wildValue = value;
+		}
+	}
+	public int getSkipValue(){
+		return skipValue;
+	}
+	public void setSkipValue(int value){
+		if(rank.value(1) == 14) {
+			skipValue = value;				//only allow changes if skipcard
+		}
+	}
 
 }

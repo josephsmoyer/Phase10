@@ -3,6 +3,7 @@ package edu.up.cs301.phase10;
 import android.util.Log;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Color;
 import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.GameComputerPlayer;
 import edu.up.cs301.game.infoMsg.GameInfo;
@@ -70,7 +71,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     //}
 
     /**
-     * callback method, called when we receive a message, typicallly from
+     * callback method, called when we receive a message, typically from
      * the game
      */
     @Override
@@ -125,28 +126,90 @@ public class P10ComputerPlayer extends GameComputerPlayer
         Deck toReturn = new Deck();
         int cards[] = cardsCount(myCards);
 
-        int numSets = 0;
+        int numSets = 0;                                //actual number and array for switch case to use
         boolean sets[] = new boolean[cards.length];
-        for(int i = 0; i < cards.length; i++){
-            sets[i] = false;
-            if(cards[i] >= 3){
-                numSets++;                              //count the number of sets
-                sets[i] = true;                         //change that value to be true
+
+        int numSets5 = 0;                               //subcomponetns used to build actual array and number
+        boolean sets5[] = new boolean[cards.length];
+        int numSets4 = 0;
+        boolean sets4[] = new boolean[cards.length];
+        int numSets3 = 0;
+        boolean sets3[] = new boolean[cards.length];
+        int numSets2 = 0;
+        boolean sets2[] = new boolean[cards.length];
+        int numSets1 = 0;
+        boolean sets1[] = new boolean[cards.length];
+        int numWilds = cards[13];
+        for(int i = 0; i < cards.length-2; i++){
+            sets5[i] = false;
+            sets4[i] = false;
+            sets3[i] = false;
+            sets2[i] = false;
+            sets1[i] = false;
+            if (cards[i] >= 5) {
+                numSets5++;                              //count the number of sets
+                sets5[i] = true;                         //change that value to be true
+            }
+            else if (cards[i] >= 4) {
+                numSets4++;                             //count the number of sets
+                sets4[i] = true;                         //change that value to be true
+            }
+            else if (cards[i] >= 3) {
+                numSets3++;                              //count the number of sets
+                sets3[i] = true;                         //change that value to be true
+            }
+            else if (cards[i] >= 2) {
+                numSets2++;
+                sets2[i] = true;                         //change that value to be true
+            }
+            else if (cards[i] >= 1) {
+                numSets1++;
+                sets1[i] = true;                         //change that value to be true
             }
         }
 
-        int numRuns = 0;
-        boolean runStart[] = new boolean[cards.length];
-        for(int i = 0; i < cards.length-3; i++){
-            runStart[i] = false;
+
+        int num4Runs = 0;
+        boolean run4Start[] = new boolean[cards.length];
+        for(int i = 0; i < cards.length-3-2; i++){          //minus 3 for consecutive runs, minus 2 for wilds and skips
+            run4Start[i] = false;
             if(cards[i] >= 1 && cards[i+1] >= 1 && cards[i+2] >= 1 && cards[i+3] >= 1){ //if 4 consecutive cards
-                numRuns++;
-                runStart[i] = true;                         //change that value to be true
+                num4Runs++;
+                run4Start[i] = true;                         //change that value to be true
             }
         }
 
         switch(myPhaseNumber){
             case 1:
+                for(int i = 0; i < sets.length-2; i++){
+                    int usedWilds = 0;
+                    if(sets3[i]){
+                        Log.i("numsets", "sets3 "+Integer.toString(i));
+                        numSets++;
+                        sets[i] = true; //if there are 3 of a kind, there is a set their
+                    }
+                    else if (sets2[i]) { //if there is NOT a set of 3, but a partial set of 2
+                        int potentialUsedWilds = usedWilds+1;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            Log.i("numsets", "sets2 "+Integer.toString(i));
+                            usedWilds++;
+                            Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                    else if (sets1[i]){ //if there is NOT a set of 2 or 3, but a partial set of 1
+                        int potentialUsedWilds = usedWilds+2;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            Log.i("numsets", "sets1 "+Integer.toString(i));
+                            usedWilds++;
+                            usedWilds++;
+                            Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                }
                 if(numSets >= 2){                               //if there are two sets
                     int set1 = -1;      //value of set 1 cards
                     int added1 = 0;     //how many set 1 cards were added
@@ -178,14 +241,32 @@ public class P10ComputerPlayer extends GameComputerPlayer
                             }
                         }
                     }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 6){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == 13){ //if wild
+                                if(added1 < 3) {
+                                    Card tempCard = myCards.peekAt(j);
+                                    tempCard.setWildValue(set1);
+                                    toReturn.add(tempCard);
+                                    added1++;
+                                }
+                                if(added2 < 3) {
+                                    Card tempCard = myCards.peekAt(j);
+                                    tempCard.setWildValue(set2);
+                                    toReturn.add(tempCard);
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case 2:
-                if(numRuns >= 1 && numSets >= 1){
-                    for(int i = 0; i < sets.length; i++){ //for all possible set values
-                        if(sets[i]){                        //if there is a set
-                            for(int j = 0; j < runStart.length; j++){ //for all possible run starts
-                                if(runStart[j]){ //if there is a run
+                if(num4Runs >= 1 && numSets3 >= 1){
+                    for(int i = 0; i < sets3.length; i++){ //for all possible set values
+                        if(sets3[i]){                        //if there is a set
+                            for(int j = 0; j < run4Start.length; j++){ //for all possible run starts
+                                if(run4Start[j]){ //if there is a run
                                     if(i != j && i != j+1 &&i != j+2 &&i != j+3) { //if set is not inside run
                                         int added1 = 0;
                                         int added2 = 0;
@@ -324,7 +405,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     }
 
     protected int[] cardsCount(Deck myCards){
-        int variety[] = new int[14]; //indicator of if a card is used in the phase
+        int variety[] = new int[15]; //indicator of if a card is used in the phase
         for(int i = 0; i < variety.length; i++){
             variety[i] = 0;			//initialized to zero
         }
@@ -357,20 +438,30 @@ public class P10ComputerPlayer extends GameComputerPlayer
 
     private boolean isValidHit(Card myC, int playerToHit, int phaseToHit){
         //return true; //always assume valid hit for now
-        if(myC == null){
-            return false;
-        }
 
-        Card myCard = new Card(myC.getRank(), myC.getSuit());
+        Card myCard = new Card(myC);
 
         if(savedState.getPlayedPhase()[playerNum][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
+            return false;
+        }
+        if(myCard == null){
             return false;
         }
 
         if(savedState.getPhases()[playerToHit] == 8) { //on phase 8 color is the only thing that matters
             if(savedState.getPlayedPhase()[playerToHit][0].size() != 0){ //if that player has played a phase
-                if(savedState.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit() == myCard.getSuit()){
+                if(myCard.getRank().value(1) == 13){ //if a wildcard
+                    return true;					//wildcards are always valid for phase 8
+                }
+                Color myColor = null;
+                for(int i = 0; i < savedState.getPlayedPhase()[playerToHit][0].size(); i++){
+                    if(savedState.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit() != Color.Black){ //for not wilds
+                        myColor = savedState.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit(); //set color to not black
+                    }
+                }
+                if(myColor == myCard.getSuit()){
                     return true; //return true if colors match
+                    //this process will not work if all cards in a phase 8 component are wild. Very rare, fix later
                 }
             }
             return false; //otherwise return false if trying to hit on someones phase 8
@@ -383,15 +474,20 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 boolean set = true;
                 boolean run = true;
                 for(int i = 0; i < myDeck.size()-1; i++){
-                    if(myDeck.peekAt(i).getRank().value(1) != myDeck.peekAt(i+1).getRank().value(1)){
+                    if(myDeck.peekAt(i).getWildValue() != myDeck.peekAt(i+1).getWildValue()){
                         set = false;
+                        Log.i("IsValidHit", "Not a set");
                     }
-                    else if(myDeck.peekAt(i).getRank().value(1) != (myDeck.peekAt(i+1).getRank().value(1)-1)){
+                    else if(myDeck.peekAt(i).getWildValue() != (myDeck.peekAt(i+1).getWildValue()-1)){
                         run = false;
+                        Log.i("IsValidHit", "Not a run");
                     }
                 }
                 if(set){
-                    if(myCard.getRank().value(1) == myDeck.peekAt(0).getRank().value(1)){
+                    myCard.setWildValue(myDeck.peekAt(0).getWildValue());
+                    Log.i("myCard Wild Val", Integer.toString(myCard.getWildValue()));
+                    Log.i("set Wild Val", Integer.toString(myDeck.peekAt(0).getWildValue()));
+                    if(myCard.getWildValue() == myDeck.peekAt(0).getWildValue()){
                         return true;
                     }
                     else{
@@ -399,10 +495,19 @@ public class P10ComputerPlayer extends GameComputerPlayer
                     }
                 }
                 else if(run){
-                    if(myCard.getRank().value(1) == (myDeck.maxMin(false)-1)){
+                    if(myDeck.maxMin(true) == 12 && myDeck.maxMin(false) == 1){
+                        return false; //if run already has 1 to 12, cannot hit
+                    }
+                    else if(myDeck.maxMin(true) < 12){
+                        myCard.setWildValue(myDeck.maxMin(true)+1); //set to highest possible for now, later allow player to choose
+                    }
+                    else if(myDeck.maxMin(false) > 1){
+                        myCard.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
+                    }
+                    if(myCard.getWildValue() == (myDeck.maxMin(false)-1)){
                         return true;
                     }
-                    if(myCard.getRank().value(1) == (myDeck.maxMin(true))+1){
+                    if(myCard.getWildValue() == (myDeck.maxMin(true))+1){
                         return true;
                     }
                     else{

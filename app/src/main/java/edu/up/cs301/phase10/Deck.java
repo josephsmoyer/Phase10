@@ -59,10 +59,11 @@ public class Deck implements Serializable {
 				this.add(Card.fromString(""+r+s));
 			}
 		}
-		/*this.add(Card.fromString("sz"));
+		//*/
 		this.add(Card.fromString("sz"));
 		this.add(Card.fromString("sz"));
 		this.add(Card.fromString("sz"));
+		this.add(Card.fromString("sz"));
 		this.add(Card.fromString("wz"));
 		this.add(Card.fromString("wz"));
 		this.add(Card.fromString("wz"));
@@ -70,7 +71,7 @@ public class Deck implements Serializable {
 		this.add(Card.fromString("wz"));
 		this.add(Card.fromString("wz"));
 		this.add(Card.fromString("wz"));
-		this.add(Card.fromString("wz"));*/
+		this.add(Card.fromString("wz")); //*/
 		// return the deck
 		return this;
 	}
@@ -295,11 +296,11 @@ public class Deck implements Serializable {
 		int max = -1; //smaller than any card value
 		int min = 50; //bigger than any card value
 		for(int i = 0; i < cards.size(); i++){
-			if(cards.get(i).getRank().value(1) > max){
-				max = cards.get(i).getRank().value(1);
+			if(cards.get(i).getWildValue() > max){
+				max = cards.get(i).getWildValue();
 			}
-			if(cards.get(i).getRank().value(1) < min){
-				min = cards.get(i).getRank().value(1);
+			if(cards.get(i).getWildValue() < min){
+				min = cards.get(i).getWildValue();
 			}
 		}
 		if(big){

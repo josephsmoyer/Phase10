@@ -31,7 +31,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
     	// update our state variable
     	savedState = (P10State)info;
 
-        Log.i("Players hand size", Integer.toString(savedState.getHand(playerNum).size()));
+        //Log.i("Players hand size", Integer.toString(savedState.getHand(playerNum).size()));
 
         //if its this players turn
     	if (savedState.getToPlay() == this.playerNum) {
@@ -88,6 +88,21 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         int valueToDiscard = -1;
         Card toDiscard = null;
         ArrayList<Integer> toSave = new ArrayList<Integer>();
+
+        /*if(myCards.size() > 9){     //if havent hit yet, always discard wilds. Dumb computer wont make phase with them
+            if(count[13] != 0){
+                valueToDiscard = 13;
+            }
+            for(int i = 0; i < myCards.size(); i++){
+                if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                    toDiscard = myCards.peekAt(i);
+                }
+            }
+            if(toDiscard != null){
+                return toDiscard;
+            }
+        }*/
+
 
         switch(myPhaseNumber){
             case 1:

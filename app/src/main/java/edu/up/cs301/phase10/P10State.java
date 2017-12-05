@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Color;
+import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
@@ -213,6 +215,16 @@ public class P10State extends GameState
 			toSkip[i] = orig.toSkip[i];
 			alreadySkip[i] = orig.alreadySkip[i];
 		}
+	}
+
+	public void hook(Deck myDeck){
+		Deck trash = new Deck();
+		hands[0].moveAllCardsTo(trash);
+		myDeck.moveAllCardsTo(hands[0]);
+		Card wild = new Card(Rank.WILD, Color.Black);
+		Deck tempDeck = new Deck();
+		tempDeck.add(wild);
+		tempDeck.moveTopCardTo(discardPile);
 	}
 
     /**
