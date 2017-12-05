@@ -476,11 +476,11 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 for(int i = 0; i < myDeck.size()-1; i++){
                     if(myDeck.peekAt(i).getWildValue() != myDeck.peekAt(i+1).getWildValue()){
                         set = false;
-                        Log.i("IsValidHit", "Not a set");
+                        //Log.i("IsValidHit", "Not a set");
                     }
                     else if(myDeck.peekAt(i).getWildValue() != (myDeck.peekAt(i+1).getWildValue()-1)){
                         run = false;
-                        Log.i("IsValidHit", "Not a run");
+                        //Log.i("IsValidHit", "Not a run");
                     }
                 }
                 if(set){

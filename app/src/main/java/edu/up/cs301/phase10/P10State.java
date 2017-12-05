@@ -85,7 +85,7 @@ public class P10State extends GameState
 
 		//Initialize the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 1;							//start all players on phase 1
+			phases[i] = 2;							//start all players on phase 1
 			scores[i] = 0;							//start all players with a score of zero
 			toSkip[i] = false;						//start no players with a skip pending
 			alreadySkip[i] = false;					//start no players marked as already been skipped
@@ -217,12 +217,73 @@ public class P10State extends GameState
 		}
 	}
 
-	public void hook(Deck myDeck){
-		Deck trash = new Deck();
+	public void hook(){
+		Deck trash = new Deck();						//clean hand
 		hands[0].moveAllCardsTo(trash);
-		myDeck.moveAllCardsTo(hands[0]);
+
+		Deck myDeck = new Deck();						//customize hand
+		Card one = new Card(Rank.ONE, Color.Green);
+		Card two = new Card(Rank.TWO, Color.Green);
+		Card three = new Card(Rank.THREE, Color.Green);
+		Card four = new Card(Rank.FOUR, Color.Green);
+		Card five = new Card(Rank.FIVE, Color.Green);
+		Card six = new Card(Rank.SIX, Color.Green);
+		Card seven = new Card(Rank.SEVEN, Color.Green);
+		Card eight = new Card(Rank.EIGHT, Color.Green);
+		Card nine = new Card(Rank.NINE, Color.Green);
+		Card ten = new Card(Rank.TEN, Color.Green);
+		Card eleven = new Card(Rank.ELEVEN, Color.Red);
+		Card twelve = new Card(Rank.TWELVE, Color.Green);
 		Card wild = new Card(Rank.WILD, Color.Black);
-		Deck tempDeck = new Deck();
+		for(int i = 0; i < 1; i++) {	//cards to add once
+			myDeck.add(one);
+			//myDeck.add(two);
+			myDeck.add(three);
+			myDeck.add(four);
+			myDeck.add(five);
+			myDeck.add(six);
+			//myDeck.add(seven);
+			myDeck.add(eight);
+			//myDeck.add(nine);
+			//myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			myDeck.add(wild);
+		}
+		for(int i = 0; i < 2; i++) {	//cards to add twice
+			//myDeck.add(one);
+			//myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			//myDeck.add(eight);
+			//myDeck.add(nine);
+			//myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			//myDeck.add(wild);
+		}
+		for(int i = 0; i < 3; i++) {	//cards to add three times
+			//myDeck.add(one);
+			//myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			//myDeck.add(eight);
+			//myDeck.add(nine);
+			myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			//myDeck.add(wild);
+		}
+
+		myDeck.moveAllCardsTo(hands[0]);				//send hand tp state area holding it
+
+		Deck tempDeck = new Deck();						//put wild on discard pile if you wnat it
 		tempDeck.add(wild);
 		tempDeck.moveTopCardTo(discardPile);
 	}

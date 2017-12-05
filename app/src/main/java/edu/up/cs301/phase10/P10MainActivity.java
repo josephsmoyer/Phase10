@@ -41,7 +41,8 @@ public class P10MainActivity extends GameMainActivity {
 		playerTypes.add(new GamePlayerType("Human player (Green)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, backgroundGreen, tfArr);
-			}});
+			}
+		});
 		/*playerTypes.add(new GamePlayerType("Human player (Yellow)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, Color.YELLOW);
@@ -53,7 +54,9 @@ public class P10MainActivity extends GameMainActivity {
 			}
 		});
 		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
-			public GamePlayer createPlayer(String name) { return new P10SmartComputerPlayer(name); }
+			public GamePlayer createPlayer(String name) {
+				return new P10SmartComputerPlayer(name);
+			}
 		});
 
 

@@ -50,17 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		Deck myDeck = new Deck();
-		Card wild = new Card(Rank.WILD, Color.Black);
-		Card five = new Card(Rank.FIVE, Color.Green);
-		Card eleven = new Card(Rank.ELEVEN, Color.Red);
-		for(int i = 0; i < 3; i++) {
-			myDeck.add(wild);
-			myDeck.add(five);
-			myDeck.add(eleven);
-		}
-		myDeck.add(wild);
-		//state.hook(myDeck); //implement the custom hand
+		state.hook(); //implement the custom hand
 
 		myContext = context;
 	}
@@ -629,18 +619,18 @@ public class P10LocalGame extends LocalGame {
 				for(int i = 0; i < myDeck.size()-1; i++){
 					if(myDeck.peekAt(i).getWildValue() != myDeck.peekAt(i+1).getWildValue()){
 						set = false;
-						Log.i("IsValidHit", "Not a set");
+						//Log.i("IsValidHit", "Not a set");
 					}
 					else if(myDeck.peekAt(i).getWildValue() != (myDeck.peekAt(i+1).getWildValue()-1)){
 						run = false;
-						Log.i("IsValidHit", "Not a run");
+						//Log.i("IsValidHit", "Not a run");
 					}
 				}
 				if(set){
 					myCard.setWildValue(myDeck.peekAt(0).getWildValue());
 					myC.setWildValue(myDeck.peekAt(0).getWildValue());
-					Log.i("myCard Wild Val", Integer.toString(myCard.getWildValue()));
-					Log.i("set Wild Val", Integer.toString(myDeck.peekAt(0).getWildValue()));
+					//Log.i("myCard Wild Val", Integer.toString(myCard.getWildValue()));
+					//Log.i("set Wild Val", Integer.toString(myDeck.peekAt(0).getWildValue()));
 					if(myCard.getWildValue() == myDeck.peekAt(0).getWildValue()){
 						return true;
 					}
@@ -653,15 +643,19 @@ public class P10LocalGame extends LocalGame {
 						return false; //if run already has 1 to 12, cannot hit
 					}
 					else if(myDeck.maxMin(true) < 12){
-						myCard.setWildValue(myDeck.maxMin(true)+1); //set to highest possible for now, later allow player to choose
+						myC.setWildValue(myDeck.maxMin(true)+1); //set to highest possible for now, later allow player to choose
 					}
 					else if(myDeck.maxMin(false) > 1){
-						myCard.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
+						myC.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
 					}
-					if(myCard.getWildValue() == (myDeck.maxMin(false)-1)){
+					if(myC.getWildValue() == (myDeck.maxMin(false)-1)){
+						Log.i("PhaseMin", Integer.toString(myDeck.maxMin(false)));
+						Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
 						return true;
 					}
-					if(myCard.getWildValue() == (myDeck.maxMin(true))+1){
+					if(myC.getWildValue() == (myDeck.maxMin(true))+1){
+						Log.i("PhaseMax", Integer.toString(myDeck.maxMin(true)));
+						Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
 						return true;
 					}
 					else{
