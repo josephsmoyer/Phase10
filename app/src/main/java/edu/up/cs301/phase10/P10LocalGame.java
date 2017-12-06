@@ -50,7 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		//state.hook(); //implement the custom state
+		state.hook(); //implement the custom state
 
 		myContext = context;
 	}
@@ -277,10 +277,10 @@ public class P10LocalGame extends LocalGame {
 			P10DrawCardAction myAction = (P10DrawCardAction) P10ma;
 			//determine which pile should be drawn from
 			if (myAction.drawPile) {
-				Card c = state.getDrawCard();
+				Card c = new Card(state.getDrawCard());
 				state.getHand(thisPlayerIdx).add(c);
 			} else {
-				Card c = state.getDiscardCard();
+				Card c = new Card(state.getDiscardCard());
 				state.getHand(thisPlayerIdx).add(c);
 			}
 			//after a successful draw, the next move will not be a draw
@@ -292,7 +292,7 @@ public class P10LocalGame extends LocalGame {
 			}
 			//if we have a discard card action
 			P10DiscardCardAction myAction = (P10DiscardCardAction) P10ma;
-			Card c = myAction.toDiscard;
+			Card c = new Card(myAction.toDiscard);
 			state.discardFromHand(thisPlayerIdx, c);
 			//after discarding, the next action should be a draw
 			state.setShouldDraw(true);
@@ -641,7 +641,7 @@ public class P10LocalGame extends LocalGame {
 				break;
 			case 2:
 				int valueSet = -1;
-				for(int i = 0; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
+				for(int i = 1; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
 					if(countCards[i] > 1){	//any duplicate card must be part of set, may also be part of run
 						valueSet = i;
 					}
@@ -649,8 +649,8 @@ public class P10LocalGame extends LocalGame {
 				if(countCards[13] == 7){	//if all wild, choose random value
 					valueSet = (int) Math.random()*12 + 1;
 				}
-				int twoMatch = 0;
-				for(int i = 0; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
+				int twoMatch = 1;
+				for(int i = 1; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
 					if(countCards[13] == 6) {	//if only 1 non-wild
 						if (countCards[i] == 1) {
 							valueSet = i;		//value of set is that cards value
@@ -668,10 +668,10 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 				int[] runPotentials = new int[countCards.length-2-3];
-				int bestRunStart = 0;
+				int bestRunStart = 1;
 
 				//-2 to not allow wild/skip, -3 because comparing next 3 cards
-				for(int i = 0; i < countCards.length-2-3; i++){
+				for(int i = 1; i < countCards.length-2-3; i++){
 					int cc0 = 0;
 					int cc1 = 0;
 					int cc2 = 0;
@@ -721,7 +721,8 @@ public class P10LocalGame extends LocalGame {
 							comp0.add(temp);
 						}
 						else{
-							comp1.add(myCards.peekAt(i)); //add to run if already have set of 3
+							Card temp = new Card(myCards.peekAt(i));
+							comp1.add(temp); //add to run if already have set of 3
 						}
 					}
 					else{
@@ -730,7 +731,8 @@ public class P10LocalGame extends LocalGame {
 							myWilds.add(temp);
 						}
 						else {	//if not in comp0, and not a wild
-							comp1.add(myCards.peekAt(i));    //anything not part of set, add to run
+							Card temp = new Card(myCards.peekAt(i));
+							comp1.add(temp);    //anything not part of set, add to run
 						}
 					}
 				}
@@ -769,7 +771,7 @@ public class P10LocalGame extends LocalGame {
 				if(countCards[13] == 8){	//if all wild, choose random value
 					valueSet = (int) Math.random()*12 + 1;
 				}
-				twoMatch = 0;
+				twoMatch = 1;
 				for(int i = 0; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
 					if(countCards[13] == 7) {	//if only 1 non-wild
 						if (countCards[i] == 1) {
@@ -788,10 +790,10 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 				runPotentials = new int[countCards.length-2-3];
-				bestRunStart = 0;
+				bestRunStart = 1;
 
 				//-2 to not allow wild/skip, -3 because comparing next 3 cards
-				for(int i = 0; i < countCards.length-2-3; i++){
+				for(int i = 1; i < countCards.length-2-3; i++){
 					int cc0 = 0;
 					int cc1 = 0;
 					int cc2 = 0;
@@ -841,7 +843,8 @@ public class P10LocalGame extends LocalGame {
 							comp0.add(temp);
 						}
 						else{
-							comp1.add(myCards.peekAt(i)); //add to run if already have set of 4
+							Card temp = new Card(myCards.peekAt(i));
+							comp1.add(temp); //add to run if already have set of 4
 						}
 					}
 					else{
@@ -850,7 +853,8 @@ public class P10LocalGame extends LocalGame {
 							myWilds.add(temp);
 						}
 						else {	//if not in comp0, and not a wild
-							comp1.add(myCards.peekAt(i));    //anything not part of set, add to run
+							Card temp = new Card(myCards.peekAt(i));
+							comp1.add(temp);    //anything not part of set, add to run
 						}
 					}
 				}

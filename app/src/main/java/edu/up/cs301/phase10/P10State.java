@@ -267,7 +267,7 @@ public class P10State extends GameState
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
-			myDeck.add(two);
+			//myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
 			//myDeck.add(five);
@@ -278,7 +278,7 @@ public class P10State extends GameState
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
-			//myDeck.add(wild);
+			myDeck.add(wild);
 		}
 
 		myDeck.moveAllCardsTo(hands[0]);				//send hand tp state area holding it

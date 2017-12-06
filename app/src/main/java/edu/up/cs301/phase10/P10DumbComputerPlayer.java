@@ -270,7 +270,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         }
                         while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
                     }
-                    toDiscard = myCards.peekAt(random);
+                    toDiscard = new Card(myCards.peekAt(random));
                 }
                 break;
             case 4:
@@ -289,7 +289,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 break;
         }
 
-
+        Log.i("Card being Discarded", toDiscard.toString());
         return toDiscard;
     }
 }
