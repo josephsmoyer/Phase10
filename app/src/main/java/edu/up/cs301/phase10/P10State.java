@@ -218,8 +218,13 @@ public class P10State extends GameState
 	}
 
 	public void hook(){
+        int playerToHook = 0;
+        boolean hookHand = false;
+
 		Deck trash = new Deck();						//clean hand
-		hands[0].moveAllCardsTo(trash);
+        if(hookHand) {
+            hands[playerToHook].moveAllCardsTo(trash);
+        }
 
 		Deck myDeck = new Deck();						//customize hand
 		Card one = new Card(Rank.ONE, Color.Green);
@@ -281,14 +286,16 @@ public class P10State extends GameState
 			myDeck.add(wild);
 		}
 
-		myDeck.moveAllCardsTo(hands[0]);				//send hand tp state area holding it
+		if(hookHand) {
+            myDeck.moveAllCardsTo(hands[playerToHook]);                //send hand tp state area holding it
 
-		Deck tempDeck = new Deck();						//put wild on discard pile if you wnat it
-		tempDeck.add(wild);
-		tempDeck.moveTopCardTo(discardPile);
+            Deck tempDeck = new Deck();                        //put wild on discard pile if you wnat it
+            tempDeck.add(wild);
+            tempDeck.moveTopCardTo(discardPile);
+        }
 
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 3;							//start all players on phase 1
+			phases[i] = 4;							//start all players on phase 1
 			//scores[i] = 0;							//start all players with a score of zero
 			//toSkip[i] = false;						//start no players with a skip pending
 			//alreadySkip[i] = false;					//start no players marked as already been skipped

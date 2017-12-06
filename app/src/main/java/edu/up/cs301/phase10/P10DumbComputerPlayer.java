@@ -134,7 +134,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         do {
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
                     toDiscard = myCards.peekAt(random);
                 }
@@ -201,7 +201,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         do {
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
                     toDiscard = myCards.peekAt(random);
                 }
@@ -261,19 +261,54 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 if(toDiscard == null){                                  //if discard card never got set
                     int random;
-                    if(myCards.size() == count[13]){
+                    if(myCards.size() == count[13]){                        //if all wilds
                         random = (int) Math.random() * myCards.size();     //pick a random card
                     }
                     else {  //only loop if not all wilds
                         do {
+                            //Log.i("Stuck in", "Do-While");
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
                     toDiscard = new Card(myCards.peekAt(random));
                 }
                 break;
             case 4:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
                 break;
             case 5:
                 break;

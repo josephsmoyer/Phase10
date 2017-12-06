@@ -528,6 +528,37 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 4:
+                int[] runPotentials = runPots(myCards, 7);
+                int bestRunStart = 1;
+
+                for(int i = 1; i < runPotentials.length; i++){
+                    if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+                        bestRunStart = i;
+                    }
+                }
+
+                if(runPotentials[bestRunStart] + cards[13] >= 7){ //if have enough wilds
+                    boolean alreadyAdded[] = new boolean[13];
+                    for(int i = 1; i < alreadyAdded.length; i++){
+                        alreadyAdded[i] = false;
+                    }
+                    int numWildsAdded = 0;
+                    numWildsNeeded = 7-runPotentials[bestRunStart];
+                    for(int i = 0; i < myCards.size(); i++){
+                        Card temp = new Card(myCards.peekAt(i));
+                        int value = temp.getWildValue();
+                        if(value < 13) {   //if not wild or skip
+                            if ((!alreadyAdded[value]) && value < bestRunStart + 7 && value >= bestRunStart) {
+                                toReturn.add(temp);
+                                alreadyAdded[value] = true;
+                            }
+                        }
+                        if(value == 13 && numWildsAdded < numWildsNeeded){
+                            toReturn.add(temp);
+                            numWildsAdded++;
+                        }
+                    }
+                }
                 break;
             case 5:
                 break;
@@ -685,5 +716,36 @@ public class P10ComputerPlayer extends GameComputerPlayer
         }
         return false;
 
+    }
+
+    /*
+	 * Returns the run potential at each card value, based on run size desired
+	 */
+    protected int[] runPots(Deck myCards, int runsize){
+        int[] countCards = cardsCount(myCards);
+        int[] toReturn = new int[countCards.length-(runsize-1)];
+
+        //minus 2 for ignoring wild/skip, minus (runsize-1) to allow comparison of next cards
+        for(int i = 1; i < countCards.length-2-(runsize-1); i++) {
+
+            int[] cc = new int[runsize];
+            for(int j = 0; j < cc.length; j++){
+                if(countCards[i+j] > 0){
+                    cc[j] = 1;
+                }
+                else {
+                    cc[j] = 0;
+                }
+            }
+
+            int runPotential = 0;
+            for(int j = 0; j < cc.length; j++){
+                runPotential = runPotential + cc[j];
+            }
+            toReturn[i] = runPotential;
+            Log.i("RunP at " + Integer.toString(i), Integer.toString(runPotential));
+        }
+
+        return toReturn;
     }
 }
