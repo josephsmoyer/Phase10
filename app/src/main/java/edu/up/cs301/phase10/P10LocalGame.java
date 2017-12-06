@@ -15,7 +15,7 @@ import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.card.Color;
 
 /**
- * The LocalGame class for a slapjack game.  Defines and enforces
+ * The LocalGame class for a Phase 10 game.  Defines and enforces
  * the game rules; handles interactions between players.
  * 
  * @author Steven R. Vegdahl 

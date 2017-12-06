@@ -7,7 +7,7 @@ import edu.up.cs301.game.GamePlayer;
  */
 
 public class P10DrawCardAction extends P10MoveAction {
-
+    private static final long serialVersionUID = -3107100269012188849L;
     //will indicate which pile to draw from
     public boolean drawPile;
     /**
