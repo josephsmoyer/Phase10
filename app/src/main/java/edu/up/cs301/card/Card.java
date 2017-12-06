@@ -1,5 +1,8 @@
 package edu.up.cs301.card;
 
+import java.io.Serializable;
+
+import edu.up.cs301.game.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,10 +11,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
-
-import java.io.Serializable;
-
-import edu.up.cs301.game.R;
 
 /**
  * A playing card in the standard Phase10 deck. The images, which have been
@@ -27,7 +26,7 @@ import edu.up.cs301.game.R;
  * @author Trenton Langer
  * @version November 2017
  */
-public class Card implements  Serializable {
+public class Card implements Serializable {
 
 	// to satisfy the Serializable interface
 	private static final long serialVersionUID = 893542931190030342L;
@@ -35,6 +34,8 @@ public class Card implements  Serializable {
 	// instance variables: the card's rank and the suit
     private Rank rank;
     private Color suit;
+	private int wildValue;
+	private int skipValue;
 
 	/**
 	 * Constructor for class card
@@ -44,8 +45,9 @@ public class Card implements  Serializable {
 	 */
 	public Card(Rank r, Color s) {
 		rank = r;
-
 		suit = s;
+		wildValue = r.value(1);
+		skipValue = -1;
 	}
 
 	/**
@@ -56,6 +58,8 @@ public class Card implements  Serializable {
 	public Card(Card orig) {
 		rank = orig.rank;
 		suit = orig.suit;
+		wildValue = orig.getWildValue();
+		skipValue = orig.getSkipValue();
 	}
 
     /**
@@ -247,5 +251,21 @@ public class Card implements  Serializable {
     	}
     }
 
+    public int getWildValue(){
+		return wildValue;
+	}
+	public void setWildValue(int value){
+		if(rank.value(1) == 13) {			//only allow changes if wildcard
+			wildValue = value;
+		}
+	}
+	public int getSkipValue(){
+		return skipValue;
+	}
+	public void setSkipValue(int value){
+		if(rank.value(1) == 14) {
+			skipValue = value;				//only allow changes if skipcard
+		}
+	}
 
 }

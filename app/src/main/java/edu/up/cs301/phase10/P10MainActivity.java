@@ -1,6 +1,7 @@
 package edu.up.cs301.phase10;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -31,10 +32,17 @@ public class P10MainActivity extends GameMainActivity {
 		//Create some custom background colors
 		final int backgroundGreen = Color.rgb(29, 207, 88);
 
+		//Add some fonts
+		Typeface tf0 = Typeface.createFromAsset(getAssets(), "mermaid.ttf");
+		final Typeface[] tfArr = new Typeface[1];
+		tfArr[0] = tf0;
+
+
 		playerTypes.add(new GamePlayerType("Human player (Green)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10HumanPlayer(name, backgroundGreen);
-			}});
+				return new P10HumanPlayer(name, backgroundGreen, tfArr);
+			}
+		});
 		/*playerTypes.add(new GamePlayerType("Human player (Yellow)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10HumanPlayer(name, Color.YELLOW);
@@ -45,11 +53,11 @@ public class P10MainActivity extends GameMainActivity {
 				return new P10DumbComputerPlayer(name);
 			}
 		});
-		/*playerTypes.add(new GamePlayerType("Computer player (Smart)") {
+		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10ComputerPlayer(name);
+				return new P10SmartComputerPlayer(name);
 			}
-		});*/
+		});
 
 
 		// Create a game configuration class for Phase10

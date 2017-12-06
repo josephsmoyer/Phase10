@@ -2,7 +2,13 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Color;
+import edu.up.cs301.card.Rank;
+import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
@@ -211,6 +217,84 @@ public class P10State extends GameState
 		}
 	}
 
+	public void hook(){
+		Deck trash = new Deck();						//clean hand
+		hands[0].moveAllCardsTo(trash);
+
+		Deck myDeck = new Deck();						//customize hand
+		Card one = new Card(Rank.ONE, Color.Green);
+		Card two = new Card(Rank.TWO, Color.Green);
+		Card three = new Card(Rank.THREE, Color.Green);
+		Card four = new Card(Rank.FOUR, Color.Green);
+		Card five = new Card(Rank.FIVE, Color.Green);
+		Card six = new Card(Rank.SIX, Color.Green);
+		Card seven = new Card(Rank.SEVEN, Color.Green);
+		Card eight = new Card(Rank.EIGHT, Color.Green);
+		Card nine = new Card(Rank.NINE, Color.Green);
+		Card ten = new Card(Rank.TEN, Color.Green);
+		Card eleven = new Card(Rank.ELEVEN, Color.Red);
+		Card twelve = new Card(Rank.TWELVE, Color.Green);
+		Card wild = new Card(Rank.WILD, Color.Black);
+		for(int i = 0; i < 1; i++) {	//cards to add once
+			//myDeck.add(one);
+			myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			myDeck.add(eight);
+			myDeck.add(nine);
+			myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			myDeck.add(wild);
+		}
+		for(int i = 0; i < 2; i++) {	//cards to add twice
+			//myDeck.add(one);
+			//myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			//myDeck.add(eight);
+			//myDeck.add(nine);
+			//myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			myDeck.add(wild);
+		}
+		for(int i = 0; i < 3; i++) {	//cards to add three times
+			//myDeck.add(one);
+			//myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			//myDeck.add(eight);
+			//myDeck.add(nine);
+			//myDeck.add(ten);
+			//myDeck.add(eleven);
+			//myDeck.add(twelve);
+			myDeck.add(wild);
+		}
+
+		myDeck.moveAllCardsTo(hands[0]);				//send hand tp state area holding it
+
+		Deck tempDeck = new Deck();						//put wild on discard pile if you wnat it
+		tempDeck.add(wild);
+		tempDeck.moveTopCardTo(discardPile);
+
+		for(int i = 0; i < numPlayers; i++){
+			phases[i] = 3;							//start all players on phase 1
+			//scores[i] = 0;							//start all players with a score of zero
+			//toSkip[i] = false;						//start no players with a skip pending
+			//alreadySkip[i] = false;					//start no players marked as already been skipped
+		}
+	}
+
     /**
      * Tells how many players there are
      *
@@ -416,11 +500,13 @@ public class P10State extends GameState
      *      the card he/she wants to discard
      */
     public void discardFromHand(int playerID, Card myCard) {
-        if(hands[playerID].size() != 0){//if trying to remove a card from a valid hand (i.e. your own)
-            for(int i = 0; i < hands[playerID].size(); i++){
-				if(hands[playerID].peekAt(i) == myCard){
+        if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
+            boolean alreadyRemoved = false;
+			for(int i = 0; i < hands[playerID].size(); i++){
+				if(hands[playerID].peekAt(i).equals(myCard) && !alreadyRemoved){
 					Card temp = hands[playerID].removeCard(i);
 					discardPile.add(temp);
+					alreadyRemoved = true;
 				}
 			}
         }
