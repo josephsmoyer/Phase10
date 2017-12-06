@@ -1069,6 +1069,9 @@ public class P10LocalGame extends LocalGame {
 		if(state.getPlayedPhase()[playerID][0].size() == 0){ //if the player has not yet made his own phase - hits are illegal
 			return false;
 		}
+		if(state.getPlayedPhase()[playerToHit][0].size() == 0) { //if that player has not made a phase - cannot hit on that
+			return false;
+		}
 		if(myCard == null){
 			return false;
 		}
