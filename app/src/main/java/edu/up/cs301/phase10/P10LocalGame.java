@@ -50,7 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom state
+		//state.hook(); //implement the custom state
 
 		myContext = context;
 	}
@@ -611,7 +611,7 @@ public class P10LocalGame extends LocalGame {
 					int runPotential = cc0 + cc1 + cc2 + cc3;	//count up whether cards are there or not
 					if(valueSet != -1){	//if a pair (or more) of cards exist
 						if(countCards[valueSet] <=3){	//if only have enough for a set
-							if(i == valueSet){
+							if(i == valueSet || i+1 == valueSet || i+2 == valueSet || i+3 == valueSet){
 								runPotential--;	//dont include thst value in run potentisl calcs
 							}
 						}
@@ -655,6 +655,7 @@ public class P10LocalGame extends LocalGame {
 					}
 				}
 				Log.i("myWilds Size", Integer.toString(myWilds.size()));
+				int numWildToRun = 0;
 				for(int i = 0; i < myWilds.size(); i++){
 					if(comp0.size()< 3) {
 						Card temp = new Card(myWilds.peekAt(i));
@@ -665,13 +666,14 @@ public class P10LocalGame extends LocalGame {
 					else{ //if part of run, not set
 						int[] runPieces = cardsCount(comp1);
 						boolean onceThrough = false;
-						for(int j = 0; j < 4; j++) {
-							if (runPieces[bestRunStart+j] == 0 && !onceThrough) {    //if run piece isnt there
+						for(int j = numWildToRun; j < 4; j++) {
+							if (runPieces[bestRunStart+j] == 0) {    //if run piece isnt there
 								Card temp = new Card(myWilds.peekAt(i));
 								temp.setWildValue(bestRunStart+j);	 //set wildval to that run piece
 								Log.i("add wild to run", Integer.toString(bestRunStart+j));
 								comp1.add(temp);
 								onceThrough = true;	//only allow one of checks to happen
+								numWildToRun++;
 							}
 						}
 					}

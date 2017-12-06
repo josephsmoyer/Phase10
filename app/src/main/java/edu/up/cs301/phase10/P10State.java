@@ -237,24 +237,24 @@ public class P10State extends GameState
 		Card wild = new Card(Rank.WILD, Color.Black);
 		for(int i = 0; i < 1; i++) {	//cards to add once
 			//myDeck.add(one);
-			//myDeck.add(two);
+			myDeck.add(two);
 			//myDeck.add(three);
-			//myDeck.add(four);
+			myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
 			myDeck.add(eight);
 			myDeck.add(nine);
 			myDeck.add(ten);
-			myDeck.add(eleven);
+			//myDeck.add(eleven);
 			//myDeck.add(twelve);
 			//myDeck.add(wild);
 		}
 		for(int i = 0; i < 2; i++) {	//cards to add twice
 			//myDeck.add(one);
-			myDeck.add(two);
+			//myDeck.add(two);
 			//myDeck.add(three);
-			myDeck.add(four);
+			//myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
@@ -269,7 +269,7 @@ public class P10State extends GameState
 			//myDeck.add(one);
 			//myDeck.add(two);
 			//myDeck.add(three);
-			//myDeck.add(four);
+			myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
