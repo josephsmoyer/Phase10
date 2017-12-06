@@ -2,11 +2,7 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import edu.up.cs301.card.Card;
-import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
@@ -420,7 +416,7 @@ public class P10State extends GameState
      *      the card he/she wants to discard
      */
     public void discardFromHand(int playerID, Card myCard) {
-        if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
+        if(hands[playerID].size() != 0){//if trying to remove a card from a valid hand (i.e. your own)
             for(int i = 0; i < hands[playerID].size(); i++){
 				if(hands[playerID].peekAt(i) == myCard){
 					Card temp = hands[playerID].removeCard(i);

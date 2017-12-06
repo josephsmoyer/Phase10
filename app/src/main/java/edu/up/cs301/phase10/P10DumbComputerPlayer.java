@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import edu.up.cs301.card.Card;
-import edu.up.cs301.card.Rank;
 import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.infoMsg.GameInfo;
 

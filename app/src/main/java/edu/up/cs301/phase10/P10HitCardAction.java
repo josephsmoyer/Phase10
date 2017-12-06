@@ -8,7 +8,7 @@ import edu.up.cs301.game.GamePlayer;
  */
 
 public class P10HitCardAction extends P10MoveAction {
-
+    private static final long serialVersionUID = -3107100271012698849L;
     private Card hitCard;
     private int playerToHit;
     private int phaseToHit;
