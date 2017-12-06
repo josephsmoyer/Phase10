@@ -85,7 +85,7 @@ public class P10State extends GameState
 
 		//Initialize the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 2;							//start all players on phase 1
+			phases[i] = 1;							//start all players on phase 1
 			scores[i] = 0;							//start all players with a score of zero
 			toSkip[i] = false;						//start no players with a skip pending
 			alreadySkip[i] = false;					//start no players marked as already been skipped
@@ -240,21 +240,21 @@ public class P10State extends GameState
 			//myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
-			myDeck.add(five);
+			//myDeck.add(five);
 			//myDeck.add(six);
-			myDeck.add(seven);
-			//myDeck.add(eight);
+			//myDeck.add(seven);
+			myDeck.add(eight);
 			myDeck.add(nine);
 			myDeck.add(ten);
 			myDeck.add(eleven);
-			myDeck.add(twelve);
-			myDeck.add(wild);
+			//myDeck.add(twelve);
+			//myDeck.add(wild);
 		}
 		for(int i = 0; i < 2; i++) {	//cards to add twice
 			//myDeck.add(one);
-			//myDeck.add(two);
+			myDeck.add(two);
 			//myDeck.add(three);
-			//myDeck.add(four);
+			myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
@@ -263,11 +263,11 @@ public class P10State extends GameState
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
-			//myDeck.add(wild);
+			myDeck.add(wild);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
-			myDeck.add(two);
+			//myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
 			//myDeck.add(five);
@@ -286,6 +286,13 @@ public class P10State extends GameState
 		Deck tempDeck = new Deck();						//put wild on discard pile if you wnat it
 		tempDeck.add(wild);
 		tempDeck.moveTopCardTo(discardPile);
+
+		for(int i = 0; i < numPlayers; i++){
+			phases[i] = 2;							//start all players on phase 1
+			//scores[i] = 0;							//start all players with a score of zero
+			//toSkip[i] = false;						//start no players with a skip pending
+			//alreadySkip[i] = false;					//start no players marked as already been skipped
+		}
 	}
 
     /**
@@ -494,10 +501,12 @@ public class P10State extends GameState
      */
     public void discardFromHand(int playerID, Card myCard) {
         if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
-            for(int i = 0; i < hands[playerID].size(); i++){
-				if(hands[playerID].peekAt(i) == myCard){
+            boolean alreadyRemoved = false;
+			for(int i = 0; i < hands[playerID].size(); i++){
+				if(hands[playerID].peekAt(i).equals(myCard) && !alreadyRemoved){
 					Card temp = hands[playerID].removeCard(i);
 					discardPile.add(temp);
+					alreadyRemoved = true;
 				}
 			}
         }

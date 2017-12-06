@@ -50,7 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom hand
+		state.hook(); //implement the custom state
 
 		myContext = context;
 	}
@@ -90,6 +90,10 @@ public class P10LocalGame extends LocalGame {
 						winScore = state.getScores()[i];
 					}
 				}
+			}
+
+			for(int i = 0; i < players.length; i++){
+				state.getHand(i).nullifyDeck();
 			}
 			//Log.i("Bad input", Integer.toString(completed.get(winner)));
 			String winName = playerNames[winner];
@@ -292,7 +296,7 @@ public class P10LocalGame extends LocalGame {
 			state.discardFromHand(thisPlayerIdx, c);
 			//after discarding, the next action should be a draw
 			state.setShouldDraw(true);
-			Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+			//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
 			int nextIDX = thisPlayerIdx + 1; //increment players whose turn it is
 			if (nextIDX >= state.getNumberPlayers()) {
 				nextIDX = 0;                //if it was the last players turn, reset to player zero
@@ -326,7 +330,7 @@ public class P10LocalGame extends LocalGame {
 		switch(phaseNum) {
 			case 1:
 				if (myCards.size() != 6) { //both components of phase 1 are 3 cards
-					Log.i("Amount of Cards given", Integer.toString(myCards.size()));
+					//Log.i("Amount of Cards given", Integer.toString(myCards.size()));
 					return false;
 				}
 				int variety[] = new int[15]; //indicator of if a card is used in the phase need 1-14, ignore zero for readability
@@ -348,7 +352,7 @@ public class P10LocalGame extends LocalGame {
 						shouldPass = false;
 					}
 				}
-				Log.i("Count of variety", Integer.toString(count));
+				//Log.i("Count of variety", Integer.toString(count));
 				if (count == 1) { //all 6 of the same card
 					return true;
 				}
@@ -359,7 +363,7 @@ public class P10LocalGame extends LocalGame {
 							wildsNeeded = 6 - variety[i]; //need to add to six, including wilds and 1 card rank
 							if(wildsNeeded == variety[13]){
 								shouldPass = true; //if have enough wild cards, valid phase
-								Log.i("isValidPhase", "Legal");
+								//Log.i("isValidPhase", "Legal");
 							}
 						}
 					}
@@ -381,11 +385,12 @@ public class P10LocalGame extends LocalGame {
 			case 2:
 				boolean comp1 = false;
 				boolean comp2 = false;
+				int usedWilds = 0;
 				if(myCards.size() != 7){
 					return false;
 				}
 				int groups = 0;
-				for(int i = 0; i < countCards.length; i++){
+				for(int i = 0; i < countCards.length-2; i++){ //minus 2 to ignore wild/skip
 					if(countCards[i] >= 3){	//need at least one set of three cards
 						comp1 = true;
 					}
@@ -393,13 +398,55 @@ public class P10LocalGame extends LocalGame {
 						groups++;
 					}
 				}
-				if(groups != 1){
+				if(!comp1) {		//if didnt find a real set, look for set with wildcards
+					//Log.i("No Real Set", "sdf");
+					for (int i = 0; i < countCards.length - 2; i++) { //minus 2 to ignore wild/skip
+						if (countCards[i] >= 2 ) { //if a pair
+							//Log.i("pair, #wilds, #used", Integer.toString(i)+" ,"+Integer.toString(countCards[13])+" ,"+Integer.toString(usedWilds));
+							if(countCards[13] - usedWilds > 0) {	//if enough wilds left
+								//Log.i("In LOOOP", "yes");
+								comp1 = true;
+								usedWilds++;					//use a wild
+							}
+						}
+					}
+					if((!comp1) && countCards[13]-usedWilds >1){			//if still no set with a pair
+						usedWilds = usedWilds+2;				//will need two wilds to make a set with a single card
+						comp1 = true;
+					}
+				}
+				if(groups != 1 && countCards[13] == 0){	//must allow only one type of card to be included multiple times if no wilds
+					//Log.i("break 1", "logic test");
 					return false;
 				}
-				for(int i = 0; i < countCards.length-3; i++){
+				else if(groups > 2 && countCards[13] != 0){	//if wilds, wilds and one other group can be multiple for phase to be valid
+					//Log.i("groups, numWild", Integer.toString(groups)+" ,"+Integer.toString(countCards[13]));
+					return false;
+				}
+				for(int i = 0; i < countCards.length-3-2; i++){//minus 3 for run of 4, minus 2 for ignore wild/skip
 					if(countCards[i] >= 1 && countCards[i+1] >= 1 && countCards[i+2] >= 1 && countCards[i+3] >= 1){	//need at least one run of 4 cards
 						comp2 = true;
 					}
+
+					int runPieces = 0;
+					if(countCards[i] >=1){
+						runPieces++;
+					}
+					if(countCards[i+1] >=1){
+						runPieces++;
+					}
+					if(countCards[i+1] >=1){
+						runPieces++;
+					}
+					if(countCards[i+1] >=1){
+						runPieces++;
+					}
+					runPieces = runPieces + countCards[13] - usedWilds; //if 4 runpieces, including unused wilds and actual cards
+					//Log.i("RunPieces", Integer.toString(runPieces));
+					if(runPieces>=4){
+						comp2 = true;
+					}
+
 				}
 				if(comp1 && comp2){
 					return true;
@@ -474,72 +521,159 @@ public class P10LocalGame extends LocalGame {
 						realVal1 = comp1.peekAt(i).getRank().value(1); //that is set value
 					}
 				}
-				Log.i("RealVal0", Integer.toString(realVal0));
-				Log.i("RealVal1", Integer.toString(realVal1));
+				//Log.i("RealVal0", Integer.toString(realVal0));
+				//Log.i("RealVal1", Integer.toString(realVal1));
+				Log.i("count wilds", Integer.toString(countCards[13]));
 				if(countCards[13] != 0){			//if there was a wildcard
 					ArrayList<Card> myWilds = new ArrayList<Card>();
 					for(int i = comp0.size()-1; i >= 0; i--){
 						if(comp0.peekAt(i).getRank().value(1) == 13){	//find wild cards
-							Card x = comp0.removeCard(i);
+							Card x = new Card(comp0.removeCard(i));
 							myWilds.add(x);
 						}
 					}
 					for(int i = comp1.size()-1; i >= 0; i--){
 						if(comp1.peekAt(i).getRank().value(1) == 13){	//find wild cards
-							Card x = comp1.removeCard(i);
+							Card x = new Card(comp1.removeCard(i));
 							myWilds.add(x);
 						}
 					}
 					Log.i("myswilds size", Integer.toString(myWilds.size()));
 					int size = comp0.size();
 					for(int i = 0; i < 3-size; i++){
-						Card x = new Card(myWilds.remove(0));
-						x.setWildValue(realVal0);
-						comp0.add(x);
-					}
-					Log.i("myswilds new size", Integer.toString(myWilds.size()));
-					size = comp1.size();
-					for(int i = 0; i < 3-size; i++){
-						Card x = new Card(myWilds.remove(0));
-						x.setWildValue(realVal1);
-						comp1.add(x);
-					}
-					Log.i("myswilds new size", Integer.toString(myWilds.size()));
-					/*
-					do{
-						if(comp0.size() != 3){
-							Card x = myWilds.remove(0);
+						if(!myWilds.isEmpty()) {
+							Card x = new Card(myWilds.remove(0));
 							x.setWildValue(realVal0);
 							comp0.add(x);
 						}
-					} while(comp0.size() != 3);
-					do{
-						if(comp1.size() != 3){
-							Card x = myWilds.remove(0);
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
+					size = comp1.size();
+					for(int i = 0; i < 3-size; i++){
+						if(!myWilds.isEmpty()) {
+							Card x = new Card(myWilds.remove(0));
 							x.setWildValue(realVal1);
 							comp1.add(x);
 						}
-					} while(comp1.size() != 3); */
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
 				}
 				break;
 			case 2:
 				int valueSet = -1;
-				for(int i = 0; i < countCards.length; i++){
-					if(countCards[i] >= 3){
+				for(int i = 0; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
+					if(countCards[i] > 1){	//any duplicate card must be part of set, may also be part of run
 						valueSet = i;
 					}
 				}
+				if(countCards[13] == 7){	//if all wild, choose random value
+					valueSet = (int) Math.random()*12 + 1;
+				}
+				int twoMatch = 0;
+				for(int i = 0; i < countCards.length-2; i++){//-2 to not allow skip or wild to be marked as value of set
+					if(countCards[13] == 6) {	//if only 1 non-wild
+						if (countCards[i] == 1) {
+							valueSet = i;		//value of set is that cards value
+						}
+					}
+					else if (countCards[13] == 5){	//if 2 non-wilds
+						if (countCards[i] == 1) {	//compare to other value
+							if(twoMatch == i) {		//if both cards match
+								valueSet = i;        //value of set is that cards value
+							}
+							else{
+								twoMatch = i;		//if not a match (first card), update twoMatch value
+							}
+						}
+					}
+				}
+				int[] runPotentials = new int[countCards.length-2-3];
+				int bestRunStart = 0;
+
+				//-2 to not allow wild/skip, -3 because comparing next 3 cards
+				for(int i = 0; i < countCards.length-2-3; i++){
+					int cc0 = 0;
+					int cc1 = 0;
+					int cc2 = 0;
+					int cc3 = 0;
+					if(countCards[i] > 0){
+						cc0 = 1;
+					}
+					if(countCards[i+1] > 0){
+						cc1 = 1;
+					}
+					if(countCards[i+2] > 0){
+						cc2 = 1;
+					}
+					if(countCards[i+3] > 0){
+						cc3 = 1;
+					}
+					int runPotential = cc0 + cc1 + cc2 + cc3;	//count up whether cards are there or not
+					if(valueSet != -1){	//if a pair (or more) of cards exist
+						if(countCards[valueSet] <=3){	//if only have enough for a set
+							if(i == valueSet){
+								runPotential--;	//dont include thst value in run potentisl calcs
+							}
+						}
+					}
+					runPotentials[i] = runPotential;
+					Log.i("RunP at "+Integer.toString(i), Integer.toString(runPotential));
+				}
+				for(int i = 1; i < runPotentials.length; i++){
+					if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+						bestRunStart = i;
+					}
+				}
+
+				if(valueSet == -1){		//only true if no pairs/triples/etc... single cards only, less than 5 wilds
+					for(int i = 0; i < countCards.length-2; i++){
+						if(countCards[i] > 0 && i != bestRunStart && i != bestRunStart+1 && i != bestRunStart+2 && i != bestRunStart+3){
+							//found card not part of best run. If it was part of best run, it would have been a double
+							valueSet = i;
+						}
+					}
+				}
+				Deck myWilds = new Deck();
 				for(int i = 0; i < myCards.size(); i++){
-					if(myCards.peekAt(i).getRank().value(1) == valueSet){
+					if(myCards.peekAt(i).getRank().value(1) == valueSet){	//if value matches
 						if(comp0.size()< 3) {
-							comp0.add(myCards.peekAt(i));
+							Card temp = new Card(myCards.peekAt(i));
+							comp0.add(temp);
 						}
 						else{
 							comp1.add(myCards.peekAt(i)); //add to run if already have set of 3
 						}
 					}
 					else{
-						comp1.add(myCards.peekAt(i));
+						if(myCards.peekAt(i).getRank().value(1) == 13){//if wild, save in wild deck
+							Card temp = new Card(myCards.peekAt(i));
+							myWilds.add(temp);
+						}
+						else {	//if not in comp0, and not a wild
+							comp1.add(myCards.peekAt(i));    //anything not part of set, add to run
+						}
+					}
+				}
+				Log.i("myWilds Size", Integer.toString(myWilds.size()));
+				for(int i = 0; i < myWilds.size(); i++){
+					if(comp0.size()< 3) {
+						Card temp = new Card(myWilds.peekAt(i));
+						temp.setWildValue(valueSet);
+						Log.i("Add wild to set", Integer.toString(valueSet));
+						comp0.add(temp);
+					}
+					else{ //if part of run, not set
+						int[] runPieces = cardsCount(comp1);
+						boolean onceThrough = false;
+						for(int j = 0; j < 4; j++) {
+							if (runPieces[bestRunStart+j] == 0 && !onceThrough) {    //if run piece isnt there
+								Card temp = new Card(myWilds.peekAt(i));
+								temp.setWildValue(bestRunStart+j);	 //set wildval to that run piece
+								Log.i("add wild to run", Integer.toString(bestRunStart+j));
+								comp1.add(temp);
+								onceThrough = true;	//only allow one of checks to happen
+							}
+						}
 					}
 				}
 				break;
@@ -743,7 +877,7 @@ public class P10LocalGame extends LocalGame {
 			variety[i] = 0;			//initialized to zero
 		}
 		for(int i = 0; i < myCards.size(); i++){
-			int val = myCards.peekAt(i).getRank().value(1);
+			int val = myCards.peekAt(i).getRank().value(1); //getWildValue();
 			Log.i("Incrementing variety at", Integer.toString(val));
 			variety[val]++; //increment the variety at a specific location
 		}

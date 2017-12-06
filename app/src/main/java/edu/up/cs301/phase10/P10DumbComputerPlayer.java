@@ -126,7 +126,16 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
 
                 if(toDiscard == null){                                  //if discard card never got set
-                    int random = (int)Math.random()*myCards.size();     //pick a random card
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                    }
                     toDiscard = myCards.peekAt(random);
                 }
                 break;
@@ -184,7 +193,16 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                     }
                 }
                 if(toDiscard == null){                                  //if discard card never got set
-                    int random = (int)Math.random()*myCards.size();     //pick a random card
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                    }
                     toDiscard = myCards.peekAt(random);
                 }
                 break;

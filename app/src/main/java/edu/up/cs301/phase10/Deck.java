@@ -40,7 +40,8 @@ public class Deck implements Serializable {
 			// create a new arrayList for our new deck; add each card in it
 			cards = new ArrayList<Card>();
 			for (Card c: orig.cards) {
-				cards.add(c);
+				Card temp = new Card(c);
+				cards.add(temp);
 			}
 		}
 	}
