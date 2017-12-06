@@ -262,233 +262,133 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 2:
-                if(num4Runs >= 1 && numSets3 >= 1){ //if run and set no wild
-                    for(int i = 0; i < sets3.length; i++){ //for all possible set values
-                        if(sets3[i]){                        //if there is a set
-                            for(int j = 0; j < run4Start.length; j++){ //for all possible run starts
-                                if(run4Start[j]){ //if there is a run
-                                    if(i != j && i != j+1 &&i != j+2 &&i != j+3) { //if set is not inside run
-                                        int added1 = 0;
-                                        int added2 = 0;
-                                        int[] added2vals = new int[5];
-                                        for(int q = 0; q < added2vals.length; q++){
-                                            added2vals[q] = 0;
-                                        }
-                                        for(int k = 0; k < myCards.size(); k++){    //for all cards
-                                            if(toReturn.size() < 7){                //if the phase isnt complete already
-                                                if(myCards.peekAt(k).getRank().value(1) == i){
-                                                    if(added1 < 3) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added1++;
-                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j){
-                                                    if(added2 < 4 && added2vals[1] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[1] = 1;                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+1){
-                                                    if(added2 < 4 && added2vals[2] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[2]= 1;                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+2){
-                                                    if(added2 < 4 && added2vals[3] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[3]= 1;
-                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+3){
-                                                    if(added2 < 4 && added2vals[4] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[4]= 1;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else{
-                                        int added1 = 0;
-                                        int added2 = 0;
-                                        int[] added2vals = new int[5];
-                                        for(int q = 0; q < added2vals.length; q++){
-                                            added2vals[q] = 0;
-                                        }
-                                        for(int k = 0; k < myCards.size(); k++){    //for all cards
-                                            if(toReturn.size() < 7){                //if the phase isnt complete already
-                                                if(myCards.peekAt(k).getRank().value(1) == i){
-                                                    if(added1 < 3) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added1++;
-                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j){
-                                                    if(added2 < 4 && added2vals[1] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[1] = 1;                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+1){
-                                                    if(added2 < 4 && added2vals[2] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[2]= 1;                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+2){
-                                                    if(added2 < 4 && added2vals[3] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[3]= 1;
-                                                    }
-                                                }
-                                                if(myCards.peekAt(k).getRank().value(1) == j+3){
-                                                    if(added2 < 4 && added2vals[4] != 1) {
-                                                        toReturn.add(myCards.peekAt(k));
-                                                        added2++;
-                                                        added2vals[4]= 1;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                boolean haveRun = false;
+                int[] runPotential = new int[10];
+                boolean haveSet = false;
+                boolean[] setVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
+                boolean havePair = false;
+                boolean[] pairVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
+
+                //minus 1 to not count skip cards for a set
+                for(int i = 0; i < cards.length-1; i++){
+                    if(cards[i] >= 3){
+                        haveSet = true;
+                        setVal[i] = true;
+                    }
+                    if(cards[i] > 1){
+                        havePair = true;
+                        pairVal[i] = true;
+                    }
+                }
+                //minus 2 to not check wild/skip, minus 3 because checking next 3 cards
+                for(int i = 0; i < cards.length-2-3; i++){
+                    int cc0 = 0;
+                    int cc1 = 0;
+                    int cc2 = 0;
+                    int cc3 = 0;
+                    if(cards[i] > 0){
+                        cc0 = 1;
+                    }
+                    if(cards[i+1] > 0){
+                        cc1 = 1;
+                    }
+                    if(cards[i+2] > 0){
+                        cc2 = 1;
+                    }
+                    if(cards[i+3] > 0){
+                        cc3 = 1;
+                    }
+                    runPotential[i] = cc0 + cc1 + cc2 + cc3;
+                    if(runPotential[i] == 4){
+                        haveRun = true;
+                    }
+                }
+                if(haveRun && haveSet){
+                    //ignore for now - satisfied by top case - consolidate first part here later
+                }
+                int numWildsNeeded = 12; //starter value, greater than possible
+                int bestI = -1;
+                int bestJ = -1;
+
+                //minus two to not check wilds/skips
+                for(int i = 0; i < cards.length-2; i++){
+                    if(cards[i] + cards[13] >= 3){           //have right cards to make a set
+                        int numWildsUsed = 3 - cards[i];
+                        if(numWildsUsed < 1) {numWildsUsed = 0;}    //if have more than 3 of set value, need 0 wilds
+                        //minus 2 for wild/skip ignoring, minus 3 for run potential
+                        for(int j = 0; j < cards.length-2-3; j++){
+                            if(i >= j && i <= j+3){                 //if set value is within run
+                                if(cards[i] > 3){                   //need 4 or more cards at set value
+
+                                }
+                                else {                              //or another wild
+                                    numWildsUsed++;
+                                }
+                            }
+                            if(runPotential[j] + cards[13] - numWildsUsed >= 4){ //if enough wilds for set and run
+                                numWildsUsed = numWildsUsed + (4 - runPotential[j]);
+                                if(numWildsUsed < numWildsNeeded){
+                                    bestI = i;  //find best set value
+                                    bestJ = j;  //find best runstart value
+                                    numWildsNeeded = numWildsUsed;
                                 }
                             }
                         }
                     }
                 }
-                else{   //if need to use wild cards
-                    boolean haveRun = false;
-                    int[] runPotential = new int[10];
-                    boolean haveSet = false;
-                    boolean[] setVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
-                    boolean havePair = false;
-                    boolean[] pairVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
 
-                    //minus 1 to not count skip cards for a set
-                    for(int i = 0; i < cards.length-1; i++){
-                        if(cards[i] >= 3){
-                            haveSet = true;
-                            setVal[i] = true;
-                        }
-                        if(cards[i] > 1){
-                            havePair = true;
-                            pairVal[i] = true;
-                        }
+                if(bestI != -1 && bestJ != -1){ //if a potential run/set combo was found
+                    int added1 = 0;
+                    int added2 = 0;
+                    int[] added2vals = new int[5];
+                    for(int q = 0; q < added2vals.length; q++){
+                        added2vals[q] = 0;
                     }
-                    //minus 2 to not check wild/skip, minus 3 because checking next 3 cards
-                    for(int i = 0; i < cards.length-2-3; i++){
-                        int cc0 = 0;
-                        int cc1 = 0;
-                        int cc2 = 0;
-                        int cc3 = 0;
-                        if(cards[i] > 0){
-                            cc0 = 1;
-                        }
-                        if(cards[i+1] > 0){
-                            cc1 = 1;
-                        }
-                        if(cards[i+2] > 0){
-                            cc2 = 1;
-                        }
-                        if(cards[i+3] > 0){
-                            cc3 = 1;
-                        }
-                        runPotential[i] = cc0 + cc1 + cc2 + cc3;
-                        if(runPotential[i] == 4){
-                            haveRun = true;
-                        }
-                    }
-                    if(haveRun && haveSet){
-                        //ignore for now - satisfied by top case - consolidate first part here later
-                    }
-                    int numWildsNeeded = 12; //starter value, greater than possible
-                    int bestI = -1;
-                    int bestJ = -1;
-
-                    //minus two to not check wilds/skips
-                    for(int i = 0; i < cards.length-2; i++){
-                        if(cards[i] + cards[13] >= 3){           //have right cards to make a set
-                            int numWildsUsed = 3 - cards[i];
-                            if(numWildsUsed < 1) {numWildsUsed = 0;}    //if have more than 3 of set value, need 0 wilds
-                            //minus 2 for wild/skip ignoring, minus 3 for run potential
-                            for(int j = 0; j < cards.length-2-3; j++){
-                                if(i >= j && i <= j+3){                 //if set value is within run
-                                    if(cards[i] > 3){                   //need 4 or more cards at set value
-
-                                    }
-                                    else {                              //or another wild
-                                        numWildsUsed++;
-                                    }
-                                }
-                                if(runPotential[j] + cards[13] - numWildsUsed >= 4){ //if enough wilds for set and run
-                                    numWildsUsed = numWildsUsed + (4 - runPotential[j]);
-                                    if(numWildsUsed < numWildsNeeded){
-                                        bestI = i;  //find best set value
-                                        bestJ = j;  //find best runstart value
-                                        numWildsNeeded = numWildsUsed;
-                                    }
+                    int wildsSent = 0;
+                    for(int k = 0; k < myCards.size(); k++){    //for all cards
+                        if(toReturn.size() < 7){                //if the phase isnt complete already
+                            if(myCards.peekAt(k).getRank().value(1) == bestI){
+                                if(added1 < 3) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added1++;
                                 }
                             }
-                        }
-                    }
-
-                    if(bestI != -1 && bestJ != -1){ //if a potential run/set combo was found
-                        int added1 = 0;
-                        int added2 = 0;
-                        int[] added2vals = new int[5];
-                        for(int q = 0; q < added2vals.length; q++){
-                            added2vals[q] = 0;
-                        }
-                        int wildsSent = 0;
-                        for(int k = 0; k < myCards.size(); k++){    //for all cards
-                            if(toReturn.size() < 7){                //if the phase isnt complete already
-                                if(myCards.peekAt(k).getRank().value(1) == bestI){
-                                    if(added1 < 3) {
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        added1++;
-                                    }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ){
+                                if(added2 < 4 && added2vals[1] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[1] = 1;                                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+1){
+                                if(added2 < 4 && added2vals[2] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[2]= 1;                                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+2){
+                                if(added2 < 4 && added2vals[3] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[3]= 1;
                                 }
-                                if(myCards.peekAt(k).getRank().value(1) == bestJ){
-                                    if(added2 < 4 && added2vals[1] != 1) {
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        added2++;
-                                        added2vals[1] = 1;                                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+3){
+                                if(added2 < 4 && added2vals[4] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[4]= 1;
                                 }
-                                if(myCards.peekAt(k).getRank().value(1) == bestJ+1){
-                                    if(added2 < 4 && added2vals[2] != 1) {
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        added2++;
-                                        added2vals[2]= 1;                                                    }
-                                }
-                                if(myCards.peekAt(k).getRank().value(1) == bestJ+2){
-                                    if(added2 < 4 && added2vals[3] != 1) {
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        added2++;
-                                        added2vals[3]= 1;
-                                    }
-                                }
-                                if(myCards.peekAt(k).getRank().value(1) == bestJ+3){
-                                    if(added2 < 4 && added2vals[4] != 1) {
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        added2++;
-                                        added2vals[4]= 1;
-                                    }
-                                }
-                                if(myCards.peekAt(k).getRank().value(1) == 13){
-                                    if(wildsSent < numWildsNeeded){
-                                        Card temp = new Card(myCards.peekAt(k));
-                                        toReturn.add(temp);
-                                        wildsSent++;
-                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == 13){
+                                if(wildsSent < numWildsNeeded){
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    wildsSent++;
                                 }
                             }
                         }
@@ -496,6 +396,136 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 3:
+                haveRun = false;
+                runPotential = new int[10];
+                haveSet = false;
+                setVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
+                pairVal = new boolean[14]; //ignores 0, counts 1-13 for wilds included
+
+                //minus 1 to not count skip cards for a set
+                for(int i = 0; i < cards.length-1; i++){
+                    if(cards[i] >= 4){
+                        haveSet = true;
+                        setVal[i] = true;
+                    }
+                    if(cards[i] > 1){
+                        pairVal[i] = true;
+                    }
+                }
+                //minus 2 to not check wild/skip, minus 3 because checking next 3 cards
+                for(int i = 0; i < cards.length-2-3; i++){
+                    int cc0 = 0;
+                    int cc1 = 0;
+                    int cc2 = 0;
+                    int cc3 = 0;
+                    if(cards[i] > 0){
+                        cc0 = 1;
+                    }
+                    if(cards[i+1] > 0){
+                        cc1 = 1;
+                    }
+                    if(cards[i+2] > 0){
+                        cc2 = 1;
+                    }
+                    if(cards[i+3] > 0){
+                        cc3 = 1;
+                    }
+                    runPotential[i] = cc0 + cc1 + cc2 + cc3;
+                    if(runPotential[i] == 4){
+                        haveRun = true;
+                    }
+                }
+                if(haveRun && haveSet){
+                    //ignore for now - satisfied by top case - consolidate first part here later
+                }
+                numWildsNeeded = 12; //starter value, greater than possible
+                bestI = -1;
+                bestJ = -1;
+
+                //minus two to not check wilds/skips
+                for(int i = 0; i < cards.length-2; i++){
+                    if(cards[i] + cards[13] >= 4){           //have right cards to make a set
+                        int numWildsUsed = 4 - cards[i];
+                        if(numWildsUsed < 1) {numWildsUsed = 0;}    //if have more than 3 of set value, need 0 wilds
+                        //minus 2 for wild/skip ignoring, minus 3 for run potential
+                        for(int j = 0; j < cards.length-2-3; j++){
+                            if(i >= j && i <= j+3){                 //if set value is within run
+                                if(cards[i] > 4){                   //need 5 or more cards at set value
+
+                                }
+                                else {                              //or another wild
+                                    numWildsUsed++;
+                                }
+                            }
+                            if(runPotential[j] + cards[13] - numWildsUsed >= 4){ //if enough wilds for set and run
+                                numWildsUsed = numWildsUsed + (4 - runPotential[j]);
+                                if(numWildsUsed < numWildsNeeded){
+                                    bestI = i;  //find best set value
+                                    bestJ = j;  //find best runstart value
+                                    numWildsNeeded = numWildsUsed;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(bestI != -1 && bestJ != -1){ //if a potential run/set combo was found
+                    int added1 = 0;
+                    int added2 = 0;
+                    int[] added2vals = new int[5];
+                    for(int q = 0; q < added2vals.length; q++){
+                        added2vals[q] = 0;
+                    }
+                    int wildsSent = 0;
+                    for(int k = 0; k < myCards.size(); k++){    //for all cards
+                        if(toReturn.size() < 8){                //if the phase isnt complete already
+                            if(myCards.peekAt(k).getRank().value(1) == bestI){
+                                if(added1 < 4) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added1++;
+                                }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ){
+                                if(added2 < 4 && added2vals[1] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[1] = 1;                                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+1){
+                                if(added2 < 4 && added2vals[2] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[2]= 1;                                                    }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+2){
+                                if(added2 < 4 && added2vals[3] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[3]= 1;
+                                }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == bestJ+3){
+                                if(added2 < 4 && added2vals[4] != 1) {
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    added2++;
+                                    added2vals[4]= 1;
+                                }
+                            }
+                            if(myCards.peekAt(k).getRank().value(1) == 13){
+                                if(wildsSent < numWildsNeeded){
+                                    Card temp = new Card(myCards.peekAt(k));
+                                    toReturn.add(temp);
+                                    wildsSent++;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case 4:
                 break;
