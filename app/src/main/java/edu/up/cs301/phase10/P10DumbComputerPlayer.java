@@ -22,22 +22,22 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         String message = "Computer"+Integer.toString(playerNum);
         //Log.i(message, "Received");
 
-    	// if we don't have a game-state, ignore
-    	if (!(info instanceof P10State)) {
-    		return;
-    	}
+        // if we don't have a game-state, ignore
+        if (!(info instanceof P10State)) {
+            return;
+        }
 
-    	// update our state variable
-    	savedState = (P10State)info;
+        // update our state variable
+        savedState = (P10State)info;
 
         //Log.i("Players hand size", Integer.toString(savedState.getHand(playerNum).size()));
 
         //if its this players turn
-    	if (savedState.getToPlay() == this.playerNum) {
+        if (savedState.getToPlay() == this.playerNum) {
             String turnIs = Integer.toString(savedState.getToPlay());
             Log.i("Players turn", turnIs);
             // delay for 0.5 seconds
-        	sleep(500);
+            sleep(500);
 
             //create an generic action to be set and sent later
             GameAction myAction = null;
@@ -59,8 +59,8 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         }
                     }
                 }
-                else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 && savedState.getPlayedPhase()[playerNum][1].size() != 0) {
-                    //will put code for hitting cards here
+                else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 /*&& savedState.getPlayedPhase()[playerNum][1].size() != 0*/) {
+                    //dont compare both phase components - will break when only one phase component
                     P10HitCardAction temp = generateHitCardAction();
                     if(temp != null){
                         myAction = temp;
@@ -76,9 +76,9 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
             }
 
-        	// submit our move to the game object
-        	game.sendAction(myAction);
-    	}
+            // submit our move to the game object
+            game.sendAction(myAction);
+        }
     }
 
     @Override
@@ -310,8 +310,76 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 break;
             case 5:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
                 break;
             case 6:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
                 break;
             case 7:
                 break;

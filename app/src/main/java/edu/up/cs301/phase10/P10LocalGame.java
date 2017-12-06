@@ -17,8 +17,8 @@ import edu.up.cs301.card.Color;
 /**
  * The LocalGame class for a Phase 10 game.  Defines and enforces
  * the game rules; handles interactions between players.
- * 
- * @author Steven R. Vegdahl 
+ *
+ * @author Steven R. Vegdahl
  * @version July 2013
  */
 
@@ -66,7 +66,7 @@ public class P10LocalGame extends LocalGame {
 		//basic win check - sends message when someone has made the final phase
 		ArrayList<Integer> completed = new ArrayList<Integer>();
 		for (int i = 0; i < state.getNumberPlayers(); i++) {
-			if (state.getPhases()[i] == 5) {	//change to 10 for full game play
+			if (state.getPhases()[i] == 10) {	//change to 10 for full game play
 				completed.add(i);
 			}
 		}
@@ -242,7 +242,11 @@ public class P10LocalGame extends LocalGame {
 						}
 					}
 				}
-				state.getPlayedPhase()[myAction.getPlayerToHit()][myAction.getPhaseToHit()].add(c);
+				int phaseToHit = myAction.getPhaseToHit();
+				if (state.getPhases()[myAction.getPlayerToHit()] > 3 && state.getPhases()[myAction.getPlayerToHit()] < 7) {//phases 4, 5, 6 being hit on
+					phaseToHit = 0; //only one phase comp to hit on
+				}
+				state.getPlayedPhase()[myAction.getPlayerToHit()][phaseToHit].add(c);
 			}
 		} else if (P10ma.isDrawCard()) {
 			//if it is not supposed to be a draw action
@@ -526,11 +530,38 @@ public class P10LocalGame extends LocalGame {
 				if(maxRunPot + countCards[13] >= 7){
 					return true;
 				}
-
 				break;
 			case 5:
+				runPotentials = runPots(myCards, 8);
+				usedWilds = 0;
+				if(myCards.size() != 8){
+					return false;
+				}
+				maxRunPot = 0;
+				for(int i = 0; i < runPotentials.length; i++){
+					if(runPotentials[i] > maxRunPot){
+						maxRunPot = runPotentials[i];
+					}
+				}
+				if(maxRunPot + countCards[13] >= 8){
+					return true;
+				}
 				break;
 			case 6:
+				runPotentials = runPots(myCards, 9);
+				usedWilds = 0;
+				if(myCards.size() != 9){
+					return false;
+				}
+				maxRunPot = 0;
+				for(int i = 0; i < runPotentials.length; i++){
+					if(runPotentials[i] > maxRunPot){
+						maxRunPot = runPotentials[i];
+					}
+				}
+				if(maxRunPot + countCards[13] >= 9){
+					return true;
+				}
 				break;
 			case 7:
 				break;
@@ -897,9 +928,10 @@ public class P10LocalGame extends LocalGame {
 					}
 
 				}
-				Log.i("myWilds Size", Integer.toString(myWilds.size()));
+				//Log.i("myWilds Size", Integer.toString(myWilds.size()));
 				numWildToRun = 0;
 				for(int i = 0; i < myWilds.size(); i++){
+					Log.i("Loop Start", "wildComp0");
 					int[] runPieces = cardsCountWildVal(comp0);
 					boolean onceThrough = false;
 					for(int j = numWildToRun; j < 7; j++) {
@@ -916,8 +948,86 @@ public class P10LocalGame extends LocalGame {
 				}
 				break;
 			case 5:
+				runPotentials = runPots(myCards, 8);
+				bestRunStart = 1;
+
+				for(int i = 1; i < runPotentials.length; i++){
+					if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+						bestRunStart = i;
+					}
+				}
+
+				myWilds = new Deck();
+				for(int i = 0; i < myCards.size(); i++){
+					if(myCards.peekAt(i).getRank().value(1) == 13){//if wild, save in wild deck
+						Card temp = new Card(myCards.peekAt(i));
+						myWilds.add(temp);
+					}
+					else {	//if not a wild
+						Card temp = new Card(myCards.peekAt(i));
+						comp0.add(temp);    //anything not wild, add to run
+					}
+
+				}
+				//Log.i("myWilds Size", Integer.toString(myWilds.size()));
+				numWildToRun = 0;
+				for(int i = 0; i < myWilds.size(); i++){
+					Log.i("Loop Start", "wildComp0");
+					int[] runPieces = cardsCountWildVal(comp0);
+					boolean onceThrough = false;
+					for(int j = numWildToRun; j < 8; j++) {
+						Log.i("RunPiece at "+Integer.toString(bestRunStart+j), Integer.toString(runPieces[bestRunStart+j]));
+						if (runPieces[bestRunStart+j] == 0 && !onceThrough) {    //if run piece isnt there
+							Card temp = new Card(myWilds.peekAt(i));
+							temp.setWildValue(bestRunStart+j);	 //set wildval to that run piece
+							Log.i("add wild to run", Integer.toString(bestRunStart+j));
+							comp0.add(temp);
+							onceThrough = true;	//only allow one of checks to happen
+							numWildToRun++;
+						}
+					}
+				}
 				break;
 			case 6:
+				runPotentials = runPots(myCards, 9);
+				bestRunStart = 1;
+
+				for(int i = 1; i < runPotentials.length; i++){
+					if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+						bestRunStart = i;
+					}
+				}
+
+				myWilds = new Deck();
+				for(int i = 0; i < myCards.size(); i++){
+					if(myCards.peekAt(i).getRank().value(1) == 13){//if wild, save in wild deck
+						Card temp = new Card(myCards.peekAt(i));
+						myWilds.add(temp);
+					}
+					else {	//if not a wild
+						Card temp = new Card(myCards.peekAt(i));
+						comp0.add(temp);    //anything not wild, add to run
+					}
+
+				}
+				//Log.i("myWilds Size", Integer.toString(myWilds.size()));
+				numWildToRun = 0;
+				for(int i = 0; i < myWilds.size(); i++){
+					Log.i("Loop Start", "wildComp0");
+					int[] runPieces = cardsCountWildVal(comp0);
+					boolean onceThrough = false;
+					for(int j = numWildToRun; j < 9; j++) {
+						Log.i("RunPiece at "+Integer.toString(bestRunStart+j), Integer.toString(runPieces[bestRunStart+j]));
+						if (runPieces[bestRunStart+j] == 0 && !onceThrough) {    //if run piece isnt there
+							Card temp = new Card(myWilds.peekAt(i));
+							temp.setWildValue(bestRunStart+j);	 //set wildval to that run piece
+							Log.i("add wild to run", Integer.toString(bestRunStart+j));
+							comp0.add(temp);
+							onceThrough = true;	//only allow one of checks to happen
+							numWildToRun++;
+						}
+					}
+				}
 				break;
 			case 7:
 				break;
@@ -1012,6 +1122,7 @@ public class P10LocalGame extends LocalGame {
 				}
 				else if(run){
 					if(myDeck.maxMin(true) == 12 && myDeck.maxMin(false) == 1){
+						Log.i("Run Hit Blocker", "Number1");
 						return false; //if run already has 1 to 12, cannot hit
 					}
 					else if(myDeck.maxMin(true) < 12){
@@ -1020,17 +1131,19 @@ public class P10LocalGame extends LocalGame {
 					else if(myDeck.maxMin(false) > 1){
 						myC.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
 					}
+					Log.i("PhaseMin", Integer.toString(myDeck.maxMin(false)));
+					Log.i("PhaseMax", Integer.toString(myDeck.maxMin(true)));
+					Log.i("MyVal", Integer.toString(myC.getWildValue()));
 					if(myC.getWildValue() == (myDeck.maxMin(false)-1)){
-						Log.i("PhaseMin", Integer.toString(myDeck.maxMin(false)));
 						Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
 						return true;
 					}
-					if(myC.getWildValue() == (myDeck.maxMin(true))+1){
-						Log.i("PhaseMax", Integer.toString(myDeck.maxMin(true)));
+					else if(myC.getWildValue() == (myDeck.maxMin(true))+1){
 						Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
 						return true;
 					}
 					else{
+						Log.i("Run Hit Blocker", "Number2");
 						return false;
 					}
 				}
@@ -1078,8 +1191,8 @@ public class P10LocalGame extends LocalGame {
 						state.setScore(i, temp);    //skip cards
 					}
 					else {
-					int temp = state.getScores()[i] + 10;
-					state.setScore(i, temp); //high rank cards
+						int temp = state.getScores()[i] + 10;
+						state.setScore(i, temp); //high rank cards
 					}
 				}
 			} while (state.getHand(i).size() != 0);
@@ -1131,7 +1244,7 @@ public class P10LocalGame extends LocalGame {
 			variety[i] = 0;			//initialized to zero
 		}
 		for(int i = 0; i < myCards.size(); i++){
-			int val = myCards.peekAt(i).getRank().value(1); //getWildValue();
+			int val = myCards.peekAt(i).getWildValue(); //getWildValue();
 			Log.i("Incrementing variety at", Integer.toString(val));
 			variety[val]++; //increment the variety at a specific location
 		}

@@ -7,7 +7,7 @@ import edu.up.cs301.card.Card;
 
 /**
  * Deck class - represents a deck of cards (not necessarily a full one)
- * 
+ *
  * @author Steven R. Vegdahl
  * @version July 2013
  *
@@ -16,20 +16,20 @@ public class Deck implements Serializable {
 
 	// to satisfy Serializable interface
 	private static final long serialVersionUID = 3216223171210121485L;
-	
+
 	// the cards in our deck; the last card in the ArrayList is the top card
 	// in the deck
 	private ArrayList<Card> cards;
-	
+
 	/**
 	 * constructor, creating an empty deck
 	 */
 	public Deck() {
 		cards = new ArrayList<Card>();
 	}
-	
+
 	/** copy constructor, making an exact copy of a deck
-	 * 
+	 *
 	 * @param orig
 	 * 		the deck from which the copy should be made
 	 */
@@ -45,11 +45,11 @@ public class Deck implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * adds one of each card, increasing the size of the deck by 52. Cards are added
 	 * spades first (King to Ace), then similarly with hearts, diamonds and clubs.
-	 * 
+	 *
 	 * @return
 	 * 		the deck
 	 */
@@ -76,9 +76,9 @@ public class Deck implements Serializable {
 		// return the deck
 		return this;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Deck shuffle() {
 		// synchronize so that we don't have someone trying to modify the
@@ -92,7 +92,7 @@ public class Deck implements Serializable {
 				cards.set(i-1, temp);
 			}
 		}
-		
+
 		// return the deck
 		return this;
 	}
@@ -100,18 +100,18 @@ public class Deck implements Serializable {
 	/**
 	 * Moves the top card the current deck to the top of another; does nothing if
 	 * the first deck is empty
-	 * 
+	 *
 	 * @param targetDeck
 	 * 		the deck to which the card should be moved
 	 */
 	public void moveTopCardTo(Deck targetDeck) {
-		
+
 		// will hold the card
 		Card c = null;
-		
+
 		// size of the first deck
 		int size;
-		
+
 		// indivisibly check the deck for empty, and remove the card, to
 		// avoid a race condition
 		synchronized(this.cards) {
@@ -120,18 +120,18 @@ public class Deck implements Serializable {
 				c = cards.remove(cards.size()-1);
 			}
 		}
-		
+
 		// if the original size was non-zero, add the card to the top of the
 		// target deck
 		if (size > 0) {
 			targetDeck.add(c);
 		}
 	}
-	
+
 	/**
 	 * move all cards in the current deck to a another deck by repeated moving
 	 * a single card from top to top
-	 * 
+	 *
 	 * @param target
 	 * 		the deck that will get the cards
 	 */
@@ -140,16 +140,16 @@ public class Deck implements Serializable {
 		if (this == target) {
 			return;
 		}
-		
+
 		// keep moving cards until the current deck is empty
 		while (size() > 0) {
 			moveTopCardTo(target);
 		}
 	}
-	
+
 	/**
 	 * add a card to the top of a deck
-	 * 
+	 *
 	 * @param c
 	 * 		the card to add
 	 */
@@ -160,7 +160,7 @@ public class Deck implements Serializable {
 			cards.add(c);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		the number of cards in the deck
@@ -168,7 +168,7 @@ public class Deck implements Serializable {
 	public int size() {
 		return cards.size();
 	}
-	
+
 	/**
 	 * replace each element in the deck with a null card; does not change
 	 * the size of the deck, but rather causes the deck to yield null for
@@ -188,7 +188,7 @@ public class Deck implements Serializable {
 
 	/**
 	 * remove the top card from the deck
-	 * 
+	 *
 	 * @return
 	 * 		the top card in the deck, which is also removed,
 	 * 		or null if the deck was empty
@@ -214,7 +214,7 @@ public class Deck implements Serializable {
 			return cards.remove(loc);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		the top card in the deck, without removing it; null
@@ -241,13 +241,13 @@ public class Deck implements Serializable {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * creates a printable version of the object, a list
 	 * of two-character names for each card in the deck
 	 * (starting at the bottom of the deck), surrounded by
 	 * brackets
-	 * 
+	 *
 	 * @return
 	 * 		a printable version of the deck
 	 */
@@ -255,7 +255,7 @@ public class Deck implements Serializable {
 	public String toString() {
 		// the eventual return value
 		String rtnVal = "";
-		
+
 		// synchronize to avoid iterating while the
 		// deck is being modified
 		synchronized (this.cards) {
@@ -270,7 +270,7 @@ public class Deck implements Serializable {
 				}
 			}
 		}
-		
+
 		// surround by brackets and return
 		rtnVal = "[" + rtnVal + " ]";
 		return rtnVal;

@@ -15,7 +15,7 @@ import edu.up.cs301.game.infoMsg.GameState;
  * Contains the state of a Phase10 game.  Sent by the game when
  * a player wants to enquire about the state of the game.  (E.g., to display
  * it, or to help figure out its next move.)
- * 
+ *
  * @author Steven R. Vegdahl
  * @author Trenton Langer
  * @version November 2018
@@ -24,9 +24,9 @@ public class P10State extends GameState
 {
 	private static final long serialVersionUID = -8269749892027578792L;
 
-    ///////////////////////////////////////////////////
-    // ************** instance variables ************
-    ///////////////////////////////////////////////////
+	///////////////////////////////////////////////////
+	// ************** instance variables ************
+	///////////////////////////////////////////////////
 
 	//Indicates the number of players this game
 	private int numPlayers;
@@ -53,12 +53,12 @@ public class P10State extends GameState
 	private Deck[][] playedPhase;
 
 
-    /**
-     * Constructor for objects of class P10State. Initializes for the beginning of the
-     * game, with a random player as the first to play
-     *  
-     */
-    public P10State(int gameSize) {
+	/**
+	 * Constructor for objects of class P10State. Initializes for the beginning of the
+	 * game, with a random player as the first to play
+	 *
+	 */
+	public P10State(int gameSize) {
 		//Constructor must tell the state how many players to set up for
 		numPlayers = gameSize;
 
@@ -116,14 +116,14 @@ public class P10State extends GameState
 
 		//Indicate that game should start with a draw action
 		shouldDraw = true;
-    }
-    
-    /**
-     * Copy constructor for objects of class P10State. Makes a copy of the given state
-     *  
-     * @param orig  the state to be copied
-     */
-    public P10State(P10State orig) {
+	}
+
+	/**
+	 * Copy constructor for objects of class P10State. Makes a copy of the given state
+	 *
+	 * @param orig  the state to be copied
+	 */
+	public P10State(P10State orig) {
 		//copy number of players
 		numPlayers = orig.numPlayers;
 
@@ -163,7 +163,7 @@ public class P10State extends GameState
 			toSkip[i] = orig.toSkip[i];
 			alreadySkip[i] = orig.alreadySkip[i];
 		}
-    }
+	}
 
 	/**
 	 * Copy constructor for objects of class P10State. Makes a copy of the given state, specific to a certain player
@@ -218,13 +218,13 @@ public class P10State extends GameState
 	}
 
 	public void hook(){
-        int playerToHook = 0;
-        boolean hookHand = false;
+		int playerToHook = 0;
+		boolean hookHand = false;
 
 		Deck trash = new Deck();						//clean hand
-        if(hookHand) {
-            hands[playerToHook].moveAllCardsTo(trash);
-        }
+		if(hookHand) {
+			hands[playerToHook].moveAllCardsTo(trash);
+		}
 
 		Deck myDeck = new Deck();						//customize hand
 		Card one = new Card(Rank.ONE, Color.Green);
@@ -287,70 +287,70 @@ public class P10State extends GameState
 		}
 
 		if(hookHand) {
-            myDeck.moveAllCardsTo(hands[playerToHook]);                //send hand tp state area holding it
+			myDeck.moveAllCardsTo(hands[playerToHook]);                //send hand tp state area holding it
 
-            Deck tempDeck = new Deck();                        //put wild on discard pile if you wnat it
-            tempDeck.add(wild);
-            tempDeck.moveTopCardTo(discardPile);
-        }
+			Deck tempDeck = new Deck();                        //put wild on discard pile if you wnat it
+			tempDeck.add(wild);
+			tempDeck.moveTopCardTo(discardPile);
+		}
 
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 4;							//start all players on phase 1
+			phases[i] = 5;							//start all players on phase 1
 			//scores[i] = 0;							//start all players with a score of zero
 			//toSkip[i] = false;						//start no players with a skip pending
 			//alreadySkip[i] = false;					//start no players marked as already been skipped
 		}
 	}
 
-    /**
-     * Tells how many players there are
-     *
-     * @return the number of players in the game
-     */
-    public int getNumberPlayers() {
-        return numPlayers;
-    }
+	/**
+	 * Tells how many players there are
+	 *
+	 * @return the number of players in the game
+	 */
+	public int getNumberPlayers() {
+		return numPlayers;
+	}
 
-    /**
-     * Tells which player's turn it is.
-     * 
-     * @return the index (0 to 5) of the player whose turn it is.
-     */
-    public int getToPlay() {
-        return toPlay;
-    }
-    
-    /**
-     * change whose move it is
-     * 
-     * @param idx
-     * 		the index of the player whose move it now is
-     */
-    public void setToPlay(int idx) {
-    	Log.i("To Play is now", Integer.toString(idx));
+	/**
+	 * Tells which player's turn it is.
+	 *
+	 * @return the index (0 to 5) of the player whose turn it is.
+	 */
+	public int getToPlay() {
+		return toPlay;
+	}
+
+	/**
+	 * change whose move it is
+	 *
+	 * @param idx
+	 * 		the index of the player whose move it now is
+	 */
+	public void setToPlay(int idx) {
+		Log.i("To Play is now", Integer.toString(idx));
 		toPlay = idx;
-    }
+	}
 
-    /**
-     * Returns the top card of the draw pile
-     *
-     * @return the top card from the draw pile. If no access to draw pile / empty pile, returns null
-     */
-    public Card getDrawCard() {
-        if(drawPile.size() == 0){               //if the draw pile is empty
-            reshuffle();
-        }
-        return drawPile.removeTopCard();
-    }
+	/**
+	 * Returns the top card of the draw pile
+	 *
+	 * @return the top card from the draw pile. If no access to draw pile / empty pile, returns null
+	 */
+	public Card getDrawCard() {
+		if(drawPile.size() == 0){               //if the draw pile is empty
+			reshuffle();
+		}
+		return drawPile.removeTopCard();
+	}
 
-    /**
-     * Returns the top card of the discard pile
-     *
-     * @return the top card from the discard pile. If no access to discard pile / empty pile, returns null
-     */
-    public Card getDiscardCard() {
-        return discardPile.removeTopCard();
-    }
+	/**
+	 * Returns the top card of the discard pile
+	 *
+	 * @return the top card from the discard pile. If no access to discard pile / empty pile, returns null
+	 */
+	public Card getDiscardCard() {
+		return discardPile.removeTopCard();
+	}
 
 	/**
 	 * shows the top card of the discard pile
@@ -361,131 +361,131 @@ public class P10State extends GameState
 		return discardPile.peekAtTopCard();
 	}
 
-    /**
-     * 'Sets' the top card of the discard pile, by adding a card to it
-     *
-     * @param discard
-     *      the card to add to the discard pile
-     */
-    public void setDiscardCard(Card discard) {
-        discardPile.add(discard);
-    }
+	/**
+	 * 'Sets' the top card of the discard pile, by adding a card to it
+	 *
+	 * @param discard
+	 *      the card to add to the discard pile
+	 */
+	public void setDiscardCard(Card discard) {
+		discardPile.add(discard);
+	}
 
-    /**
-     * Returns whether or not a draw action is expected next
-     *
-     * @return boolean indicator of what the next expected action is
-     */
-    public boolean getShouldDraw() {
-        return shouldDraw;
-    }
+	/**
+	 * Returns whether or not a draw action is expected next
+	 *
+	 * @return boolean indicator of what the next expected action is
+	 */
+	public boolean getShouldDraw() {
+		return shouldDraw;
+	}
 
-    /**
-     * Sets the shouldDraw variable
-     *
-     * @param expectedDraw
-     *      boolean to updated what the next expected move type is
-     */
-    public void setShouldDraw(boolean expectedDraw) {
-        shouldDraw = expectedDraw;
-    }
+	/**
+	 * Sets the shouldDraw variable
+	 *
+	 * @param expectedDraw
+	 *      boolean to updated what the next expected move type is
+	 */
+	public void setShouldDraw(boolean expectedDraw) {
+		shouldDraw = expectedDraw;
+	}
 
-    /**
-     * Returns the array listing what phase each player is on
-     *
-     * @return the array listing what phase each player is on
-     */
-    public int[] getPhases() {
-        return phases;
-    }
+	/**
+	 * Returns the array listing what phase each player is on
+	 *
+	 * @return the array listing what phase each player is on
+	 */
+	public int[] getPhases() {
+		return phases;
+	}
 
-    /**
-     * Sets a phase for an individual player
-     *
-     * @param playerID
-     *      the ID of the player that is having his/her phase updated
-     * @param myPhase
-     *      the phase the player should be on
-     */
-    public void setPhase(int playerID, int myPhase) {
-        phases[playerID] = myPhase;
-    }
+	/**
+	 * Sets a phase for an individual player
+	 *
+	 * @param playerID
+	 *      the ID of the player that is having his/her phase updated
+	 * @param myPhase
+	 *      the phase the player should be on
+	 */
+	public void setPhase(int playerID, int myPhase) {
+		phases[playerID] = myPhase;
+	}
 
-    /**
-     * Returns the array listing what score each player has
-     *
-     * @return the array listing what score each player has
-     */
-    public int[] getScores() {
-        return scores;
-    }
+	/**
+	 * Returns the array listing what score each player has
+	 *
+	 * @return the array listing what score each player has
+	 */
+	public int[] getScores() {
+		return scores;
+	}
 
-    /**
-     * Sets the score for an individual player
-     *
-     * @param playerID
-     *      the ID of the player that is having his/her phase updated
-     * @param myScore
-     *      the score to change that players score to
-     */
-    public void setScore(int playerID, int myScore) {
-        scores[playerID] = myScore;
-    }
+	/**
+	 * Sets the score for an individual player
+	 *
+	 * @param playerID
+	 *      the ID of the player that is having his/her phase updated
+	 * @param myScore
+	 *      the score to change that players score to
+	 */
+	public void setScore(int playerID, int myScore) {
+		scores[playerID] = myScore;
+	}
 
-    /**
-     * Returns the array listing which players are set to be skipped
-     *
-     * @return the array listing which players are set to be skipped
-     */
-    public boolean[] getToSkip() {
-        return toSkip;
-    }
+	/**
+	 * Returns the array listing which players are set to be skipped
+	 *
+	 * @return the array listing which players are set to be skipped
+	 */
+	public boolean[] getToSkip() {
+		return toSkip;
+	}
 
-    /**
-     * Sets the toSkip for an individual player
-     *
-     * @param playerID
-     *      the ID of the player that is having his/her toSkip updated
-     * @param mySkip
-     *      the boolean indicating if that player should be skipped or not
-     */
-    public void setToSkip(int playerID, boolean mySkip) {
-        toSkip[playerID] = mySkip;
-    }
+	/**
+	 * Sets the toSkip for an individual player
+	 *
+	 * @param playerID
+	 *      the ID of the player that is having his/her toSkip updated
+	 * @param mySkip
+	 *      the boolean indicating if that player should be skipped or not
+	 */
+	public void setToSkip(int playerID, boolean mySkip) {
+		toSkip[playerID] = mySkip;
+	}
 
-    /**
-     * Returns the array listing which players have been skipped
-     *
-     * @return the array listing which players have been skipped
-     */
-    public boolean[] getAlreadySkip() {
-        return alreadySkip;
-    }
+	/**
+	 * Returns the array listing which players have been skipped
+	 *
+	 * @return the array listing which players have been skipped
+	 */
+	public boolean[] getAlreadySkip() {
+		return alreadySkip;
+	}
 
-    /**
-     * Sets the alreadySkip for an individual player
-     *
-     * @param playerID
-     *      the ID of the player that is having his/her alreadySkip updated
-     * @param mySkip
-     *      the boolean indicating if that player has been skipped or not
-     */
-    public void setAlreadySkip(int playerID, boolean mySkip) {
-        alreadySkip[playerID] = mySkip;
-    }
+	/**
+	 * Sets the alreadySkip for an individual player
+	 *
+	 * @param playerID
+	 *      the ID of the player that is having his/her alreadySkip updated
+	 * @param mySkip
+	 *      the boolean indicating if that player has been skipped or not
+	 */
+	public void setAlreadySkip(int playerID, boolean mySkip) {
+		alreadySkip[playerID] = mySkip;
+	}
 
-    /**
-     * Returns the hand for a specific player
-     *
-     * @param playerID
-     * @return the hand for a specific player
-     */
-    public Deck getHand(int playerID) {
+	/**
+	 * Returns the hand for a specific player
+	 *
+	 * @param playerID
+	 * @return the hand for a specific player
+	 */
+	public Deck getHand(int playerID) {
 		if(hands == null){
 			return null;
 		}
 		else {
-            //Log.i("Hands is", "Valid");
+			//Log.i("Hands is", "Valid");
 			//Log.i("Player id is", Integer.toString(playerID));
 			for(int i = 0; i < numPlayers; i++) {
 				if(hands[i] != null){
@@ -496,19 +496,19 @@ public class P10State extends GameState
 			//Log.i("Peek Card is", hands[playerID].peekAtTopCard().toString());
 			return hands[playerID];
 		}
-    }
+	}
 
-    /**
-     * discards a card from a specific players hand to the discard pile
-     *
-     * @param playerID
-     *      the ID of the player that is discarding
-     * @param myCard
-     *      the card he/she wants to discard
-     */
-    public void discardFromHand(int playerID, Card myCard) {
-        if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
-            boolean alreadyRemoved = false;
+	/**
+	 * discards a card from a specific players hand to the discard pile
+	 *
+	 * @param playerID
+	 *      the ID of the player that is discarding
+	 * @param myCard
+	 *      the card he/she wants to discard
+	 */
+	public void discardFromHand(int playerID, Card myCard) {
+		if(hands[playerID].size() != 0){                            //if trying to remove a card from a valid hand (i.e. your own)
+			boolean alreadyRemoved = false;
 			for(int i = 0; i < hands[playerID].size(); i++){
 				if(hands[playerID].peekAt(i).equals(myCard) && !alreadyRemoved){
 					Card temp = hands[playerID].removeCard(i);
@@ -516,39 +516,39 @@ public class P10State extends GameState
 					alreadyRemoved = true;
 				}
 			}
-        }
-    }
+		}
+	}
 
-    /**
-     * Returns the played phases on the table
-     *
-     * @return the array with all of the played phases
-     */
-    public Deck[][] getPlayedPhase() {
-        return playedPhase;
-    }
+	/**
+	 * Returns the played phases on the table
+	 *
+	 * @return the array with all of the played phases
+	 */
+	public Deck[][] getPlayedPhase() {
+		return playedPhase;
+	}
 
-    /*
+	/*
      * Moves all cards, except top card, from discard pile back to draw pile, and shuffles
      */
-    private void reshuffle(){
-        Card top = discardPile.removeTopCard();
-        for(int i = 0; i < discardPile.size(); i++){
-            discardPile.moveTopCardTo(drawPile);
-        }
-        drawPile.shuffle();
-        discardPile.add(top);                               //return the top card to the discard pile
-    }
+	private void reshuffle(){
+		Card top = discardPile.removeTopCard();
+		for(int i = 0; i < discardPile.size(); i++){
+			discardPile.moveTopCardTo(drawPile);
+		}
+		drawPile.shuffle();
+		discardPile.add(top);                               //return the top card to the discard pile
+	}
 
-    public void cleanDecks(){
-        playedPhase = new Deck[numPlayers][2];
-        for(int i = 0; i < numPlayers; i++){
-            for(int j = 0; j < 2; j ++) {
-                playedPhase[i][j] = new Deck();		//create a deck for each possible phase component (2 max per player)
-            }
-        }
-        drawPile = new Deck();
-        discardPile = new Deck();
+	public void cleanDecks(){
+		playedPhase = new Deck[numPlayers][2];
+		for(int i = 0; i < numPlayers; i++){
+			for(int j = 0; j < 2; j ++) {
+				playedPhase[i][j] = new Deck();		//create a deck for each possible phase component (2 max per player)
+			}
+		}
+		drawPile = new Deck();
+		discardPile = new Deck();
 		drawPile.add108();
 		drawPile.shuffle();
 
