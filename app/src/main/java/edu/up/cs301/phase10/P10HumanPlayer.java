@@ -850,6 +850,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				for(int i = 0; i < selectedCards.length; i++){
 					selectedCards[i] = 0; //deselect all cards
 				}
+				return;
 			}
 			else if (count > 1) { //if more than 1 card is selected, flash
                 surface.flash(Color.RED, 50);
@@ -859,6 +860,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				P10DrawCardAction myAction = new P10DrawCardAction(this, false);
 				//send action to the game
 				game.sendAction(myAction);
+				return;
 			}
 		}
 		if(drawLocation.contains(x,y)){
@@ -866,6 +868,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			P10DrawCardAction myAction = new P10DrawCardAction(this, true);
 			//send action to the game
 			game.sendAction(myAction);
+			return;
 		}
         for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
         	//phaseLocs[i] = getPhaseLoc(i);
@@ -885,6 +888,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					for (int z = 0; z < selectedCards.length; z++) {
 						selectedCards[z] = 0; //deselect all cards
 					}
+					return;
 				}
 				else {
 					int count = 0;
@@ -901,6 +905,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
+						return;
 					}
 				}
 			}
@@ -924,6 +929,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					if (state.getChooseSkip()) {
 						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
 						game.sendAction(myAction);
+						return;
 					}
 					else if(count == 1) {
 						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
@@ -931,6 +937,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
+						return;
 					}
 					else{
 						surface.flash(Color.RED, 50);
@@ -939,6 +946,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					if (state.getChooseSkip()) {
 						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
 						game.sendAction(myAction);
+						return;
 					}
 					if (count == 1) {
 						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
@@ -946,6 +954,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
+						return;
 					} else {
 						surface.flash(Color.RED, 50);
 					}

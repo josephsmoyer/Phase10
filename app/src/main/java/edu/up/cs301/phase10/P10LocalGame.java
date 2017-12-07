@@ -33,26 +33,32 @@ public class P10LocalGame extends LocalGame {
 	 * Constructor for the P10LocalGame.
 	 */
 	public P10LocalGame(int number) {
-		Log.i("P10LocalGame", "creating game");
+		//Log.i("P10LocalGame", "creating game");
 		// create the state for the beginning of the game
 		state = new P10State(number);
 		String myStateStr = Integer.toString(state.getHand(1).size());
-		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
+		//Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 	}
 	/**
 	 * Constructor for the P10LocalGame.
 	 */
 	public P10LocalGame(int number, Context context) {
-		Log.i("P10LocalGame", "creating game");
+		myContext = context;
+		//Log.i("P10LocalGame", "creating game");
 		// create the state for the beginning of the game
 		state = new P10State(number);
 		String myStateStr = Integer.toString(state.getHand(1).size());
-		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
+		//Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		//state.hook(); //implement the custom state
+		state.hook(); //implement the custom state
 
-		myContext = context;
+		if(state.getDiscardCard().getWildValue() == 14){ //if flips a wild for first card
+			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
+			int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+			state.setToPlay(nextIDX);
+			Toast.makeText(myContext, "First Player skipped, because of skip in discard Pile", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 
@@ -1713,6 +1719,13 @@ public class P10LocalGame extends LocalGame {
 		state.setShouldDraw(true);
 		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
 		state.cleanDecks();
+
+		if(state.getDiscardCard().getWildValue() == 14){ //if flips a wild for first card
+			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
+			int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+			state.setToPlay(nextIDX);
+			Toast.makeText(myContext, "First Player skipped, because of skip in discard Pile", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/*
