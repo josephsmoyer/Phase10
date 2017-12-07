@@ -50,7 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom state
+		//state.hook(); //implement the custom state
 
 		myContext = context;
 	}
@@ -1548,6 +1548,9 @@ public class P10LocalGame extends LocalGame {
 			return false;
 		}
 		if(myCard == null){
+			return false;
+		}
+		if(myCard.getWildValue() == 14){ //skip cards are never a valid hit
 			return false;
 		}
 

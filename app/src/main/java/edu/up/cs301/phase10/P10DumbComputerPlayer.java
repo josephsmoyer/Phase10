@@ -89,20 +89,32 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         Card toDiscard = null;
         ArrayList<Integer> toSave = new ArrayList<Integer>();
 
-        /*if(myCards.size() > 9){     //if havent hit yet, always discard wilds. Dumb computer wont make phase with them
-            if(count[13] != 0){
-                valueToDiscard = 13;
-            }
+        /*
+        if(count[14] > 0){  //always discard skips first
+            Card temp = null;
             for(int i = 0; i < myCards.size(); i++){
-                if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
-                    toDiscard = myCards.peekAt(i);
+                if(myCards.peekAt(i).getWildValue() == 14){
+                    temp = new Card(myCards.peekAt(i));
                 }
             }
-            if(toDiscard != null){
-                return toDiscard;
+            if(temp != null){
+                int playerIdxToSkip = -1;
+                for(int i = 0; i < savedState.getNumberPlayers(); i++){
+                    if(playerNum == 0){ //if comp is player 0, update playertoskip
+                        playerIdxToSkip = 1;
+                    }
+                    if(i != playerNum){ //dont let player skip themselves
+                        if(savedState.getPhases()[i] > savedState.getPhases()[playerIdxToSkip]){
+                            if(!savedState.getAlreadySkip()[i]) { //if player hasnt been skipped yet
+                                playerIdxToSkip = i;    //skip player on highest phase
+                            }
+                        }
+                    }
+                }
+                temp.setSkipValue(playerIdxToSkip);
+                return temp;
             }
         }*/
-
 
         switch(myPhaseNumber){
             case 1:
