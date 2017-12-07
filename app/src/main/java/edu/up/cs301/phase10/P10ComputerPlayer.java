@@ -627,6 +627,95 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 7:
+                for(int i = 0; i < sets.length-2; i++){
+                    int usedWilds = 0;
+                    if(sets4[i]){
+                        //Log.i("numsets", "sets3 "+Integer.toString(i));
+                        numSets++;
+                        sets[i] = true; //if there are 3 of a kind, there is a set their
+                    }
+                    else if(sets3[i]){
+                        int potentialUsedWilds = usedWilds+1;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            //Log.i("numsets", "sets3 "+Integer.toString(i));
+                            usedWilds++;
+                            //Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                    else if (sets2[i]) { //if there is NOT a set of 4, but a partial set of 2
+                        int potentialUsedWilds = usedWilds+2;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            //Log.i("numsets", "sets2 "+Integer.toString(i));
+                            usedWilds++;
+                            //Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                    else if (sets1[i]){ //if there is NOT a set of 2 or 3, but a partial set of 1
+                        int potentialUsedWilds = usedWilds+3;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            Log.i("numsets", "sets1 "+Integer.toString(i));
+                            usedWilds++;
+                            usedWilds++;
+                            Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                }
+                if(numSets >= 2){                               //if there are two sets
+                    int set1 = -1;      //value of set 1 cards
+                    int added1 = 0;     //how many set 1 cards were added
+                    int set2 = -1;
+                    int added2 = 0;
+                    for(int j = 0; j < sets.length; j++){
+                        if(sets[j]){
+                            if(set1 == -1){
+                                set1 = j;
+                            }
+                            else if (set2 == -1){
+                                set2 = j;
+                            }
+                        }
+                    }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 8){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == set1){
+                                if(added1 < 4) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added1++;
+                                }
+                            }
+                            else if(myCards.peekAt(j).getRank().value(1) == set2){
+                                if(added2 < 4) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 8){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == 13){ //if wild
+                                if(added1 < 4) {
+                                    Card tempCard = new Card(myCards.peekAt(j));
+                                    tempCard.setWildValue(set1);
+                                    toReturn.add(tempCard);
+                                    added1++;
+                                }
+                                if(added2 < 4) {
+                                    Card tempCard = new Card(myCards.peekAt(j));
+                                    tempCard.setWildValue(set2);
+                                    toReturn.add(tempCard);
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case 8:
                 break;
