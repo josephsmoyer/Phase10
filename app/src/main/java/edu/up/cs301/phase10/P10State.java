@@ -50,6 +50,8 @@ public class P10State extends GameState
 	private boolean[] toSkip;
 	//Array correlating player number to if they have already been skipped
 	private boolean[] alreadySkip;
+	//Boolean telling player to choose someone to skip
+	private boolean chooseSkip;
 
 	//Array of deck objects, for each players hand
 	private Deck[] hands;
@@ -76,6 +78,7 @@ public class P10State extends GameState
 		scorePlace = new int[numPlayers];
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
+		chooseSkip = false;
 		hands = new Deck[numPlayers];
 		Log.i("NUmberPlayers", Integer.toString(numPlayers));
 		for(int i = 0; i < numPlayers; i++){
@@ -166,6 +169,7 @@ public class P10State extends GameState
 		scorePlace = new int[numPlayers];
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
+		chooseSkip = orig.chooseSkip;
 		//Copy the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
 			phases[i] = orig.phases[i];
@@ -220,10 +224,13 @@ public class P10State extends GameState
 		scores = new int[numPlayers];
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
+		chooseSkip = orig.chooseSkip;
 		//Copy the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
 			phases[i] = orig.phases[i];
+			phasePlace[i] = orig.phasePlace[i];
 			scores[i] = orig.scores[i];
+			scorePlace[i] = orig.scorePlace[i];
 			toSkip[i] = orig.toSkip[i];
 			alreadySkip[i] = orig.alreadySkip[i];
 		}
@@ -257,7 +264,7 @@ public class P10State extends GameState
 			//myDeck.add(one);
 			//myDeck.add(two);
 			//myDeck.add(three);
-			myDeck.add(four);
+			//myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
@@ -282,14 +289,14 @@ public class P10State extends GameState
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
-			//myDeck.add(wild);
-			//myDeck.add(skip);
+			myDeck.add(wild);
+			myDeck.add(skip);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
 			myDeck.add(two);
 			//myDeck.add(three);
-			myDeck.add(four);
+			//myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
@@ -298,8 +305,8 @@ public class P10State extends GameState
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
-			myDeck.add(wild);
-			//myDeck.add(skip);
+			//myDeck.add(wild);
+			myDeck.add(skip);
 		}
 
 		if(hookHand) {
@@ -317,6 +324,13 @@ public class P10State extends GameState
 			//alreadySkip[i] = false;					//start no players marked as already been skipped
 		}
 		//phases[0] = 9;
+	}
+
+	public boolean getChooseSkip() { return chooseSkip; }
+
+	public void setChooseSkip(boolean yon) {
+		Log.i("ChooseSkip set", Boolean.toString(yon));
+		chooseSkip = yon;
 	}
 
 	/**
