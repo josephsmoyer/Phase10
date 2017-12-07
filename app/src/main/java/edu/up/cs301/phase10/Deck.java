@@ -280,6 +280,7 @@ public class Deck implements Serializable {
 		for(int i = 0; i < size(); i++){
 			int minPos = i;
 			for(int j = i + 1; j < size(); j++){
+
 				if(cards.get(minPos).getWildValue() > cards.get(j).getWildValue()){
 					minPos = j;
 				}
