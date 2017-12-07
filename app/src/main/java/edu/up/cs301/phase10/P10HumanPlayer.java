@@ -438,20 +438,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						float rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][0] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][0] = myLoc;
 						rectTop1 = rectTop + 4 * (SMALL_CARD_HEIGHT_PERCENT + SMALL_VER_OVERLAP) * height / 100f;
 						rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 						rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][1] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][1] = myLoc;
 
 						//turn indicator
 						rectTop1 = rectTop + (10 * height / 100f);
 						rectBottom1 = rectTop1 + (2.5f * height / 100f);
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-						computerTurnLocation[i] = myLoc;
+						computerTurnLocation[(i+playerNum)%(players-1)] = myLoc;
 					}
 				} else {
 					float rectTop1;
@@ -479,22 +479,23 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[0][0] = myLoc;
+					computerPhaseLocs[playerNum][0] = myLoc;
 					rectTop1 = rectTop + 1.75f * height * (SMALL_CARD_HEIGHT_PERCENT + 2 * SMALL_VER_OVERLAP) / 100;
 					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					rectLeft1 = rectLeft + width * 5 * (SMALL_CARD_WIDTH_PERCENT) / 100;
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[0][1] = myLoc;
+					computerPhaseLocs[playerNum][1] = myLoc;
 
 					//turn indicator
-					rectTop1 = rectTop + (7.5f * height / 100f);                                    //Lots of really bad use of variables
-					rectBottom1 = rectTop1 + (2.5f * height / 100f);                            //Will update and comment later
-					rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
-					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
-					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for alpha code
-					computerTurnLocation[0] = myLoc;
+					//Still really bad turn indicator code, but w/e
+					rectTop1 = rectTop;
+					rectBottom1 = rectTop1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP))/10;
+					rectLeft1 = 0;
+					rectRight1 = (2.5f*height/100f);
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for beta code
+					computerTurnLocation[playerNum] = myLoc;
 
 					//Spacing for top row
 					float padding = (100 - (players - 3) * (SMALL_CARD_WIDTH_PERCENT)) / (players - 2);
@@ -521,20 +522,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][0] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][0] = myLoc;
 						rectTop1 = rectTop + 4 * (SMALL_CARD_HEIGHT_PERCENT + SMALL_VER_OVERLAP) * height / 100f;
 						rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 						rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][1] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][1] = myLoc;
 
 						//turn indicator
 						rectTop1 = rectTop + (10 * height / 100f);
 						rectBottom1 = rectTop1 + (2.5f * height / 100f);
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-						computerTurnLocation[i] = myLoc;
+						computerTurnLocation[(i+playerNum)%(players-1)] = myLoc;
 					}
 
 					//right card
@@ -557,23 +558,24 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectLeft1 = rectRight1 - 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[players - 2][0] = myLoc;
+					computerPhaseLocs[(players-2+playerNum)%(players-1)][0] = myLoc;
 					rectTop1 = rectTop + 1.75f * height * (SMALL_CARD_HEIGHT_PERCENT + 2 * SMALL_VER_OVERLAP) / 100;
 					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					rectRight1 = rectRight - width * 5 * (SMALL_CARD_WIDTH_PERCENT) / 100;
 					rectLeft1 = rectRight1 - 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[players - 2][1] = myLoc;
+					computerPhaseLocs[(players-2+playerNum)%(players-1)][1] = myLoc;
 
 
 					//turn indicator
-					rectTop1 = rectTop + (7.5f * height / 100f);                                        //Lots of really bad use of variables
-					rectBottom1 = rectTop1 + (2.5f * height / 100f);                                    //Will update and comment later
-					rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
-					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
-					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for alpha code
-					computerTurnLocation[players - 2] = myLoc;
+					//Still really bad turn indicator code, but w/e
+					rectTop1 = rectTop;
+					rectBottom1 = rectTop1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP))/10;
+					rectLeft1 = width - (2.5f*height/100f);
+					rectRight1 = width;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for beta code
+					computerTurnLocation[(players-2+playerNum)%(players-1)] = myLoc;
 
 				}
 
@@ -664,7 +666,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 						//turn indicator
 						if (j == state.getToPlay()) {
-							if (players > 4) {
+							//BAD CODE
+							/*if (players > 4) {
 								if (j - offset == 0) {
 									g.save();
 									g.rotate(90, 0, (35) * height / 100);
@@ -677,10 +680,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 									g.restore();
 								} else {
 									g.drawRect(computerTurnLocation[j - offset], turnPaint);
-								}
-							} else {
-								g.drawRect(computerTurnLocation[j - offset], turnPaint);
-							}
+								}*/
+							//ONLY NEED THIS NOW
+							g.drawRect(computerTurnLocation[j - offset], turnPaint);
 						}
 					}
 				}
