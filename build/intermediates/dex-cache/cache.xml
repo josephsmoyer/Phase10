@@ -3,6 +3,15 @@
 
     <item
         is-multidex="true"
+        jar="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\FinalProject\Phase10\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="91e0535a0fd6c467c7df2914403332dac7b02186">
+        <dex dex="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\FinalProject\Phase10\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_ea6838d28bbb9d88ed4ffb9d350ea183b9e53b40\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\HW5\Phase10\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
@@ -27,6 +36,15 @@
         revision="25.0.0"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\HW5\Phase10\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_03f027c713add429d98c34d4a246ccf783f64bd1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\FinalProject\Phase10\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\Trenton\Documents\UP\Senior\F17\CS301_Object\FinalProject\Phase10\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_e4650effe0c61dc418acb29b710533b9ca1eccf3\classes.dex" />
     </item>
 
 </items>

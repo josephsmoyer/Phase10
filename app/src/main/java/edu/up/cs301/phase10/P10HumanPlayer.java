@@ -69,6 +69,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private RectF[] phaseLocs = new RectF[2]; //2 for the human player
 	//Changing Phase lay down locations
 	private RectF[][] computerPhaseLocs = new RectF[5][2];
+	//Hand Locations for computer players
+	//private RectF[] computerHandLocs = new RectF[5];
 	//Changing turn indicator locations
 	private RectF turnLocation = new RectF();
 	private RectF[] computerTurnLocation = new RectF[5];
@@ -272,22 +274,31 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				RectF s = new RectF(0, 0, width, height);
 				g.drawBitmap(imgBitmap[0], r, s, p);
 
-				//Scores title
-				/*r = new Rect(0,0,imgBitmap[2].getWidth(),imgBitmap[2].getHeight());
-				s = new RectF(1314.45f, 144.44f, 1314.45f+imgBitmap[2].getWidth(), 144.44f+imgBitmap[2].getHeight());
-				g.drawBitmap(imgBitmap[2], r, s, p);*/
-
-
-
-				//score text per player
-				float myX = 1314.45f; 	//specific coordinates according
-				float myY = 248.6f;		//to Adobe Illustrator
+				//phase text per player
+				float myX = 1318f; 	//specific coordinates according
+				float myY = 242f;		//to Adobe Illustrator
+				int[] phasePl = state.getPhasePlace();
+				int[] scorePl = state.getScorePlace();
 				for(int i = 0; i < state.getNumberPlayers(); i++) {
-					if(allPlayerNames[i].length() > 5) {
-						g.drawText(""+allPlayerNames[i].substring(0, 4)+": "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+					if(allPlayerNames[phasePl[i]].length() > 5) {
+						g.drawText(""+allPlayerNames[phasePl[i]].substring(0, 5)+": "+Integer.toString(state.getPhases()[phasePl[i]]), myX, myY, textPaint);
 					}
 					else {
-						g.drawText(""+allPlayerNames[i]+": "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
+						g.drawText(""+allPlayerNames[phasePl[i]]+": "+Integer.toString(state.getPhases()[phasePl[i]]), myX, myY, textPaint);
+					}
+					//scoreX = Math.max(scoreX,);
+					myY = myY + 66;
+				}
+
+				//score text per player
+				myX = 1318f; 	//specific coordinates according
+				myY = 738f;		//to Adobe Illustrator
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					if(allPlayerNames[scorePl[i]].length() > 5) {
+						g.drawText(""+allPlayerNames[scorePl[i]].substring(0, 5)+": "+Integer.toString(state.getScores()[scorePl[i]]), myX, myY, textPaint);
+					}
+					else {
+						g.drawText(""+allPlayerNames[scorePl[i]]+": "+Integer.toString(state.getScores()[scorePl[i]]), myX, myY, textPaint);
 					}
 					//scoreX = Math.max(scoreX,);
 					myY = myY + 66;
@@ -376,8 +387,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 								g.drawText("Set of Three", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
 							}
 							break;
+						case 11:
+							g.drawText("Game Over!", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
+							break;
 						default:
-							g.drawText("ERROR", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
+							g.drawText("Error", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
 					}
 				}
 
@@ -392,6 +406,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						rectLeft = (padding + (i * (SMALL_CARD_WIDTH_PERCENT + padding))) * width / 100;
 						rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
 						RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+						//save hand location to use for onTouch events
+						//computerHandLocs[i] = myRect;
 						g.save();
 						g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT / 2) * width / 100, 0);
 						drawCard(g, myRect, Card.fromString("1x"));
@@ -431,6 +447,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectTop = (25) * height / 100f;
 					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					//save hand location to use for onTouch events
+					//computerHandLocs[0] = myRect;
 					g.save();
 					g.rotate(90, 0, (35) * height / 100);
 					drawCard(g, myRect, Card.fromString("1x"));
@@ -471,6 +489,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						rectLeft = (padding + ((i - 1) * (SMALL_CARD_WIDTH_PERCENT + padding))) * width / 100;
 						rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
 						myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+						//save hand location to use for onTouch events
+						//computerHandLocs[i] = myRect;
 						g.save();
 						g.rotate(180, rectLeft + (SMALL_CARD_WIDTH_PERCENT / 2) * width / 100, 0);
 						drawCard(g, myRect, Card.fromString("1x"));
@@ -505,6 +525,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectTop = (25) * height / 100f;
 					rectBottom = rectTop + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+					//save hand location to use for onTouch events
+					//computerHandLocs[players-2] = myRect;
 					g.save();
 					g.rotate(-90, width, (35) * height / 100);
 					drawCard(g, myRect, Card.fromString("1x"));
@@ -828,6 +850,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				for(int i = 0; i < selectedCards.length; i++){
 					selectedCards[i] = 0; //deselect all cards
 				}
+				return;
 			}
 			else if (count > 1) { //if more than 1 card is selected, flash
                 surface.flash(Color.RED, 50);
@@ -837,6 +860,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				P10DrawCardAction myAction = new P10DrawCardAction(this, false);
 				//send action to the game
 				game.sendAction(myAction);
+				return;
 			}
 		}
 		if(drawLocation.contains(x,y)){
@@ -844,6 +868,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			P10DrawCardAction myAction = new P10DrawCardAction(this, true);
 			//send action to the game
 			game.sendAction(myAction);
+			return;
 		}
         for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
         	//phaseLocs[i] = getPhaseLoc(i);
@@ -863,6 +888,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					for (int z = 0; z < selectedCards.length; z++) {
 						selectedCards[z] = 0; //deselect all cards
 					}
+					return;
 				}
 				else {
 					int count = 0;
@@ -879,6 +905,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
+						return;
 					}
 				}
 			}
@@ -899,29 +926,39 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 
 				if (computerPhaseLocs[i - offset][0].contains(x, y)) {
-					if(count == 1) {
+					if (state.getChooseSkip()) {
+						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
+						game.sendAction(myAction);
+						return;
+					}
+					else if(count == 1) {
 						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
 						game.sendAction(myAction);
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
+						return;
 					}
 					else{
 						surface.flash(Color.RED, 50);
 					}
 				} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
-					if(count == 1) {
+					if (state.getChooseSkip()) {
+						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
+						game.sendAction(myAction);
+						return;
+					}
+					if (count == 1) {
 						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
 						game.sendAction(myAction);
 						for (int k = 0; k < selectedCards.length; k++) {
 							selectedCards[k] = 0; //deselect all cards
 						}
-					}
-					else{
+						return;
+					} else {
 						surface.flash(Color.RED, 50);
 					}
 				}
-
 			}
 		}
 	}

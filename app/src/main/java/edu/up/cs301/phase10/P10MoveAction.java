@@ -46,4 +46,5 @@ public abstract class P10MoveAction extends GameAction {
     }
     public boolean isDrawCard(){return false;}
     public boolean isDiscardCard(){return false;}
+    public boolean isSkipPlayer(){return false;}
 }

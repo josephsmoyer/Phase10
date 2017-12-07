@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Color;
 import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.infoMsg.GameInfo;
 
@@ -22,22 +23,22 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         String message = "Computer"+Integer.toString(playerNum);
         //Log.i(message, "Received");
 
-    	// if we don't have a game-state, ignore
-    	if (!(info instanceof P10State)) {
-    		return;
-    	}
+        // if we don't have a game-state, ignore
+        if (!(info instanceof P10State)) {
+            return;
+        }
 
-    	// update our state variable
-    	savedState = (P10State)info;
+        // update our state variable
+        savedState = (P10State)info;
 
         //Log.i("Players hand size", Integer.toString(savedState.getHand(playerNum).size()));
 
         //if its this players turn
-    	if (savedState.getToPlay() == this.playerNum) {
+        if (savedState.getToPlay() == this.playerNum) {
             String turnIs = Integer.toString(savedState.getToPlay());
             Log.i("Players turn", turnIs);
             // delay for 0.5 seconds
-        	sleep(500);
+            sleep(500);
 
             //create an generic action to be set and sent later
             GameAction myAction = null;
@@ -46,6 +47,15 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
             if(savedState.getShouldDraw()){
                 Log.i("Drawing - Player", Integer.toString(this.playerNum));
                 myAction = new P10DrawCardAction(this, true);  //dumb player always draws from draw pile
+            }
+            //if next valid action is to skip player
+            else if (savedState.getChooseSkip()) {
+                int random;
+                do {
+                    random = (int) (Math.random() * (savedState.getNumberPlayers()));
+                } while (random == playerNum);
+                //if (savedState.getAlreadySkip() && !savedState.getToSkip)
+                myAction = new P10SkipPlayerAction(this, random);
             }
             else { //if its not time to draw
                 //if neither phase component has been made
@@ -59,8 +69,8 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         }
                     }
                 }
-                else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 && savedState.getPlayedPhase()[playerNum][1].size() != 0) {
-                    //will put code for hitting cards here
+                else if (savedState.getPlayedPhase()[playerNum][0].size() != 0 /*&& savedState.getPlayedPhase()[playerNum][1].size() != 0*/) {
+                    //dont compare both phase components - will break when only one phase component
                     P10HitCardAction temp = generateHitCardAction();
                     if(temp != null){
                         myAction = temp;
@@ -76,9 +86,11 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
             }
 
-        	// submit our move to the game object
-        	game.sendAction(myAction);
-    	}
+
+
+            // submit our move to the game object
+            game.sendAction(myAction);
+        }
     }
 
     @Override
@@ -88,30 +100,25 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         Card toDiscard = null;
         ArrayList<Integer> toSave = new ArrayList<Integer>();
 
-        /*if(myCards.size() > 9){     //if havent hit yet, always discard wilds. Dumb computer wont make phase with them
-            if(count[13] != 0){
-                valueToDiscard = 13;
-            }
-            for(int i = 0; i < myCards.size(); i++){
-                if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
-                    toDiscard = myCards.peekAt(i);
+
+        if(count[14] > 0){  //always discard skips first
+            Card temp = null;
+            for(int i = 0; i < myCards.size(); i++) {
+                if (myCards.peekAt(i).getWildValue() == 14) {
+                    temp = new Card(myCards.peekAt(i));
+                    return temp;
                 }
             }
-            if(toDiscard != null){
-                return toDiscard;
-            }
-        }*/
-
-
+        }
         switch(myPhaseNumber){
             case 1:
-                for(int i = 0; i < count.length; i++){                  //finds a card you only have one of
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
                     if (count[i] == 1){
                         valueToDiscard = i;
                     }
                 }
                 if(valueToDiscard == -1){                               //if no single cards
-                    for(int i = 0; i < count.length; i++){
+                    for(int i = 0; i < count.length-2; i++){
                         if(count[i] != 0){                              //find a value you have multiple of
                             valueToDiscard = i;                         //decide to discard that value
                         }
@@ -133,7 +140,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         do {
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
                     toDiscard = myCards.peekAt(random);
                 }
@@ -200,7 +207,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         do {
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
                     toDiscard = myCards.peekAt(random);
                 }
@@ -260,6 +267,149 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 if(toDiscard == null){                                  //if discard card never got set
                     int random;
+                    if(myCards.size() == count[13]){                        //if all wilds
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            //Log.i("Stuck in", "Do-While");
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
+                    }
+                    toDiscard = new Card(myCards.peekAt(random));
+                }
+                break;
+            case 4:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
+                break;
+            case 5:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
+                break;
+            case 6:
+                valueToDiscard = -1;
+                for(int i = 0; i < count.length-2; i++){ //dont check wild/skip
+                    if(count[i] > 1){
+                        valueToDiscard = i; //discards highest value duplicate
+                    }
+                }
+                if(valueToDiscard == -1){
+                    int normalCards = 0;
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] > 0){
+                            normalCards++;  //find out how many non-special cards you have
+                        }
+                    }
+                    if(normalCards != 0) {  //if there is a non-special card
+                        do {
+                            //Log.i("Stuck in", "Non-Special");
+                            valueToDiscard = (int) (Math.random() * 12 + 1);    //if no duplciates, discard value = 1->12
+                            //Log.i("value to discard", Integer.toString(valueToDiscard));
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                    else{
+                        do {
+                            //Log.i("Stuck in", "All-Special");
+                            valueToDiscard = (int) (Math.random() * 14 + 1);    //if no duplciates, discard value = 1->12, Wild, Skip
+                        }
+                        while (count[valueToDiscard] == 0); //repeat random until found a card to discard in hand
+                    }
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){
+                        toDiscard = new Card(myCards.peekAt(i));
+                    }
+                }
+                break;
+            case 7:
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
+                }
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] == 2){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
+                }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random;
                     if(myCards.size() == count[13]){
                         random = (int) Math.random() * myCards.size();     //pick a random card
                     }
@@ -267,24 +417,129 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                         do {
                             random = (int) Math.random() * myCards.size();     //pick a random card
                         }
-                        while (myCards.peekAt(random).getRank().value(1) != 13); //repick if its wild
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
                     }
-                    toDiscard = new Card(myCards.peekAt(random));
+                    toDiscard = myCards.peekAt(random);
                 }
                 break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
-                break;
             case 8:
+                int[] colors = new int[5]; //red(0), blue(1), green(2), yellow(3), black(4)
+                for(int i = 0; i < colors.length; i++){
+                    colors[i] = 0;
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getSuit() == Color.Red){
+                        colors[0]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Blue){
+                        colors[1]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Green){
+                        colors[2]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Yellow){
+                        colors[3]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Black){
+                        colors[4]++;
+                    }
+                }
+                int minPos = 0;
+                for(int i = 1; i < colors.length-1; i++){ //minus 1, never discard wilds
+                    if(colors[minPos] == 0){    //if no cards of that color, auto update minpos
+                        minPos = i;
+                    }
+
+                    if(colors[i] < colors[minPos] && colors[i] > 0){    //only check if wouldnt set to zero
+                        minPos = i; //find color with least cards
+                    }
+                }
+                Color killColor = null;
+                if(minPos == 0){
+                    killColor = Color.Red;
+                }
+                if(minPos == 1){
+                    killColor = Color.Blue;
+                }
+                if(minPos == 2){
+                    killColor = Color.Green;
+                }
+                if(minPos == 3){
+                    killColor = Color.Yellow;
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getSuit() == killColor){
+                        toDiscard = new Card(myCards.peekAt(i)); //discards highest value card of minColor
+                    }
+                }
                 break;
             case 9:
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
+                }
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] != 0){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
+                }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
+                    }
+                    toDiscard = myCards.peekAt(random);
+                }
                 break;
             case 10:
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
+                }
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] != 0){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
+                }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
+                    }
+                    toDiscard = myCards.peekAt(random);
+                }
                 break;
         }
 

@@ -11,59 +11,59 @@ import edu.up.cs301.game.infoMsg.GameInfo;
 /**
  * This is a computer player that slaps at an average rate given
  * by the constructor parameter.
- * 
+ *
  * @author Steven R. Vegdahl
- * @version July 2013 
+ * @version July 2013
  */
 public class P10ComputerPlayer extends GameComputerPlayer
 {
-	// the minimum reaction time for this player, in milliseconds
-	protected double minReactionTimeInMillis;
-	
-	// the most recent state of the game
-	protected P10State savedState;
-	
+    // the minimum reaction time for this player, in milliseconds
+    protected double minReactionTimeInMillis;
+
+    // the most recent state of the game
+    protected P10State savedState;
+
     /**
      * Constructor for the P10ComputerPlayer class; creates an "average"
      * player.
-     * 
+     *
      * @param name
      * 		the player's name
      */
     public P10ComputerPlayer(String name) {
         // invoke general constructor to create player whose average reaction
-    	// time is half a second.
+        // time is half a second.
         this(name, 0.5);
-    }	
-    
+    }
+
     /*
      * Constructor for the P10ComputerPlayer class
      */
     public P10ComputerPlayer(String name, double avgReactionTime) {
         // invoke superclass constructor
         super(name);
-        
+
         // set the minimim reaction time, which is half the average reaction
         // time, converted to milliseconds (0.5 * 1000 = 500)
         minReactionTimeInMillis = 500*avgReactionTime;
     }
 
-	/**
-	 * Invoked whenever the player's timer has ticked. It is expected
-	 * that this will be overridden in many players.
-	 */
+    /**
+     * Invoked whenever the player's timer has ticked. It is expected
+     * that this will be overridden in many players.
+     */
     //@Override
     //protected void timerTicked() {
 		/*
     	// we had seen a Jack, now we have waited the requisite time to slap
-    	
+
     	// look at the top card now. If it's still a Jack, slap it
     	Card topCard = savedState.getDeck(2).peekAtTopCard();
     	if (topCard != null && topCard.getRank() == Rank.SKIP) {
     		// the Jack is still there, so submit our move to the game object
     		game.sendAction(new P10MakePhaseAction(this));
     	}
-    	
+
     	// stop the timer, since we don't want another timer-tick until it
     	// again is explicitly started
     	getTimer().stop();
@@ -81,16 +81,16 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	if (!(info instanceof P10State)) {
     		return;
     	}
-    	
+
     	// update our state variable
     	savedState = (P10State)info;
-    	
+
     	// access the state's middle deck
     	Deck middleDeck = savedState.getDeck(2);
-    	
+
     	// look at the top card
     	Card topCard = middleDeck.peekAtTopCard();
-    	
+
     	// if it's a Jack, slap it; otherwise, if it's our turn to
     	// play, play a card
     	if (topCard != null && topCard.getRank() == Rank.WILD) {
@@ -103,10 +103,10 @@ public class P10ComputerPlayer extends GameComputerPlayer
     	}
     	else if (savedState.toPlay() == this.playerNum) {
     		// not a Jack but it's my turn to play a card
-    		
+
     		// delay for up to two seconds; then play
         	sleep((int)(2000*Math.random()));
-        	
+
         	// submit our move to the game object
         	game.sendAction(new P10PlayAction(this));
     	}
@@ -528,18 +528,390 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 break;
             case 4:
+                int[] runPotentials = runPots(myCards, 7);
+                int bestRunStart = 1;
+
+                for(int i = 1; i < runPotentials.length; i++){
+                    if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+                        bestRunStart = i;
+                    }
+                }
+
+                if(runPotentials[bestRunStart] + cards[13] >= 7){ //if have enough wilds
+                    boolean alreadyAdded[] = new boolean[13];
+                    for(int i = 1; i < alreadyAdded.length; i++){
+                        alreadyAdded[i] = false;
+                    }
+                    int numWildsAdded = 0;
+                    numWildsNeeded = 7-runPotentials[bestRunStart];
+                    for(int i = 0; i < myCards.size(); i++){
+                        Card temp = new Card(myCards.peekAt(i));
+                        int value = temp.getWildValue();
+                        if(value < 13) {   //if not wild or skip
+                            if ((!alreadyAdded[value]) && value < bestRunStart + 7 && value >= bestRunStart) {
+                                toReturn.add(temp);
+                                alreadyAdded[value] = true;
+                            }
+                        }
+                        if(value == 13 && numWildsAdded < numWildsNeeded){
+                            toReturn.add(temp);
+                            numWildsAdded++;
+                        }
+                    }
+                }
                 break;
             case 5:
+                runPotentials = runPots(myCards, 8);
+                bestRunStart = 1;
+
+                for(int i = 1; i < runPotentials.length; i++){
+                    if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+                        bestRunStart = i;
+                    }
+                }
+
+                if(runPotentials[bestRunStart] + cards[13] >= 8){ //if have enough wilds
+                    boolean alreadyAdded[] = new boolean[13];
+                    for(int i = 1; i < alreadyAdded.length; i++){
+                        alreadyAdded[i] = false;
+                    }
+                    int numWildsAdded = 0;
+                    numWildsNeeded = 8-runPotentials[bestRunStart];
+                    for(int i = 0; i < myCards.size(); i++){
+                        Card temp = new Card(myCards.peekAt(i));
+                        int value = temp.getWildValue();
+                        if(value < 13) {   //if not wild or skip
+                            if ((!alreadyAdded[value]) && value < bestRunStart + 8 && value >= bestRunStart) {
+                                toReturn.add(temp);
+                                alreadyAdded[value] = true;
+                            }
+                        }
+                        if(value == 13 && numWildsAdded < numWildsNeeded){
+                            toReturn.add(temp);
+                            numWildsAdded++;
+                        }
+                    }
+                }
                 break;
             case 6:
+                runPotentials = runPots(myCards, 9);
+                bestRunStart = 1;
+
+                for(int i = 1; i < runPotentials.length; i++){
+                    if(runPotentials[i] > runPotentials[bestRunStart]){	//find group of cards best fit for a run
+                        bestRunStart = i;
+                    }
+                }
+
+                if(runPotentials[bestRunStart] + cards[13] >= 9){ //if have enough wilds
+                    boolean alreadyAdded[] = new boolean[13];
+                    for(int i = 1; i < alreadyAdded.length; i++){
+                        alreadyAdded[i] = false;
+                    }
+                    int numWildsAdded = 0;
+                    numWildsNeeded = 9-runPotentials[bestRunStart];
+                    for(int i = 0; i < myCards.size(); i++){
+                        Card temp = new Card(myCards.peekAt(i));
+                        int value = temp.getWildValue();
+                        if(value < 13) {   //if not wild or skip
+                            if ((!alreadyAdded[value]) && value < bestRunStart + 9 && value >= bestRunStart) {
+                                toReturn.add(temp);
+                                alreadyAdded[value] = true;
+                            }
+                        }
+                        if(value == 13 && numWildsAdded < numWildsNeeded){
+                            toReturn.add(temp);
+                            numWildsAdded++;
+                        }
+                    }
+                }
                 break;
             case 7:
+                for(int i = 0; i < sets.length-2; i++){
+                    int usedWilds = 0;
+                    if(sets4[i]){
+                        //Log.i("numsets", "sets3 "+Integer.toString(i));
+                        numSets++;
+                        sets[i] = true; //if there are 3 of a kind, there is a set their
+                    }
+                    else if(sets3[i]){
+                        int potentialUsedWilds = usedWilds+1;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            //Log.i("numsets", "sets3 "+Integer.toString(i));
+                            usedWilds++;
+                            //Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                    else if (sets2[i]) { //if there is NOT a set of 4, but a partial set of 2
+                        int potentialUsedWilds = usedWilds+2;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            //Log.i("numsets", "sets2 "+Integer.toString(i));
+                            usedWilds++;
+                            //Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                    else if (sets1[i]){ //if there is NOT a set of 2 or 3, but a partial set of 1
+                        int potentialUsedWilds = usedWilds+3;
+                        if(cards[13] - potentialUsedWilds > 0){//only increment count of sets if there are enough wilds
+                            numSets++;
+                            Log.i("numsets", "sets1 "+Integer.toString(i));
+                            usedWilds++;
+                            usedWilds++;
+                            Log.i("cards13 - used", Integer.toString(cards[13]-usedWilds));
+                            sets[i] = true;
+                        }
+                    }
+                }
+                if(numSets >= 2){                               //if there are two sets
+                    int set1 = -1;      //value of set 1 cards
+                    int added1 = 0;     //how many set 1 cards were added
+                    int set2 = -1;
+                    int added2 = 0;
+                    for(int j = 0; j < sets.length; j++){
+                        if(sets[j]){
+                            if(set1 == -1){
+                                set1 = j;
+                            }
+                            else if (set2 == -1){
+                                set2 = j;
+                            }
+                        }
+                    }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 8){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == set1){
+                                if(added1 < 4) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added1++;
+                                }
+                            }
+                            else if(myCards.peekAt(j).getRank().value(1) == set2){
+                                if(added2 < 4) {
+                                    toReturn.add(myCards.peekAt(j));
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
+                    for(int j = 0; j < myCards.size(); j++){    //for all cards
+                        if(toReturn.size() < 8){                //if the phase isnt complete already
+                            if(myCards.peekAt(j).getRank().value(1) == 13){ //if wild
+                                if(added1 < 4) {
+                                    Card tempCard = new Card(myCards.peekAt(j));
+                                    tempCard.setWildValue(set1);
+                                    toReturn.add(tempCard);
+                                    added1++;
+                                }
+                                if(added2 < 4) {
+                                    Card tempCard = new Card(myCards.peekAt(j));
+                                    tempCard.setWildValue(set2);
+                                    toReturn.add(tempCard);
+                                    added2++;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case 8:
+                int red = 0;
+                int blue = 0;
+                int green = 0;
+                int yellow = 0;
+                int black = 0;
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getSuit() == Color.Red){
+                        red++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Blue){
+                        blue++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Green){
+                        green++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Yellow){
+                        yellow++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Black && myCards.peekAt(i).getWildValue() == 13){
+                        black++;
+                    }
+                }
+                Color phaseColor = null;
+                if(black >= 7){
+                    phaseColor = Color.Red; //if all wilds, for now, default to red
+                }
+                else if(red + black >= 7){
+                    phaseColor = Color.Red;
+                }
+                else if(blue + black >= 7){
+                    phaseColor = Color.Blue;
+                }
+                else if(green + black >= 7){
+                    phaseColor = Color.Green;
+                }
+                else if(yellow + black >= 7){
+                    phaseColor = Color.Yellow;
+                }
+                if(phaseColor != null) {    //if enough for a phase
+                    for (int i = 0; i < myCards.size(); i++) {
+                        if (toReturn.size() < 7) {
+                            if (myCards.peekAt(i).getSuit() == phaseColor) {
+                                Card temp = myCards.peekAt(i);
+                                toReturn.add(temp);
+                            }
+                        }
+                    }
+                    for (int i = 0; i < myCards.size(); i++) {    //add non-wilds first
+                        if (toReturn.size() < 7) {                //if not enough for full set
+                            if (myCards.peekAt(i).getSuit() == Color.Black && myCards.peekAt(i).getWildValue() == 13) {     //add wilds
+                                Card temp = myCards.peekAt(i);
+                                toReturn.add(temp);
+                            }
+                        }
+                    }
+                }
                 break;
             case 9:
+                int wildsLeft = cards[13];
+                int bigSet = 1;
+                int smallSet = 1;
+                //set bigSet value
+                for(int i = 1; i < cards.length-2; i++){//minus 2 to ignore wild/skip
+                    if(cards[i] > cards[bigSet]){
+                        bigSet = i;
+                    }
+                }
+                //set smallSet value
+                for(int i = 1; i < cards.length-2; i++){//minus 2 to ignore wild/skip
+                    if(smallSet == bigSet){
+                        smallSet = i;       //if small & big have same value, auto increment small
+                    }
+                    if(cards[i] > cards[smallSet] && i != bigSet){ //dont let bigSet == smallSet
+                        smallSet = i;
+                    }
+                }
+                Log.i("Bigset", Integer.toString(bigSet));
+                Log.i("Smallset", Integer.toString(smallSet));
+                if(cards[bigSet] + wildsLeft >= 5){ //if enough wilds to complete bigSet
+                    //Log.i("In Bigset", "Enough Wilds");
+                    int usedWilds = 5 - cards[bigSet];
+                    if(usedWilds < 1){ usedWilds = 0;} //if need no wilds, usedwilds = 0
+                    //Log.i("Used wilds", Integer.toString(usedWilds));
+                    wildsLeft = wildsLeft-usedWilds;
+                    //Log.i("Wilds Left", Integer.toString(wildsLeft));
+                    if(cards[smallSet] + wildsLeft >= 2){ //if enough wilds for smallset
+                        //Log.i("In smallset", "Enough Wilds");
+                        int countBig = 0;
+                        int countSmall = 0;
+                        for(int i = 0; i < myCards.size(); i++){
+                            if(countBig < 5){
+                                if(myCards.peekAt(i).getRank().value(1) == bigSet){
+                                    Card temp = myCards.peekAt(i);
+                                    toReturn.add(temp);
+                                    countBig++;
+                                }
+                            }
+                            if(countSmall < 2){
+                                if(myCards.peekAt(i).getRank().value(1) == smallSet){
+                                    Card temp = myCards.peekAt(i);
+                                    toReturn.add(temp);
+                                    countSmall++;
+                                }
+                            }
+                        }
+                        for(int i = 0; i < myCards.size(); i++){
+                            if(countBig < 5){
+                                if(myCards.peekAt(i).getRank().value(1) == 13){ //if wild
+                                    Card temp = myCards.peekAt(i);
+                                    temp.setWildValue(bigSet);
+                                    toReturn.add(temp);
+                                    countBig++;
+                                }
+                            }
+                            else if(countSmall < 2){
+                                if(myCards.peekAt(i).getRank().value(1) == 13){
+                                    Card temp = myCards.peekAt(i);
+                                    temp.setWildValue(smallSet);
+                                    toReturn.add(temp);
+                                    countSmall++;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
             case 10:
+                wildsLeft = cards[13];
+                bigSet = 1;
+                smallSet = 1;
+                //set bigSet value
+                for(int i = 1; i < cards.length-2; i++){//minus 2 to ignore wild/skip
+                    if(cards[i] > cards[bigSet]){
+                        bigSet = i;
+                    }
+                }
+                //set smallSet value
+                for(int i = 1; i < cards.length-2; i++){//minus 2 to ignore wild/skip
+                    if(smallSet == bigSet){
+                        smallSet = i;       //if small & big have same value, auto increment small
+                    }
+                    if(cards[i] > cards[smallSet] && i != bigSet){ //dont let bigSet == smallSet
+                        smallSet = i;
+                    }
+                }
+                Log.i("Bigset", Integer.toString(bigSet));
+                Log.i("Smallset", Integer.toString(smallSet));
+                if(cards[bigSet] + wildsLeft >= 5){ //if enough wilds to complete bigSet
+                    //Log.i("In Bigset", "Enough Wilds");
+                    int usedWilds = 5 - cards[bigSet];
+                    if(usedWilds < 1){ usedWilds = 0;} //if need no wilds, usedwilds = 0
+                    //Log.i("Used wilds", Integer.toString(usedWilds));
+                    wildsLeft = wildsLeft-usedWilds;
+                    //Log.i("Wilds Left", Integer.toString(wildsLeft));
+                    if(cards[smallSet] + wildsLeft >= 3){ //if enough wilds for smallset
+                        //Log.i("In smallset", "Enough Wilds");
+                        int countBig = 0;
+                        int countSmall = 0;
+                        for(int i = 0; i < myCards.size(); i++){
+                            if(countBig < 5){
+                                if(myCards.peekAt(i).getRank().value(1) == bigSet){
+                                    Card temp = myCards.peekAt(i);
+                                    toReturn.add(temp);
+                                    countBig++;
+                                }
+                            }
+                            if(countSmall < 3){
+                                if(myCards.peekAt(i).getRank().value(1) == smallSet){
+                                    Card temp = myCards.peekAt(i);
+                                    toReturn.add(temp);
+                                    countSmall++;
+                                }
+                            }
+                        }
+                        for(int i = 0; i < myCards.size(); i++){
+                            if(countBig < 5){
+                                if(myCards.peekAt(i).getRank().value(1) == 13){ //if wild
+                                    Card temp = myCards.peekAt(i);
+                                    temp.setWildValue(bigSet);
+                                    toReturn.add(temp);
+                                    countBig++;
+                                }
+                            }
+                            else if(countSmall < 3){
+                                if(myCards.peekAt(i).getRank().value(1) == 13){
+                                    Card temp = myCards.peekAt(i);
+                                    temp.setWildValue(smallSet);
+                                    toReturn.add(temp);
+                                    countSmall++;
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
 
         }
@@ -569,6 +941,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
     }
 
     protected int[] cardsCount(Deck myCards){
+        myCards.sortNumerical();
         int variety[] = new int[15]; //indicator of if a card is used in the phase
         for(int i = 0; i < variety.length; i++){
             variety[i] = 0;			//initialized to zero
@@ -585,6 +958,7 @@ public class P10ComputerPlayer extends GameComputerPlayer
         P10HitCardAction myAction = null;
         for(int u = 0; u < savedState.getHand(playerNum).size(); u++) { //for each card in the hand
             Card c = savedState.getHand(playerNum).peekAt(u);
+            Log.i("Comp Hit Card Val", Integer.toString(c.getWildValue()));
             if(c != null) {
                 for (int i = 0; i < savedState.getNumberPlayers(); i++) {   //for every player
                     for (int j = 0; j < 2; j++) {                           //for each phase component
@@ -602,6 +976,10 @@ public class P10ComputerPlayer extends GameComputerPlayer
 
     private boolean isValidHit(Card myC, int playerToHit, int phaseToHit){
         //return true; //always assume valid hit for now
+
+        if (savedState.getPhases()[playerToHit] > 3 && savedState.getPhases()[playerToHit] < 7) {//phases 4, 5, 6 being hit on
+            phaseToHit = 0; //only one phase comp to hit on
+        }
 
         Card myCard = new Card(myC);
 
@@ -649,8 +1027,9 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 if(set){
                     myCard.setWildValue(myDeck.peekAt(0).getWildValue());
-                    Log.i("myCard Wild Val", Integer.toString(myCard.getWildValue()));
-                    Log.i("set Wild Val", Integer.toString(myDeck.peekAt(0).getWildValue()));
+                    myC.setWildValue(myDeck.peekAt(0).getWildValue());
+                    //Log.i("myCard Wild Val", Integer.toString(myCard.getWildValue()));
+                    //Log.i("set Wild Val", Integer.toString(myDeck.peekAt(0).getWildValue()));
                     if(myCard.getWildValue() == myDeck.peekAt(0).getWildValue()){
                         return true;
                     }
@@ -660,21 +1039,28 @@ public class P10ComputerPlayer extends GameComputerPlayer
                 }
                 else if(run){
                     if(myDeck.maxMin(true) == 12 && myDeck.maxMin(false) == 1){
+                        Log.i("Run Hit Blocker", "Number1");
                         return false; //if run already has 1 to 12, cannot hit
                     }
                     else if(myDeck.maxMin(true) < 12){
-                        myCard.setWildValue(myDeck.maxMin(true)+1); //set to highest possible for now, later allow player to choose
+                        myC.setWildValue(myDeck.maxMin(true)+1); //set to highest possible for now, later allow player to choose
                     }
                     else if(myDeck.maxMin(false) > 1){
-                        myCard.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
+                        myC.setWildValue(myDeck.maxMin(false)-1); //set to lowest possible for now, later allow player to choose
                     }
-                    if(myCard.getWildValue() == (myDeck.maxMin(false)-1)){
+                    Log.i("PhaseMin", Integer.toString(myDeck.maxMin(false)));
+                    Log.i("PhaseMax", Integer.toString(myDeck.maxMin(true)));
+                    Log.i("MyVal", Integer.toString(myC.getWildValue()));
+                    if(myC.getWildValue() == (myDeck.maxMin(false)-1)){
+                        Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
                         return true;
                     }
-                    if(myCard.getWildValue() == (myDeck.maxMin(true))+1){
+                    else if(myC.getWildValue() == (myDeck.maxMin(true))+1){
+                        Log.i("New Wild Val", Integer.toString(myC.getWildValue()));
                         return true;
                     }
                     else{
+                        Log.i("Run Hit Blocker", "Number2");
                         return false;
                     }
                 }
@@ -685,5 +1071,36 @@ public class P10ComputerPlayer extends GameComputerPlayer
         }
         return false;
 
+    }
+
+    /*
+	 * Returns the run potential at each card value, based on run size desired
+	 */
+    protected int[] runPots(Deck myCards, int runsize){
+        int[] countCards = cardsCount(myCards);
+        int[] toReturn = new int[countCards.length-(runsize-1)];
+
+        //minus 2 for ignoring wild/skip, minus (runsize-1) to allow comparison of next cards
+        for(int i = 1; i < countCards.length-2-(runsize-1); i++) {
+
+            int[] cc = new int[runsize];
+            for(int j = 0; j < cc.length; j++){
+                if(countCards[i+j] > 0){
+                    cc[j] = 1;
+                }
+                else {
+                    cc[j] = 0;
+                }
+            }
+
+            int runPotential = 0;
+            for(int j = 0; j < cc.length; j++){
+                runPotential = runPotential + cc[j];
+            }
+            toReturn[i] = runPotential;
+            Log.i("RunP at " + Integer.toString(i), Integer.toString(runPotential));
+        }
+
+        return toReturn;
     }
 }

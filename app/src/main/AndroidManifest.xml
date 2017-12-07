@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme" >
 
         <activity android:name="edu.up.cs301.phase10.P10MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" >
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
