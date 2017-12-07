@@ -51,7 +51,7 @@ public class P10LocalGame extends LocalGame {
 		//Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom state
+		//state.hook(); //implement the custom state
 
 		if(state.getDiscardCard().getWildValue() == 14){ //if flips a wild for first card
 			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
