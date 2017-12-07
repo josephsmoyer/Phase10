@@ -272,16 +272,23 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				RectF s = new RectF(0, 0, width, height);
 				g.drawBitmap(imgBitmap[0], r, s, p);
 
-				//Scores title
-				/*r = new Rect(0,0,imgBitmap[2].getWidth(),imgBitmap[2].getHeight());
-				s = new RectF(1314.45f, 144.44f, 1314.45f+imgBitmap[2].getWidth(), 144.44f+imgBitmap[2].getHeight());
-				g.drawBitmap(imgBitmap[2], r, s, p);*/
-
-
+				//phase text per player
+				float myX = 1318f; 	//specific coordinates according
+				float myY = 242f;		//to Adobe Illustrator
+				for(int i = 0; i < state.getNumberPlayers(); i++) {
+					if(allPlayerNames[i].length() > 5) {
+						g.drawText(""+allPlayerNames[i].substring(0, 4)+": "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
+					}
+					else {
+						g.drawText(""+allPlayerNames[i]+": "+Integer.toString(state.getPhases()[i]), myX, myY, textPaint);
+					}
+					//scoreX = Math.max(scoreX,);
+					myY = myY + 66;
+				}
 
 				//score text per player
-				float myX = 1314.45f; 	//specific coordinates according
-				float myY = 248.6f;		//to Adobe Illustrator
+				myX = 1318f; 	//specific coordinates according
+				myY = 738f;		//to Adobe Illustrator
 				for(int i = 0; i < state.getNumberPlayers(); i++) {
 					if(allPlayerNames[i].length() > 5) {
 						g.drawText(""+allPlayerNames[i].substring(0, 4)+": "+Integer.toString(state.getScores()[i]), myX, myY, textPaint);
