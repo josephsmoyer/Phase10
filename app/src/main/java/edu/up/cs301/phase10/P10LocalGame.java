@@ -274,15 +274,48 @@ public class P10LocalGame extends LocalGame {
 			P10DiscardCardAction myAction = (P10DiscardCardAction) P10ma;
 			Card c = new Card(myAction.toDiscard);
 			state.discardFromHand(thisPlayerIdx, c);
-			//after discarding, the next action should be a draw
-			state.setShouldDraw(true);
-			//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
-			int nextIDX = thisPlayerIdx + 1; //increment players whose turn it is
-			if (nextIDX >= state.getNumberPlayers()) {
-				nextIDX = 0;                //if it was the last players turn, reset to player zero
+			//if discarded card is a skip card trigger a SkipPlayerAction
+			if (c.getRank().value(1) == 14) {
+				state.setChooseSkip(true);
 			}
-			Log.i("Turn is player", Integer.toString(nextIDX));
-			state.setToPlay(nextIDX);        //update\
+			//else move play to next player
+			else {
+				//after discarding, the next action should be a draw
+				state.setShouldDraw(true);
+				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+				int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+				while (state.getToSkip()[nextIDX]) {
+					state.setToSkip(nextIDX, false);
+					state.setAlreadySkip(nextIDX, true);
+					nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
+				}
+				Log.i("Turn is player", Integer.toString(nextIDX));
+				state.setToPlay(nextIDX);        //update
+			}
+		} else if (P10ma.isSkipPlayer()) {
+			P10SkipPlayerAction myAction = (P10SkipPlayerAction) P10ma;
+			int playerToSkip = myAction.getPlayerID();
+			//If player can be skipped
+			if (!state.getAlreadySkip()[playerToSkip]) {
+				Log.i("Skipping Player", Integer.toString(playerToSkip));
+				//Skip player
+				state.setToSkip(playerToSkip, true);
+				//move play to next player
+				state.setShouldDraw(true);
+				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+				int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+				while (state.getToSkip()[nextIDX]) {
+					state.setToSkip(nextIDX, false);
+					state.setAlreadySkip(nextIDX, true);
+					nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
+				}
+				Log.i("Turn is player", Integer.toString(nextIDX));
+				state.setToPlay(nextIDX);        //update
+			}
+			//If player can NOT be skipped
+			else {
+				Log.i("Cannot skip player", Integer.toString(playerToSkip));
+			}
 		} else { // some unexpected action
 			return false;
 		}
