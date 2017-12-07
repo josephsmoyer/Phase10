@@ -295,7 +295,7 @@ public class P10State extends GameState
 			//myDeck.add(one);
 			myDeck.add(two);
 			//myDeck.add(three);
-			myDeck.add(four);
+			//myDeck.add(four);
 			//myDeck.add(five);
 			//myDeck.add(six);
 			//myDeck.add(seven);
@@ -305,6 +305,7 @@ public class P10State extends GameState
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
 			//myDeck.add(wild);
+			myDeck.add(skip);
 		}
 
 		if(hookHand) {

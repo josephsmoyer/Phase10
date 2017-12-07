@@ -276,10 +276,17 @@ public class P10LocalGame extends LocalGame {
 			state.discardFromHand(thisPlayerIdx, c);
 			//if discarded card is a skip card trigger a SkipPlayerAction
 			if (c.getRank().value(1) == 14) {
-				state.setChooseSkip(true);
+				for (int i=0; i < state.getNumberPlayers(); i++) {
+					//If any player (excluding the discarder) has not been skipped, trigger a SkipPlayerAction
+					if (!state.getToSkip()[i] && !state.getAlreadySkip()[i]) {
+						if (i != thisPlayerIdx) {
+							state.setChooseSkip(true);
+						}
+					}
+				}
 			}
-			//else move play to next player
-			else {
+			//If a SkipPlayerAction was not triggered, move play to next player
+			if (!state.getChooseSkip()) {
 				//after discarding, the next action should be a draw
 				state.setShouldDraw(true);
 				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
@@ -300,6 +307,7 @@ public class P10LocalGame extends LocalGame {
 				Log.i("Skipping Player", Integer.toString(playerToSkip));
 				//Skip player
 				state.setToSkip(playerToSkip, true);
+				state.setChooseSkip(false);
 				//move play to next player
 				state.setShouldDraw(true);
 				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
