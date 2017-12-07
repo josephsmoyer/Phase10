@@ -40,8 +40,12 @@ public class P10State extends GameState
 	private boolean shouldDraw;
 	//Array correlating player number to phase
 	private int[] phases;
+	//Array ordering phase from highest to lowest
+	private int[] phasePlace;
 	//Array correlating player number to score
 	private int[] scores;
+	//Array ordering score from lowest to highest
+	private int[] scorePlace;
 	//Array correlating player number to if they have a skip pending
 	private boolean[] toSkip;
 	//Array correlating player number to if they have already been skipped
@@ -67,7 +71,9 @@ public class P10State extends GameState
 		discardPile = new Deck();
 		shouldDraw = true;
 		phases = new int[numPlayers];
+		phasePlace = new int[numPlayers];
 		scores = new int[numPlayers];
+		scorePlace = new int[numPlayers];
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
 		hands = new Deck[numPlayers];
@@ -86,7 +92,9 @@ public class P10State extends GameState
 		//Initialize the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
 			phases[i] = 1;							//start all players on phase 1
+			phasePlace[i] = i;						//start phase placement based off index
 			scores[i] = 0;							//start all players with a score of zero
+			scorePlace[i] = i;						//start score placement based off index
 			toSkip[i] = false;						//start no players with a skip pending
 			alreadySkip[i] = false;					//start no players marked as already been skipped
 		}
@@ -153,13 +161,17 @@ public class P10State extends GameState
 		}
 
 		phases = new int[numPlayers];
+		phasePlace = new int[numPlayers];
 		scores = new int[numPlayers];
+		scorePlace = new int[numPlayers];
 		toSkip = new boolean[numPlayers];
 		alreadySkip = new boolean[numPlayers];
 		//Copy the rest of player specific info, been skipped, score, etc...
 		for(int i = 0; i < numPlayers; i++){
 			phases[i] = orig.phases[i];
+			phasePlace[i] = orig.phasePlace[i];
 			scores[i] = orig.scores[i];
+			scorePlace[i] = orig.scorePlace[i];
 			toSkip[i] = orig.toSkip[i];
 			alreadySkip[i] = orig.alreadySkip[i];
 		}
@@ -499,6 +511,8 @@ public class P10State extends GameState
 		}
 	}
 
+
+
 	/**
 	 * discards a card from a specific players hand to the discard pile
 	 *
@@ -529,6 +543,25 @@ public class P10State extends GameState
 		return playedPhase;
 	}
 
+	/**
+	 * Returns the placings based on it's phase placement
+	 *
+	 * @return a placing array
+	 */
+	public int[] getPhasePlace() {
+		return phasePlace;
+	}
+
+	/**
+	 * Returns the placings based on it's score placement
+	 *
+	 * @return a placing array
+	 */
+	public int[] getScorePlace() {
+		return scorePlace;
+	}
+
+
 	/*
      * Moves all cards, except top card, from discard pile back to draw pile, and shuffles
      */
@@ -539,6 +572,30 @@ public class P10State extends GameState
 		}
 		drawPile.shuffle();
 		discardPile.add(top);                               //return the top card to the discard pile
+	}
+
+	/*
+	 * Creates rankings/placements for all players
+	 * To be displayed on stats page
+	 */
+	public void updatePlacements() {
+		int holder;
+		for(int i=0; i<numPlayers; i++) {
+			for (int j=0; j<numPlayers-1;j++) {
+				//If person at worse ranking has higher phase, switch places
+				if (phases[phasePlace[j]] < phases[phasePlace[j + 1]]) {
+					holder = phasePlace[j];
+					phasePlace[j] = phasePlace[j + 1];
+					phasePlace[j + 1] = holder;
+				}
+				//If person at worse ranking has lower score, switch places
+				if (scores[scorePlace[j]] > scores[scorePlace[j + 1]]) {
+					holder = scorePlace[j];
+					scorePlace[j] = scorePlace[j + 1];
+					scorePlace[j + 1] = holder;
+				}
+			}
+		}
 	}
 
 	public void cleanDecks(){

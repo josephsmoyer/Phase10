@@ -1295,7 +1295,7 @@ public class P10LocalGame extends LocalGame {
 			Card c = null;
 			//Empty the hands for each player, and score
 			do{
-				if(state.getHand(i).size() != 0) {
+				if(state.getHand(i).size() != 0) { //this if statement is a little redundant with the do-while loop
 					c = state.getHand(i).removeTopCard();
 					if (c.getRank().value(1) < 10) {
 						int temp = state.getScores()[i] + 5;
@@ -1330,6 +1330,7 @@ public class P10LocalGame extends LocalGame {
 			state.setToSkip(i, false);
 			state.setAlreadySkip(i, false);
 		}
+		state.updatePlacements();
 		//Reset "the Dealer" to be player 0
 		state.setToPlay(0);
 		//Start with a draw action
