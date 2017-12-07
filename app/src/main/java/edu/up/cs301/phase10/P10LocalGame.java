@@ -66,7 +66,7 @@ public class P10LocalGame extends LocalGame {
 		//basic win check - sends message when someone has made the final phase
 		ArrayList<Integer> completed = new ArrayList<Integer>();
 		for (int i = 0; i < state.getNumberPlayers(); i++) {
-			if (state.getPhases()[i] == 10) {	//change to 10 for full game play
+			if (state.getPhases()[i] == 11) {	//change to 10 for full game play
 				completed.add(i);
 			}
 		}
@@ -244,6 +244,9 @@ public class P10LocalGame extends LocalGame {
 				}
 				int phaseToHit = myAction.getPhaseToHit();
 				if (state.getPhases()[myAction.getPlayerToHit()] > 3 && state.getPhases()[myAction.getPlayerToHit()] < 7) {//phases 4, 5, 6 being hit on
+					phaseToHit = 0; //only one phase comp to hit on
+				}
+				if (state.getPhases()[myAction.getPlayerToHit()] == 8) {//phases 8 being hit on
 					phaseToHit = 0; //only one phase comp to hit on
 				}
 				state.getPlayedPhase()[myAction.getPlayerToHit()][phaseToHit].add(c);
@@ -619,11 +622,162 @@ public class P10LocalGame extends LocalGame {
 				}
 				return shouldPass;
 			case 8:
-				break;
+				Color phaseColor = null;
+				if(myCards.size() != 7){
+					return false; //need 7 cards of same color
+				}
+				for(int i = 0; i < myCards.size(); i++){
+					if(phaseColor == null && myCards.peekAt(i).getSuit() != Color.Black){
+						//if phase color isnt set, and its not a wild card
+						phaseColor = myCards.peekAt(i).getSuit(); //set phase color
+						Log.i("Phase Color", phaseColor.toString());
+					}
+					if(!(myCards.peekAt(i).getSuit() == phaseColor || (myCards.peekAt(i).getSuit() == Color.Black && myCards.peekAt(i).getWildValue() == 13)) ){
+						//if doesnt match phase color, and not a wild
+						return false;
+					}
+				}
+				return true;
 			case 9:
-				break;
+				if (myCards.size() != 7) { //both components of phase 9 add to 7 cards
+					//Log.i("Amount of Cards given", Integer.toString(myCards.size()));
+					return false;
+				}
+				variety = new int[15]; //indicator of if a card is used in the phase need 1-14, ignore zero for readability
+				for (int i = 0; i < variety.length; i++) {
+					variety[i] = 0;            //initialized to zero
+				}
+				for (int i = 0; i < myCards.size(); i++) {
+					int val = myCards.peekAt(i).getRank().value(1);
+					Log.i("Incrementing variety at", Integer.toString(val));
+					variety[val]++; //increment the variety at a specific location, based on card value
+				}
+				count = 0;
+				shouldPass = true;
+				for (int i = 0; i < variety.length; i++) {
+					if (variety[i] != 0) {
+						count++;
+					}
+					if (!(variety[i] == 5 || variety[i] == 2) && variety[i] != 0) {    //if there are not 2 or 5 of each variety
+						shouldPass = false;
+					}
+				}
+				//Log.i("Count of variety", Integer.toString(count));
+				if (count == 1) { //all 7 of the same card
+					return true;
+				}
+				else if (count == 2 && variety[13] != 0) { //one type of card plus wildcards
+					int wildsNeeded = 0;
+					for(int i = 0; i <=12; i++){
+						if(variety[i] != 0){
+							wildsNeeded = 7 - variety[i]; //need to add to seven, including wilds and 1 card rank
+							if(wildsNeeded == variety[13]){
+								shouldPass = true; //if have enough wild cards, valid phase
+								//Log.i("isValidPhase", "Legal");
+							}
+						}
+					}
+				}
+				else if (count == 3 && variety[13] != 0) { //two types of cards plus wild cards
+					int wildCardsNeeded = 0;
+					boolean bigPiece = false;		//increments to true when bigpiece has been found
+					for (int i  = 0; i <= 12; i++){ //only increment over value cards, not skip (14) or wild (13)
+						if(variety[i] != 0){	//if there is a set or incomplete set - already determined to be 1 or 2 ranks only
+							if(variety[i] > 2 && !bigPiece) {
+								//if found a group, and its already more than 2
+								bigPiece = true;	//first time this happens, flag as bigPiece
+								wildCardsNeeded = wildCardsNeeded + (5 - variety[i]); //mark each incomplete set as needing a wildcard
+							}
+							else if(variety[i] > 2 && bigPiece){
+								return false; //cant have two sets of more than 2
+							}
+							else if(variety[i] <= 2){
+								//only need to add to 2 for the smaller set
+								wildCardsNeeded = wildCardsNeeded + (2 - variety[i]);
+							}
+						}
+					}
+					if(!bigPiece){
+						//if neither set portion had more than 2 cards, need 3 more wilds
+						wildCardsNeeded = wildCardsNeeded + 3;
+					}
+					if (wildCardsNeeded == variety[13]){
+						return true;	//if you have enough wild cards for the sets, it is a valid phase
+					}
+				} else if (count > 3) { //if there are more than three card values given
+					return false;	//not valid phase 1 if more than 3 card types - ignoring wild card case
+				}
+				return shouldPass;
 			case 10:
-				break;
+				if (myCards.size() != 8) { //both components of phase 9 add to 7 cards
+					//Log.i("Amount of Cards given", Integer.toString(myCards.size()));
+					return false;
+				}
+				variety = new int[15]; //indicator of if a card is used in the phase need 1-14, ignore zero for readability
+				for (int i = 0; i < variety.length; i++) {
+					variety[i] = 0;            //initialized to zero
+				}
+				for (int i = 0; i < myCards.size(); i++) {
+					int val = myCards.peekAt(i).getRank().value(1);
+					Log.i("Incrementing variety at", Integer.toString(val));
+					variety[val]++; //increment the variety at a specific location, based on card value
+				}
+				count = 0;
+				shouldPass = true;
+				for (int i = 0; i < variety.length; i++) {
+					if (variety[i] != 0) {
+						count++;
+					}
+					if (!(variety[i] == 5 || variety[i] == 3) && variety[i] != 0) {    //if there are not 2 or 5 of each variety
+						shouldPass = false;
+					}
+				}
+				//Log.i("Count of variety", Integer.toString(count));
+				if (count == 1) { //all 8 of the same card
+					return true;
+				}
+				else if (count == 2 && variety[13] != 0) { //one type of card plus wildcards
+					int wildsNeeded = 0;
+					for(int i = 0; i <=12; i++){
+						if(variety[i] != 0){
+							wildsNeeded = 8 - variety[i]; //need to add to seven, including wilds and 1 card rank
+							if(wildsNeeded == variety[13]){
+								shouldPass = true; //if have enough wild cards, valid phase
+								//Log.i("isValidPhase", "Legal");
+							}
+						}
+					}
+				}
+				else if (count == 3 && variety[13] != 0) { //two types of cards plus wild cards
+					int wildCardsNeeded = 0;
+					boolean bigPiece = false;		//increments to true when bigpiece has been found
+					for (int i  = 0; i <= 12; i++){ //only increment over value cards, not skip (14) or wild (13)
+						if(variety[i] != 0){	//if there is a set or incomplete set - already determined to be 1 or 2 ranks only
+							if(variety[i] > 3 && !bigPiece) {
+								//if found a group, and its already more than 2
+								bigPiece = true;	//first time this happens, flag as bigPiece
+								wildCardsNeeded = wildCardsNeeded + (5 - variety[i]); //mark each incomplete set as needing a wildcard
+							}
+							else if(variety[i] > 3 && bigPiece){
+								return false; //cant have two sets of more than 2
+							}
+							else if(variety[i] <= 3){
+								//only need to add to 2 for the smaller set
+								wildCardsNeeded = wildCardsNeeded + (3 - variety[i]);
+							}
+						}
+					}
+					if(!bigPiece){
+						//if neither set portion had more than 3 cards, need 2 more wilds
+						wildCardsNeeded = wildCardsNeeded + 2;
+					}
+					if (wildCardsNeeded == variety[13]){
+						return true;	//if you have enough wild cards for the sets, it is a valid phase
+					}
+				} else if (count > 3) { //if there are more than three card values given
+					return false;	//not valid phase 1 if more than 3 card types - ignoring wild card case
+				}
+				return shouldPass;
 		}
 		return false;
 	}
@@ -1148,10 +1302,171 @@ public class P10LocalGame extends LocalGame {
 				}
 				break;
 			case 8:
+				for(int i = 0; i < myCards.size(); i++){
+					Card temp = myCards.peekAt(i);
+					comp0.add(temp);	//all cards go in phase component 0
+				}
 				break;
 			case 9:
+				int bigSet = 1;
+				int smallSet = 1;
+				//set bigSet value
+				for(int i = 1; i < countCards.length-2; i++){//minus 2 to ignore wild/skip
+					if(countCards[i] > countCards[bigSet]){
+						bigSet = i;
+					}
+				}
+				//set smallSet value
+				for(int i = 1; i < countCards.length-2; i++){//minus 2 to ignore wild/skip
+					if(smallSet == bigSet){
+						smallSet = i;       //if small & big have same value, auto increment small
+					}
+					if(countCards[i] > countCards[smallSet] && i != bigSet){ //dont let bigSet == smallSet
+						smallSet = i;
+					}
+				}
+				for(int i = 0; i < myCards.size(); i++){
+					if(myCards.peekAt(i).getRank().value(1) == bigSet){
+						comp0.add(myCards.peekAt(i));
+					}
+					else{
+						comp1.add(myCards.peekAt(i));
+					}
+				}
+				if(comp0.size() == 7){				//if all have the same value, move 2 cards to other comp
+					comp0.moveTopCardTo(comp1);		//all cards will have been placed in same comp. because they match
+					comp0.moveTopCardTo(comp1);
+				}
+				realVal0 = (int) (Math.random()*12)+1;		//set value of set to random legal value
+				realVal1 = (int)( Math.random()*12)+1;		//set value of set to random legal value
+				for(int i = 0; i < comp0.size(); i++){
+					if(comp0.peekAt(i).getRank().value(1) != 13){	//find not wild cards
+						realVal0 = comp0.peekAt(i).getRank().value(1); //that is set value
+					}
+				}
+				for(int i = 0; i < comp1.size(); i++){
+					if(comp1.peekAt(i).getRank().value(1) != 13){	//find not wild cards
+						realVal1 = comp1.peekAt(i).getRank().value(1); //that is set value
+					}
+				}
+				//Log.i("RealVal0", Integer.toString(realVal0));
+				//Log.i("RealVal1", Integer.toString(realVal1));
+				Log.i("count wilds", Integer.toString(countCards[13]));
+				if(countCards[13] != 0){			//if there was a wildcard
+					ArrayList<Card> myWildCards = new ArrayList<Card>();
+					for(int i = comp0.size()-1; i >= 0; i--){
+						if(comp0.peekAt(i).getRank().value(1) == 13){	//find wild cards
+							Card x = new Card(comp0.removeCard(i));
+							myWildCards.add(x);
+						}
+					}
+					for(int i = comp1.size()-1; i >= 0; i--){
+						if(comp1.peekAt(i).getRank().value(1) == 13){	//find wild cards
+							Card x = new Card(comp1.removeCard(i));
+							myWildCards.add(x);
+						}
+					}
+					Log.i("myswilds size", Integer.toString(myWildCards.size()));
+					int size = comp0.size();
+					for(int i = 0; i < 5-size; i++){
+						if(!myWildCards.isEmpty()) {
+							Card x = new Card(myWildCards.remove(0));
+							x.setWildValue(realVal0);
+							comp0.add(x);
+						}
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
+					size = comp1.size();
+					for(int i = 0; i < 2-size; i++){
+						if(!myWildCards.isEmpty()) {
+							Card x = new Card(myWildCards.remove(0));
+							x.setWildValue(realVal1);
+							comp1.add(x);
+						}
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
+				}
 				break;
 			case 10:
+				bigSet = 1;
+				smallSet = 1;
+				//set bigSet value
+				for(int i = 1; i < countCards.length-2; i++){//minus 2 to ignore wild/skip
+					if(countCards[i] > countCards[bigSet]){
+						bigSet = i;
+					}
+				}
+				//set smallSet value
+				for(int i = 1; i < countCards.length-2; i++){//minus 2 to ignore wild/skip
+					if(smallSet == bigSet){
+						smallSet = i;       //if small & big have same value, auto increment small
+					}
+					if(countCards[i] > countCards[smallSet] && i != bigSet){ //dont let bigSet == smallSet
+						smallSet = i;
+					}
+				}
+				for(int i = 0; i < myCards.size(); i++){
+					if(myCards.peekAt(i).getRank().value(1) == bigSet){
+						comp0.add(myCards.peekAt(i));
+					}
+					else{
+						comp1.add(myCards.peekAt(i));
+					}
+				}
+				if(comp0.size() == 8){				//if all have the same value, move 3 cards to other comp
+					comp0.moveTopCardTo(comp1);		//all cards will have been placed in same comp. because they match
+					comp0.moveTopCardTo(comp1);
+					comp0.moveTopCardTo(comp1);
+				}
+				realVal0 = (int) (Math.random()*12)+1;		//set value of set to random legal value
+				realVal1 = (int)( Math.random()*12)+1;		//set value of set to random legal value
+				for(int i = 0; i < comp0.size(); i++){
+					if(comp0.peekAt(i).getRank().value(1) != 13){	//find not wild cards
+						realVal0 = comp0.peekAt(i).getRank().value(1); //that is set value
+					}
+				}
+				for(int i = 0; i < comp1.size(); i++){
+					if(comp1.peekAt(i).getRank().value(1) != 13){	//find not wild cards
+						realVal1 = comp1.peekAt(i).getRank().value(1); //that is set value
+					}
+				}
+				//Log.i("RealVal0", Integer.toString(realVal0));
+				//Log.i("RealVal1", Integer.toString(realVal1));
+				Log.i("count wilds", Integer.toString(countCards[13]));
+				if(countCards[13] != 0){			//if there was a wildcard
+					ArrayList<Card> myWildCards = new ArrayList<Card>();
+					for(int i = comp0.size()-1; i >= 0; i--){
+						if(comp0.peekAt(i).getRank().value(1) == 13){	//find wild cards
+							Card x = new Card(comp0.removeCard(i));
+							myWildCards.add(x);
+						}
+					}
+					for(int i = comp1.size()-1; i >= 0; i--){
+						if(comp1.peekAt(i).getRank().value(1) == 13){	//find wild cards
+							Card x = new Card(comp1.removeCard(i));
+							myWildCards.add(x);
+						}
+					}
+					Log.i("myswilds size", Integer.toString(myWildCards.size()));
+					int size = comp0.size();
+					for(int i = 0; i < 5-size; i++){
+						if(!myWildCards.isEmpty()) {
+							Card x = new Card(myWildCards.remove(0));
+							x.setWildValue(realVal0);
+							comp0.add(x);
+						}
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
+					size = comp1.size();
+					for(int i = 0; i < 3-size; i++){
+						if(!myWildCards.isEmpty()) {
+							Card x = new Card(myWildCards.remove(0));
+							x.setWildValue(realVal1);
+							comp1.add(x);
+						}
+					}
+					//Log.i("myswilds new size", Integer.toString(myWilds.size()));
+				}
 				break;
 
 		}
@@ -1179,6 +1494,9 @@ public class P10LocalGame extends LocalGame {
 		if (state.getPhases()[playerToHit] > 3 && state.getPhases()[playerToHit] < 7) {//phases 4, 5, 6 being hit on
 			phaseToHit = 0; //only one phase comp to hit on
 		}
+		if (state.getPhases()[playerToHit] == 8) {//phases 8 being hit on
+			phaseToHit = 0; //only one phase comp to hit on
+		}
 
 		Card myCard = new Card(myC);
 
@@ -1199,13 +1517,16 @@ public class P10LocalGame extends LocalGame {
 				}
 				Color myColor = null;
 				for(int i = 0; i < state.getPlayedPhase()[playerToHit][0].size(); i++){
-					if(state.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit() != Color.Black){ //for not wilds
-						myColor = state.getPlayedPhase()[playerToHit][0].peekAtTopCard().getSuit(); //set color to not black
+					if(state.getPlayedPhase()[playerToHit][0].peekAt(i).getSuit() != Color.Black){ //for not wilds
+						myColor = state.getPlayedPhase()[playerToHit][0].peekAt(i).getSuit(); //set color to not black
+						Log.i("PhaseColor in ValidHit", myColor.toString());
 					}
+				}
+				if(myColor == null){
+					return true; //if all wilds, any color is valid
 				}
 				if(myColor == myCard.getSuit()){
 					return true; //return true if colors match
-					//this process will not work if all cards in a phase 8 component are wild. Very rare, fix later
 				}
 			}
 			return false; //otherwise return false if trying to hit on someones phase 8

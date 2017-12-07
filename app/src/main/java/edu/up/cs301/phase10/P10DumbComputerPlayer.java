@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import edu.up.cs301.card.Card;
+import edu.up.cs301.card.Color;
 import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.infoMsg.GameInfo;
 
@@ -416,10 +417,123 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
                 break;
             case 8:
+                int[] colors = new int[5]; //red(0), blue(1), green(2), yellow(3), black(4)
+                for(int i = 0; i < colors.length; i++){
+                    colors[i] = 0;
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getSuit() == Color.Red){
+                        colors[0]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Blue){
+                        colors[1]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Green){
+                        colors[2]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Yellow){
+                        colors[3]++;
+                    }
+                    if(myCards.peekAt(i).getSuit() == Color.Black){
+                        colors[4]++;
+                    }
+                }
+                int minPos = 0;
+                for(int i = 1; i < colors.length-1; i++){ //minus 1, never discard wilds
+                    if(colors[minPos] == 0){    //if no cards of that color, auto update minpos
+                        minPos = i;
+                    }
+
+                    if(colors[i] < colors[minPos] && colors[i] > 0){    //only check if wouldnt set to zero
+                        minPos = i; //find color with least cards
+                    }
+                }
+                Color killColor = null;
+                if(minPos == 0){
+                    killColor = Color.Red;
+                }
+                if(minPos == 1){
+                    killColor = Color.Blue;
+                }
+                if(minPos == 2){
+                    killColor = Color.Green;
+                }
+                if(minPos == 3){
+                    killColor = Color.Yellow;
+                }
+                for(int i = 0; i < myCards.size(); i++){
+                    if(myCards.peekAt(i).getSuit() == killColor){
+                        toDiscard = new Card(myCards.peekAt(i)); //discards highest value card of minColor
+                    }
+                }
                 break;
             case 9:
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
+                }
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] != 0){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
+                }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
+                    }
+                    toDiscard = myCards.peekAt(random);
+                }
                 break;
             case 10:
+                for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
+                    if (count[i] == 1){
+                        valueToDiscard = i;
+                    }
+                }
+                if(valueToDiscard == -1){                               //if no single cards
+                    for(int i = 0; i < count.length-2; i++){
+                        if(count[i] != 0){                              //find a value you have multiple of
+                            valueToDiscard = i;                         //decide to discard that value
+                        }
+                    }
+                }
+
+                for(int i = 0; i < myCards.size(); i++){                //check all cards
+                    if(myCards.peekAt(i).getRank().value(1) == valueToDiscard){ //set discard card as one that matches discard value
+                        toDiscard = myCards.peekAt(i);
+                    }
+                }
+
+                if(toDiscard == null){                                  //if discard card never got set
+                    int random;
+                    if(myCards.size() == count[13]){
+                        random = (int) Math.random() * myCards.size();     //pick a random card
+                    }
+                    else {  //only loop if not all wilds
+                        do {
+                            random = (int) Math.random() * myCards.size();     //pick a random card
+                        }
+                        while (myCards.peekAt(random).getRank().value(1) == 13); //repick if its wild
+                    }
+                    toDiscard = myCards.peekAt(random);
+                }
                 break;
         }
 

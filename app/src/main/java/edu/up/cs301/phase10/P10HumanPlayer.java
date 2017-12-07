@@ -385,8 +385,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 								g.drawText("Set of Three", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
 							}
 							break;
+						case 11:
+							g.drawText("Game Over!", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
+							break;
 						default:
-							g.drawText("ERROR", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
+							g.drawText("Error", phaseLocs[i].centerX(), phaseLocs[i].centerY(), phaseTextPaint);
 					}
 				}
 
