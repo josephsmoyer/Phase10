@@ -50,7 +50,10 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
             }
             //if next valid action is to skip player
             else if (savedState.getChooseSkip()) {
-                int random = (int)(Math.random()*(savedState.getNumberPlayers()));
+                int random;
+                do {
+                    random = (int) (Math.random() * (savedState.getNumberPlayers()));
+                } while (random == playerNum);
                 //if (savedState.getAlreadySkip() && !savedState.getToSkip)
                 myAction = new P10SkipPlayerAction(this, random);
             }

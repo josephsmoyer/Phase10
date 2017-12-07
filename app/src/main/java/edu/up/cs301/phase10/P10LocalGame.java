@@ -50,7 +50,7 @@ public class P10LocalGame extends LocalGame {
 		Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom state
+		//state.hook(); //implement the custom state
 
 		myContext = context;
 	}
@@ -313,8 +313,10 @@ public class P10LocalGame extends LocalGame {
 			P10SkipPlayerAction myAction = (P10SkipPlayerAction) P10ma;
 			int playerToSkip = myAction.getPlayerID();
 			//If player can be skipped
+			String PlayerBeingSkipped = playerNames[playerToSkip];
 			if (!state.getAlreadySkip()[playerToSkip]) {
 				Log.i("Skipping Player", Integer.toString(playerToSkip));
+				Toast.makeText(myContext, "Skip played on "+PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
 				//Skip player
 				state.setToSkip(playerToSkip, true);
 				state.setChooseSkip(false);
@@ -333,6 +335,7 @@ public class P10LocalGame extends LocalGame {
 			//If player can NOT be skipped
 			else {
 				Log.i("Cannot skip player", Integer.toString(playerToSkip));
+				Toast.makeText(myContext, PlayerBeingSkipped+" has already been skipped", Toast.LENGTH_SHORT).show();
 			}
 		} else { // some unexpected action
 			return false;
@@ -1023,10 +1026,10 @@ public class P10LocalGame extends LocalGame {
 						comp0.add(temp);
 					}
 					else{ //if part of run, not set
-						int[] runPieces = cardsCount(comp1);
+						int[] runPieces = cardsCountWildVal(comp1);
 						boolean onceThrough = false;
 						for(int j = numWildToRun; j < 4; j++) {
-							if (runPieces[bestRunStart+j] == 0) {    //if run piece isnt there
+							if (runPieces[bestRunStart+j] == 0 && !onceThrough) {    //if run piece isnt there
 								Card temp = new Card(myWilds.peekAt(i));
 								temp.setWildValue(bestRunStart+j);	 //set wildval to that run piece
 								Log.i("add wild to run", Integer.toString(bestRunStart+j));
@@ -1701,6 +1704,7 @@ public class P10LocalGame extends LocalGame {
 			//reset skip information
 			state.setToSkip(i, false);
 			state.setAlreadySkip(i, false);
+			state.setChooseSkip(false);
 		}
 		state.updatePlacements();
 		//Reset "the Dealer" to be player 0
