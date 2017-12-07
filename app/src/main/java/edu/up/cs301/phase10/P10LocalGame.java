@@ -1524,7 +1524,7 @@ public class P10LocalGame extends LocalGame {
 			toReturn = new Deck(comp0);
 		}
 		else{
-			toReturn = new Deck (comp1);
+			toReturn = new Deck (comp1); //return comp1
 		}
 		return toReturn;
 	}
