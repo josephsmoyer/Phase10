@@ -288,8 +288,8 @@ public class P10State extends GameState
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
-			//myDeck.add(twelve);
-			myDeck.add(wild);
+			myDeck.add(twelve);
+			//myDeck.add(wild);
 			myDeck.add(skip);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times

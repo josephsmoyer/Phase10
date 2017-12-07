@@ -48,6 +48,12 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 Log.i("Drawing - Player", Integer.toString(this.playerNum));
                 myAction = new P10DrawCardAction(this, true);  //dumb player always draws from draw pile
             }
+            //if next valid action is to skip player
+            else if (savedState.getChooseSkip()) {
+                int random = (int)(Math.random()*(savedState.getNumberPlayers()));
+                //if (savedState.getAlreadySkip() && !savedState.getToSkip)
+                myAction = new P10SkipPlayerAction(this, random);
+            }
             else { //if its not time to draw
                 //if neither phase component has been made
                 //Log.i("Sizes", Integer.toString(savedState.getPlayedPhase()[playerNum][0].size())+Integer.toString(savedState.getPlayedPhase()[playerNum][1].size()));
@@ -77,6 +83,8 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 }
             }
 
+
+
             // submit our move to the game object
             game.sendAction(myAction);
         }
@@ -89,33 +97,16 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
         Card toDiscard = null;
         ArrayList<Integer> toSave = new ArrayList<Integer>();
 
-        /*
+
         if(count[14] > 0){  //always discard skips first
             Card temp = null;
-            for(int i = 0; i < myCards.size(); i++){
-                if(myCards.peekAt(i).getWildValue() == 14){
+            for(int i = 0; i < myCards.size(); i++) {
+                if (myCards.peekAt(i).getWildValue() == 14) {
                     temp = new Card(myCards.peekAt(i));
+                    return temp;
                 }
             }
-            if(temp != null){
-                int playerIdxToSkip = -1;
-                for(int i = 0; i < savedState.getNumberPlayers(); i++){
-                    if(playerNum == 0){ //if comp is player 0, update playertoskip
-                        playerIdxToSkip = 1;
-                    }
-                    if(i != playerNum){ //dont let player skip themselves
-                        if(savedState.getPhases()[i] > savedState.getPhases()[playerIdxToSkip]){
-                            if(!savedState.getAlreadySkip()[i]) { //if player hasnt been skipped yet
-                                playerIdxToSkip = i;    //skip player on highest phase
-                            }
-                        }
-                    }
-                }
-                temp.setSkipValue(playerIdxToSkip);
-                return temp;
-            }
-        }*/
-
+        }
         switch(myPhaseNumber){
             case 1:
                 for(int i = 0; i < count.length-2; i++){                  //finds a card you only have one of
