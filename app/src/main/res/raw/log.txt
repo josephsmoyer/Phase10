@@ -1,0 +1,86 @@
+Log File - CS301 Assignment 5 - Phase 10
+Due Date: 09/25/2017
+Contributors: Jacob Apenes, Trenton Langer, Kaitlin Larson, Joseph Smoyer
+
+Primary Sources:
+*Android Java API
+*Example Games provided by Steven Vegdahl (Mostly Slapjack)
+
+Blank Log Entry:
+Author:
+*
+Date:
+*
+Problem Description:
+*
+Solution Resource:
+*
+Solution Description:
+*
+End Blank Log Entry
+
+Author:
+*Trenton Langer
+Date:
+*11/18/2017
+Problem Description:
+*Error with images uploaded for custom cards / card backs
+Solution Resource:
+*https://stackoverflow.com/questions/21392972/how-to-load-large-images-in-android-and-avoiding-the-out-of-memory-error
+Solution Description:
+*Resource stated error message was due to amount of pixels in the image, reduced number of pixels
+
+Author:
+*Trenton Langer
+Date:
+*11/19/2017
+Problem Description:
+*Syntax error when drawing a rectangle
+Solution Resource:
+*https://alvinalexander.com/android/how-to-draw-rectangle-in-android-view-ondraw-canvas
+Solution Description:
+*Provided a DrawRect example, used to fix syntax
+
+Author:
+*Trenton Langer
+Date:
+*11/20/2017
+Problem Description:
+*Switch statement syntax causing errors
+Solution Resource:
+*https://stackoverflow.com/questions/4227539/android-how-to-create-switch-case-from-this
+Solution Description:
+*Provided a switch example, used to fix syntax
+
+Author:
+*Trenton Langer
+Date:
+*11/21/2017
+Problem Description:
+*Created player score/phase info screen, drawing text responding not as expected
+Solution Resource:
+*https://stackoverflow.com/questions/2655402/android-canvas-drawtext
+Solution Description:
+*Provided a draw text example, used to update methods
+
+Author:
+*Trenton Langer
+Date:
+*12/3/2017
+Problem Description:
+*Wanted to display brief error messages to the user
+Solution Resource:
+*https://stackoverflow.com/questions/3500197/how-to-display-toast-in-android
+Solution Description:
+*Gave example of toast, used to send some info to players
+
+Author:
+*Trenton Langer
+Date:
+*12/7/2017
+Problem Description:
+*Wanted to lock tablet orientation
+Solution Resource:
+*https://stackoverflow.com/questions/4675750/lock-screen-orientation-android
+Solution Description:
+*Gave an example, used to update our code
