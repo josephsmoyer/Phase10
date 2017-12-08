@@ -75,13 +75,18 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private RectF turnLocation = new RectF();
 	private RectF[] computerTurnLocation = new RectF[5];
 	Bitmap[] imgBitmap = new Bitmap[3];
-	int[] imgArr = new int[3];
+	int[] imgArr = new int[7];
 	//fonts
 	Typeface[] tf = new Typeface[1];
 
-	//indicator for if score/phase info shoudl be shown
+	//indicator for if score/phase info should be shown
 	private boolean showScores;
 	private RectF scoreRect;
+
+	//indicator for if manual should be shown
+	private boolean showHelp;
+	private RectF helpRect;
+	private RectF closeHelpRect;
 
 	/**
 	 * constructor
@@ -106,9 +111,14 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			phaseLocs[i] = null;
 		}
 		showScores = false;
+		showHelp = false;
 		imgArr[0] = R.drawable.stats_base;
 		imgArr[1] = R.drawable.phases;
 		imgArr[2] = R.drawable.scores;
+		imgArr[3] = R.drawable.manual;
+		imgArr[4] = R.mipmap.cog;
+		imgArr[5] = R.drawable.help_icon;
+		imgArr[6] = R.drawable.manual;
 	}
 
 	/**
@@ -224,6 +234,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		Paint scorePaint = new Paint();
 		scorePaint.setColor(Color.CYAN);
 
+		Paint helpPaint = new Paint();
+		helpPaint.setColor(Color.rgb(255, 180, 0));
+
 		Paint coverPaint = new Paint();
 		coverPaint.setColor(Color.GRAY);
 
@@ -236,22 +249,16 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		}
 		else {
 
-			/*if (imgBitmap[0] != null) {
-				//for bitmap drawings
-				Rect r = new Rect(0,0,imgBitmap[0].getWidth(),imgBitmap[0].getHeight());
-				//settings box (can be changed after)
-				RectF s = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
-				//placeholder paint
-				Paint p = new Paint();
-				p.setColor(Color.BLACK);
-				//draw the settings icon
-				g.drawBitmap(imgBitmap[0], r, s, p);
-			}*/
+			float width = surface.getWidth();
+			float height = surface.getHeight();
 
 			//draw scores on top of everything else if user wants to see them
 			if(showScores){
-				float width = surface.getWidth();
-				float height = surface.getHeight();
+
+				//for bitmap drawings used in info page
+				for (int i = 0; i < 3; i++) {
+					imgBitmap[i] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[i]);
+				}
 
 				//float scoreX = width/8;
 				Paint textPaint = new Paint();
@@ -259,11 +266,6 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				textPaint.setTextSize(55);
 				textPaint.setTypeface(tf[0]);
 
-
-				//for bitmap drawings
-				for (int i = 0; i < imgArr.length; i++) {
-					imgBitmap[i] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[i]);
-				}
 
 				//placeholder paint
 				Paint p = new Paint();
@@ -304,9 +306,25 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					myY = myY + 66;
 				}
 			}
+			else if (showHelp){
+				//for bitmap drawing used in manual
+				imgBitmap[0] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[6]);
+
+				//placeholder paint
+				Paint p = new Paint();
+				p.setColor(Color.BLACK);
+
+				//draw manual
+				Rect r = new Rect(0,0,imgBitmap[0].getWidth(),imgBitmap[0].getHeight());
+				RectF s = new RectF(0, 0, width, height);
+				g.drawBitmap(imgBitmap[0], r, s, p);
+
+				closeHelpRect = new RectF(1910,18,2030,1262);
+				//g.drawRect(closeHelpRect, helpPaint); To find perfect hitbox
+			}
 			else {
-				int height = surface.getHeight();
-				int width = surface.getWidth();
+				height = surface.getHeight();
+				width = surface.getWidth();
 				//if the players hand is not initialized
 				if (state.getHand(playerNum) == null) return;
 				//variables for rect creation
@@ -420,20 +438,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						float rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][0] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][0] = myLoc;
 						rectTop1 = rectTop + 4 * (SMALL_CARD_HEIGHT_PERCENT + SMALL_VER_OVERLAP) * height / 100f;
 						rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 						rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][1] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][1] = myLoc;
 
 						//turn indicator
 						rectTop1 = rectTop + (10 * height / 100f);
 						rectBottom1 = rectTop1 + (2.5f * height / 100f);
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-						computerTurnLocation[i] = myLoc;
+						computerTurnLocation[(i+playerNum)%(players-1)] = myLoc;
 					}
 				} else {
 					float rectTop1;
@@ -461,22 +479,23 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[0][0] = myLoc;
+					computerPhaseLocs[playerNum%(players-1)][0] = myLoc;
 					rectTop1 = rectTop + 1.75f * height * (SMALL_CARD_HEIGHT_PERCENT + 2 * SMALL_VER_OVERLAP) / 100;
 					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					rectLeft1 = rectLeft + width * 5 * (SMALL_CARD_WIDTH_PERCENT) / 100;
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[0][1] = myLoc;
+					computerPhaseLocs[playerNum%(players-1)][1] = myLoc;
 
 					//turn indicator
-					rectTop1 = rectTop + (7.5f * height / 100f);                                    //Lots of really bad use of variables
-					rectBottom1 = rectTop1 + (2.5f * height / 100f);                            //Will update and comment later
-					rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
-					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
-					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for alpha code
-					computerTurnLocation[0] = myLoc;
+					//Still really bad turn indicator code, but w/e
+					rectTop1 = rectTop;
+					rectBottom1 = rectTop1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP))/10;
+					rectLeft1 = 0;
+					rectRight1 = (2.5f*height/100f);
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for beta code
+					computerTurnLocation[playerNum%(players-1)] = myLoc;
 
 					//Spacing for top row
 					float padding = (100 - (players - 3) * (SMALL_CARD_WIDTH_PERCENT)) / (players - 2);
@@ -503,20 +522,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][0] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][0] = myLoc;
 						rectTop1 = rectTop + 4 * (SMALL_CARD_HEIGHT_PERCENT + SMALL_VER_OVERLAP) * height / 100f;
 						rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 						rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
 						rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 						g.drawRect(myLoc, myPaint);
-						computerPhaseLocs[i][1] = myLoc;
+						computerPhaseLocs[(i+playerNum)%(players-1)][1] = myLoc;
 
 						//turn indicator
 						rectTop1 = rectTop + (10 * height / 100f);
 						rectBottom1 = rectTop1 + (2.5f * height / 100f);
 						myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
-						computerTurnLocation[i] = myLoc;
+						computerTurnLocation[(i+playerNum)%(players-1)] = myLoc;
 					}
 
 					//right card
@@ -539,23 +558,24 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectLeft1 = rectRight1 - 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[players - 2][0] = myLoc;
+					computerPhaseLocs[(players-2+playerNum)%(players-1)][0] = myLoc;
 					rectTop1 = rectTop + 1.75f * height * (SMALL_CARD_HEIGHT_PERCENT + 2 * SMALL_VER_OVERLAP) / 100;
 					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					rectRight1 = rectRight - width * 5 * (SMALL_CARD_WIDTH_PERCENT) / 100;
 					rectLeft1 = rectRight1 - 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[players - 2][1] = myLoc;
+					computerPhaseLocs[(players-2+playerNum)%(players-1)][1] = myLoc;
 
 
 					//turn indicator
-					rectTop1 = rectTop + (7.5f * height / 100f);                                        //Lots of really bad use of variables
-					rectBottom1 = rectTop1 + (2.5f * height / 100f);                                    //Will update and comment later
-					rectLeft1 = rectLeft - width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 2) / 10 - width * 3.5f / 100;
-					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
-					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for alpha code
-					computerTurnLocation[players - 2] = myLoc;
+					//Still really bad turn indicator code, but w/e
+					rectTop1 = rectTop;
+					rectBottom1 = rectTop1 + 2*width*(7*(SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP))/10;
+					rectLeft1 = width - (2.5f*height/100f);
+					rectRight1 = width;
+					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for beta code
+					computerTurnLocation[(players-2+playerNum)%(players-1)] = myLoc;
 
 				}
 
@@ -646,7 +666,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 						//turn indicator
 						if (j == state.getToPlay()) {
-							if (players > 4) {
+							//BAD CODE
+							/*if (players > 4) {
 								if (j - offset == 0) {
 									g.save();
 									g.rotate(90, 0, (35) * height / 100);
@@ -659,10 +680,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 									g.restore();
 								} else {
 									g.drawRect(computerTurnLocation[j - offset], turnPaint);
-								}
-							} else {
-								g.drawRect(computerTurnLocation[j - offset], turnPaint);
-							}
+								}*/
+							//ONLY NEED THIS NOW
+							g.drawRect(computerTurnLocation[j - offset], turnPaint);
 						}
 					}
 				}
@@ -674,6 +694,21 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				float rectB = height * CARD_HEIGHT_PERCENT / 100 / 2;
 				scoreRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(scoreRect, scorePaint);
+
+				rectT = height * CARD_HEIGHT_PERCENT / 100 / 2;
+				rectB = height * CARD_HEIGHT_PERCENT / 100;
+				helpRect = new RectF(rectL, rectT, rectR, rectB);
+				g.drawRect(helpRect, helpPaint);
+
+				/*//for bitmap drawings
+				Rect r = new Rect(0,0,imgBitmap[4].getWidth(),imgBitmap[4].getHeight());
+				//settings box (can be changed after)
+				scoreRect = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
+				//placeholder paint
+				Paint p = new Paint();
+				p.setColor(Color.BLACK);
+				//draw the settings icon
+				g.drawBitmap(imgBitmap[4], r, scoreRect, p);*/
 			}
 		}
 
@@ -792,21 +827,34 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		
 		// ignore everything except down-touch events
 		if (event.getAction() != MotionEvent.ACTION_DOWN) return;
-		//if showing scores, any touch will hide scores
-		if (showScores){
-			showScores = false;
-			return;
-		}
 
 		// get the location of the touch on the surface
 		int x = (int) event.getX();
 		int y = (int) event.getY();
 		//Log.i("Xloc, yLoc", Integer.toString(x)+", "+Integer.toString(y));
 
+		//if showing scores, any touch will hide scores
+		if (showScores){
+			showScores = false;
+			return;
+		}
+		//if showing manual, any touch will hide manual
+		else if (showHelp){
+			if (closeHelpRect.contains(x,y)) {
+				showHelp = false;
+			}
+			return;
+		}
+
 		//determine if player wants to see score info
 		if(scoreRect.contains(x, y)){
 			Log.i("Score","Logged");
 			showScores = true;
+		}
+		//determine if player wants to see manual
+		else if(helpRect.contains(x, y)){
+			Log.i("Help", "Logged");
+			showHelp = true;
 		}
 		// determine whether the touch occurred on any of the players cards
 		int touchedCard = -1;

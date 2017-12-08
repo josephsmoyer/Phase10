@@ -51,9 +51,9 @@ public class P10LocalGame extends LocalGame {
 		//Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
 		// set up custom hand for player 0 - for testing
-		state.hook(); //implement the custom state
+		//state.hook(); //implement the custom state
 
-		if(state.getDiscardCard().getWildValue() == 14){ //if flips a wild for first card
+		if(state.peekDiscardCard().getWildValue() == 14){ //if flips a wild for first card
 			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
 			int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
 			state.setToPlay(nextIDX);
@@ -318,13 +318,7 @@ public class P10LocalGame extends LocalGame {
 		} else if (P10ma.isSkipPlayer()) {
 			P10SkipPlayerAction myAction = (P10SkipPlayerAction) P10ma;
 			int playerToSkip = myAction.getPlayerID();
-			//If player can be skipped
-			String PlayerBeingSkipped = playerNames[playerToSkip];
-			if (!state.getAlreadySkip()[playerToSkip]) {
-				Log.i("Skipping Player", Integer.toString(playerToSkip));
-				Toast.makeText(myContext, "Skip played on "+PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
-				//Skip player
-				state.setToSkip(playerToSkip, true);
+			if(playerToSkip == -1){		//if computer couldnt find a player to skip
 				state.setChooseSkip(false);
 				//move play to next player
 				state.setShouldDraw(true);
@@ -338,10 +332,32 @@ public class P10LocalGame extends LocalGame {
 				Log.i("Turn is player", Integer.toString(nextIDX));
 				state.setToPlay(nextIDX);        //update
 			}
-			//If player can NOT be skipped
 			else {
-				Log.i("Cannot skip player", Integer.toString(playerToSkip));
-				Toast.makeText(myContext, PlayerBeingSkipped+" has already been skipped", Toast.LENGTH_SHORT).show();
+				//If player can be skipped
+				String PlayerBeingSkipped = playerNames[playerToSkip];
+				if (!state.getAlreadySkip()[playerToSkip]) {
+					Log.i("Skipping Player", Integer.toString(playerToSkip));
+					Toast.makeText(myContext, "Skip played on " + PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
+					//Skip player
+					state.setToSkip(playerToSkip, true);
+					state.setChooseSkip(false);
+					//move play to next player
+					state.setShouldDraw(true);
+					//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+					int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+					while (state.getToSkip()[nextIDX]) {
+						state.setToSkip(nextIDX, false);
+						state.setAlreadySkip(nextIDX, true);
+						nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
+					}
+					Log.i("Turn is player", Integer.toString(nextIDX));
+					state.setToPlay(nextIDX);        //update
+				}
+				//If player can NOT be skipped
+				else {
+					Log.i("Cannot skip player", Integer.toString(playerToSkip));
+					Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
+				}
 			}
 		} else { // some unexpected action
 			return false;
@@ -1720,7 +1736,7 @@ public class P10LocalGame extends LocalGame {
 		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
 		state.cleanDecks();
 
-		if(state.getDiscardCard().getWildValue() == 14){ //if flips a wild for first card
+		if(state.peekDiscardCard().getWildValue() == 14){ //if flips a wild for first card
 			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
 			int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
 			state.setToPlay(nextIDX);
