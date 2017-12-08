@@ -659,10 +659,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					if (selectedCards[i] == -1) {
 						selectedCards[i]++;
 					}
-					if(state.getHand(playerNum).peekAt(i).toString().equals(selectCard)){
-						//Log.i("Match Select", selectCard);
-						selectedCards[i]++;			//"select" the card in the players hand
-						selectCard = null;			//return selectCard to null, so only one instance gets highlighted
+					if(selectCard != null){
+						if(state.getHand(playerNum).peekAt(i).toString().equals(selectCard)){
+							//Log.i("Match Select", selectCard);
+							selectedCards[i]++;			//"select" the card in the players hand
+							selectCard = null;			//return selectCard to null, so only one instance gets highlighted
+						}
 					}
 					rectLeft = (start + (i * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT))) * width / 100;
 					rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
