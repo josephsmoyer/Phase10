@@ -679,11 +679,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
 					rectTop = phaseLocs[j].top;
 					rectBottom = phaseLocs[j].bottom;
+					float overlapCrunch = 1;
+					if(state.getPlayedPhase()[playerNum][j].size() > 7){
+						overlapCrunch = 1.5f;
+					}
 					for (int k = 0; k < state.getPlayedPhase()[playerNum][j].size(); k++) {
 						RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 						drawCard(g, myRect, state.getPlayedPhase()[playerNum][j].peekAt(k));
 
-						rectLeft = rectLeft + width * (CARD_WIDTH_PERCENT - HOR_OVERLAP) / 100;
+						rectLeft = rectLeft + width * (CARD_WIDTH_PERCENT - HOR_OVERLAP) / (100 * overlapCrunch);
 						rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
 					}
 				}
@@ -713,12 +717,16 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 							rectTop = computerPhaseLocs[j - offset][k].top;
 							rectBottom = computerPhaseLocs[j - offset][k].bottom;
 
+							float overlapCrunch = 1;	//factopr for card spacing if phase locations get too full
+							if(state.getPlayedPhase()[j-offset][k].size() > 7){
+								overlapCrunch = 1.5f;
+							}
 							//cards in phase locations
 							for (int l = 0; l < state.getPlayedPhase()[j][k].size(); l++) {
 								RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 								drawCard(g, myRect, state.getPlayedPhase()[j][k].peekAt(l));
 
-								rectLeft = rectLeft + width * (2 * SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / 100;
+								rectLeft = rectLeft + width * (2 * SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / (100*overlapCrunch);
 								rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
 							}
 						}
