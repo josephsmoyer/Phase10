@@ -50,14 +50,21 @@ public class P10MainActivity extends GameMainActivity {
 		});*/
 		playerTypes.add(new GamePlayerType("Computer player (Dumb)") {
 			public GamePlayer createPlayer(String name) {
+				return new P10StupidComputerPlayer(name);
+			}
+		});
+		playerTypes.add(new GamePlayerType("Computer player (Moderate)") {
+			public GamePlayer createPlayer(String name) {
 				return new P10DumbComputerPlayer(name);
 			}
 		});
+		/*
 		playerTypes.add(new GamePlayerType("Computer player (Smart)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10SmartComputerPlayer(name);
 			}
 		});
+		*/
 
 
 		// Create a game configuration class for Phase10
@@ -65,10 +72,10 @@ public class P10MainActivity extends GameMainActivity {
 
 		// Add the default players
 		defaultConfig.addPlayer("Human", 0);
-		defaultConfig.addPlayer("1Computer", 1);
-		defaultConfig.addPlayer("2Computer", 1);
-		defaultConfig.addPlayer("3Computer", 1);
-		defaultConfig.addPlayer("4Computer", 1);
+		defaultConfig.addPlayer("1Computer", 2);
+		defaultConfig.addPlayer("2Computer", 2);
+		defaultConfig.addPlayer("3Computer", 2);
+		defaultConfig.addPlayer("4Computer", 2);
 		
 		// Set the initial information for the remote player
 		defaultConfig.setRemoteData("Guest", "", 1);
