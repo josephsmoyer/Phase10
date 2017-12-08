@@ -60,7 +60,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                         int highCount = 0;
                         int lastCount = 0;
                         int temp = 0;
-                        boolean swag = false;
+                        boolean swag = false; //
                         int cardNum2 = 0;
                         int[] cardNum = new int[];
                         for (int i = 0; i < 14; i++) {
