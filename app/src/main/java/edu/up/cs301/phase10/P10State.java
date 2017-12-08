@@ -118,6 +118,11 @@ public class P10State extends GameState
 			}
 		}
 
+		//start the players as having a sorted hand
+		for(int i = 0; i < numPlayers; i++){
+			hands[i].sortNumerical();
+		}
+
 		//After Dealing, move top card from draw pile to be face up in discard pile
 		drawPile.moveTopCardTo(discardPile);
 
@@ -636,6 +641,11 @@ public class P10State extends GameState
 					playerIDX = 0;							//if reached last player, cycle back to player 0
 				}
 			}
+		}
+
+		//sort the new hands
+		for(int i = 0; i < numPlayers; i++){
+			hands[i].sortNumerical();
 		}
 
 		drawPile.moveTopCardTo(discardPile);
