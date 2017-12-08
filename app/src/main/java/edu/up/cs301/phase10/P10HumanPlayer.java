@@ -479,14 +479,14 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					RectF myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[playerNum][0] = myLoc;
+					computerPhaseLocs[playerNum%(players-1)][0] = myLoc;
 					rectTop1 = rectTop + 1.75f * height * (SMALL_CARD_HEIGHT_PERCENT + 2 * SMALL_VER_OVERLAP) / 100;
 					rectBottom1 = rectTop1 + (SMALL_CARD_HEIGHT_PERCENT) * height / 100f;
 					rectLeft1 = rectLeft + width * 5 * (SMALL_CARD_WIDTH_PERCENT) / 100;
 					rectRight1 = rectLeft1 + 2 * width * (7 * (SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP)) / 10;
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);
 					g.drawRect(myLoc, myPaint);
-					computerPhaseLocs[playerNum][1] = myLoc;
+					computerPhaseLocs[playerNum%(players-1)][1] = myLoc;
 
 					//turn indicator
 					//Still really bad turn indicator code, but w/e
@@ -495,7 +495,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					rectLeft1 = 0;
 					rectRight1 = (2.5f*height/100f);
 					myLoc = new RectF(rectLeft1, rectTop1, rectRight1, rectBottom1);        //Rush for beta code
-					computerTurnLocation[playerNum] = myLoc;
+					computerTurnLocation[playerNum%(players-1)] = myLoc;
 
 					//Spacing for top row
 					float padding = (100 - (players - 3) * (SMALL_CARD_WIDTH_PERCENT)) / (players - 2);
