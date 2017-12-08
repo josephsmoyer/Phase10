@@ -50,12 +50,12 @@ public class P10MainActivity extends GameMainActivity {
 		});*/
 		playerTypes.add(new GamePlayerType("Computer player (Dumb)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10StupidComputerPlayer(name);
+				return new P10DumbComputerPlayer(name);
 			}
 		});
 		playerTypes.add(new GamePlayerType("Computer player (Moderate)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10DumbComputerPlayer(name);
+				return new P10ModerateComputerPlayer(name);
 			}
 		});
 		/*

@@ -240,6 +240,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		Paint coverPaint = new Paint();
 		coverPaint.setColor(Color.GRAY);
 
+		Paint needToDrawPaint = new Paint();
+		needToDrawPaint.setColor(Color.rgb(255, 0, 0));
+		needToDrawPaint.setTextSize(35);
+
 		Paint phaseTextPaint = new Paint();
 		phaseTextPaint.setColor(Color.BLACK);
 		phaseTextPaint.setTextSize(40);
@@ -344,7 +348,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					// draw phase number and instructions for phase
 					int p = Integer.parseInt(Integer.toString(state.getPhases()[playerNum]));
 					if (i == 0) {
-						g.drawText("Phase " + p, phaseLocs[i].left, phaseLocs[i].top, phaseTextPaint);
+						g.drawText("Phase " + p, phaseLocs[i].left, phaseLocs[i].top-10, phaseTextPaint);
 					}
 					switch (p) {
 						case 1:
@@ -595,6 +599,20 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 				drawCard(g, discardLocation, state.peekDiscardCard());
 				drawCard(g, drawLocation, Card.fromString("1x"));
+
+                if(state.getShouldDraw() && state.getToPlay() == playerNum){
+                    //if the player should draw, and its the humans turn
+                    float rectLeft1 = (start + LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) * width / 100;
+                    float rectRight1 = rectLeft + width * CARD_WIDTH_PERCENT / 100;
+                    float rectTop1 = (50 - VERTICAL_BORDER_PERCENT - CARD_HEIGHT_PERCENT / 2) * height / 100f;
+                    float rectBottom1 = (50 - VERTICAL_BORDER_PERCENT + CARD_HEIGHT_PERCENT / 2) * height / 100f;
+					float x, y;
+					x = rectRight + (rectRight1-rectLeft1)/2;
+					y = rectTop1 + (rectBottom1-rectTop1)/2;
+                    float radius = 25;
+                    g.drawCircle(x, y, radius, needToDrawPaint);
+					g.drawText("Remember to Draw!", x, y+(radius*3), needToDrawPaint);
+                }
 
 				//start of all the possible cards as neither selected or not
 				for (int i = length; i < 11; i++) {
