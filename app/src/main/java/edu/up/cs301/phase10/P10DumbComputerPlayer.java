@@ -52,12 +52,6 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                 Log.i("Drawing - Player", Integer.toString(this.playerNum));
                 myAction = new P10DrawCardAction(this, true);  //dumb player always draws from draw pile
             }
-            //if next valid action is to skip player
-            else if (savedState.getChooseSkip()) {
-                int random = generateToSkip();
-                //if (savedState.getAlreadySkip() && !savedState.getToSkip)
-                myAction = new P10SkipPlayerAction(this, random);
-            }
             else { //if its not time to draw
                 //if neither phase component has been made
                 //Log.i("Sizes", Integer.toString(savedState.getPlayedPhase()[playerNum][0].size())+Integer.toString(savedState.getPlayedPhase()[playerNum][1].size()));

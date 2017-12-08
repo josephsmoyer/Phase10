@@ -1012,7 +1012,6 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				if(myCard != null) {
 					if (computerPhaseLocs[i - offset][0].contains(x, y)) {
 						if (myCard.getWildValue() == 14 && count == 1) {
-							//P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
 							skipCard = new Card(myCard);
 							skipCard.setSkipValue(i);
 							P10DiscardCardAction myAction = new P10DiscardCardAction(this, skipCard);

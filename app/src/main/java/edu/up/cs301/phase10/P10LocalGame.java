@@ -373,51 +373,8 @@ public class P10LocalGame extends LocalGame {
 				Log.i("Turn is player", Integer.toString(nextIDX));
 				state.setToPlay(nextIDX);        //update
 			}
-		}/* else if (P10ma.isSkipPlayer()) {
-			P10SkipPlayerAction myAction = (P10SkipPlayerAction) P10ma;
-			int playerToSkip = myAction.getPlayerID();
-			if(playerToSkip == -1){		//if computer couldnt find a player to skip
-				state.setChooseSkip(false);
-				//move play to next player
-				state.setShouldDraw(true);
-				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
-				int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
-				while (state.getToSkip()[nextIDX]) {
-					state.setToSkip(nextIDX, false);
-					state.setAlreadySkip(nextIDX, true);
-					nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
-				}
-				Log.i("Turn is player", Integer.toString(nextIDX));
-				state.setToPlay(nextIDX);        //update
-			}
-			else {
-				//If player can be skipped
-				String PlayerBeingSkipped = playerNames[playerToSkip];
-				if (!state.getAlreadySkip()[playerToSkip]) {
-					Log.i("Skipping Player", Integer.toString(playerToSkip));
-					Toast.makeText(myContext, "Skip played on " + PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
-					//Skip player
-					state.setToSkip(playerToSkip, true);
-					state.setChooseSkip(false);
-					//move play to next player
-					state.setShouldDraw(true);
-					//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
-					int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
-					while (state.getToSkip()[nextIDX]) {
-						state.setToSkip(nextIDX, false);
-						state.setAlreadySkip(nextIDX, true);
-						nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
-					}
-					Log.i("Turn is player", Integer.toString(nextIDX));
-					state.setToPlay(nextIDX);        //update
-				}
-				//If player can NOT be skipped
-				else {
-					Log.i("Cannot skip player", Integer.toString(playerToSkip));
-					Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
-				}
-			}
-		} */else { // some unexpected action
+		}
+		else { // some unexpected action
 			return false;
 		}
 
