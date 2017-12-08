@@ -291,7 +291,7 @@ public class P10LocalGame extends LocalGame {
 			//after a successful draw, the next move will not be a draw
 			state.setShouldDraw(false);
 
-			P10ToastMessageInfo cardInfo = new P10ToastMessageInfo("New Card: "+c.toString());
+			P10ToastMessageInfo cardInfo = new P10ToastMessageInfo("New Card: "+c.toString(), c.toString());
 			players[thisPlayerIdx].sendInfo(cardInfo);
 
 			//sort that players hand after they draw

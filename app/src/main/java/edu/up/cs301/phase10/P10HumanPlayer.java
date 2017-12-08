@@ -60,6 +60,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	//our activity context
 	private Context myContext;
+	private String selectCard;
 
 	// the amination surface
 	private AnimationSurface surface;
@@ -131,6 +132,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		imgArr[6] = R.drawable.manual;
 
 		this.myContext = myContext;
+		selectCard = null;
 	}
 
 	/**
@@ -151,7 +153,14 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			//Log.i("REceived error info", "sdfd");
 			P10ToastMessageInfo myInfo = (P10ToastMessageInfo) info;
 			String myMessage = myInfo.getMyMessage();
-			Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
+			if(myInfo.myCard == null) {
+				//if the toast message contains no card, display it
+				Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
+			}
+			else {	//if the toast message contains a card
+				Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
+				selectCard = myInfo.getMyCard();	//select that card
+			}
 		}
 
 		Log.i("P10HumanPlayer", "receiving updated state ("+info.getClass()+")");
@@ -365,7 +374,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				int length = state.getHand(playerNum).size();
 				//Log.i("Hand Length", Integer.toString(length));
 
-				//set up phase area (temporary)
+				//set up phase area
 				for (int i = 0; i < 2; i++) { //expand to all phase areas later
 					phaseLocs[i] = getPhaseLoc(i);
 					g.drawRect(phaseLocs[i], myPaint);
@@ -649,6 +658,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				for (int i = 0; i < length; i++) {
 					if (selectedCards[i] == -1) {
 						selectedCards[i]++;
+					}
+					if(state.getHand(playerNum).peekAt(i).toString().equals(selectCard)){
+						//Log.i("Match Select", selectCard);
+						selectedCards[i]++;			//"select" the card in the players hand
+						selectCard = null;			//return selectCard to null, so only one instance gets highlighted
 					}
 					rectLeft = (start + (i * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT))) * width / 100;
 					rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
