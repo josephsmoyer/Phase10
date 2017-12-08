@@ -22,6 +22,7 @@ import edu.up.cs301.game.R;
 import edu.up.cs301.game.infoMsg.GameInfo;
 import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
 import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
+import edu.up.cs301.game.util.MessageBox;
 
 /**
  * A GUI that allows a human to play Slapjack. Moves are made by clicking
@@ -88,6 +89,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private RectF helpRect;
 	private RectF closeHelpRect;
 
+	//card holder for if its a skip card
+	Card skipCard = null;
+
 	/**
 	 * constructor
 	 * 
@@ -129,6 +133,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 */
 	@Override
 	public void receiveInfo(GameInfo info) {
+		if(info instanceof  P10PopUpMessageInfo){
+			Log.i("REceived error info", "sdfd");
+			P10PopUpMessageInfo myInfo = (P10PopUpMessageInfo) info;
+			String myMessage = myInfo.getMyMessage();
+			MessageBox.popUpMessage(myMessage, myActivity);
+		}
+
 		Log.i("P10HumanPlayer", "receiving updated state ("+info.getClass()+")");
 		if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
 			// if we had an out-of-turn or illegal move, flash the screen
@@ -842,7 +853,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the motion-event
 	 */
 	public void onTouch(MotionEvent event) {
-		
+
 		// ignore everything except down-touch events
 		if (event.getAction() != MotionEvent.ACTION_DOWN) return;
 
@@ -911,10 +922,18 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			if(cardSelected){ //if one card was selected, when pressing the discard, discard that card
 				Card toDiscard = state.getHand(playerNum).peekAt(loc);
 				Log.i("Card discarding", toDiscard.toString());
-				P10DiscardCardAction myAction = new P10DiscardCardAction(this, toDiscard);
-				game.sendAction(myAction);
-				for(int i = 0; i < selectedCards.length; i++){
-					selectedCards[i] = 0; //deselect all cards
+				if(toDiscard.getWildValue() == 14){
+					//if its a skip card
+					state.setChooseSkip(true);
+					skipCard = new Card(toDiscard);
+					Log.i("setting skipCard", "set choose skip");
+				}
+				else {
+					P10DiscardCardAction myAction = new P10DiscardCardAction(this, toDiscard);
+					game.sendAction(myAction);
+					for(int j = 0; j < selectedCards.length; j++){
+						selectedCards[j] = 0; //deselect all cards
+					}
 				}
 				return;
 			}
@@ -990,40 +1009,52 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						myCard = state.getHand(playerNum).peekAt(j);
 					}
 				}
-
-				if (computerPhaseLocs[i - offset][0].contains(x, y)) {
-					if (state.getChooseSkip()) {
-						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
-						game.sendAction(myAction);
-						return;
-					}
-					else if(count == 1) {
-						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
-						game.sendAction(myAction);
-						for (int k = 0; k < selectedCards.length; k++) {
-							selectedCards[k] = 0; //deselect all cards
+				if(myCard != null) {
+					if (computerPhaseLocs[i - offset][0].contains(x, y)) {
+						if (myCard.getWildValue() == 14 && count == 1) {
+							skipCard = new Card(myCard);
+							skipCard.setSkipValue(i);
+							P10DiscardCardAction myAction = new P10DiscardCardAction(this, skipCard);
+							game.sendAction(myAction);
+							for (int j = 0; j < selectedCards.length; j++) {
+								selectedCards[j] = 0; //deselect all cards
+							}
+							return;
+						} else if (count == 1) {
+							P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
+							game.sendAction(myAction);
+							for (int k = 0; k < selectedCards.length; k++) {
+								selectedCards[k] = 0; //deselect all cards
+							}
+							return;
+						} else {
+							surface.flash(Color.RED, 50);
 						}
-						return;
-					}
-					else{
-						surface.flash(Color.RED, 50);
-					}
-				} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
-					if (state.getChooseSkip()) {
-						P10SkipPlayerAction myAction = new P10SkipPlayerAction(this, i);
-						game.sendAction(myAction);
-						return;
-					}
-					if (count == 1) {
-						P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
-						game.sendAction(myAction);
-						for (int k = 0; k < selectedCards.length; k++) {
-							selectedCards[k] = 0; //deselect all cards
+					} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
+						if (myCard.getWildValue() == 14 && count == 1) {
+							skipCard = new Card(myCard);
+							skipCard.setSkipValue(i);
+							P10DiscardCardAction myAction = new P10DiscardCardAction(this, skipCard);
+							game.sendAction(myAction);
+							for (int j = 0; j < selectedCards.length; j++) {
+								selectedCards[j] = 0; //deselect all cards
+							}
+							return;
 						}
-						return;
-					} else {
-						surface.flash(Color.RED, 50);
+						if (count == 1) {
+							P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
+							game.sendAction(myAction);
+							for (int k = 0; k < selectedCards.length; k++) {
+								selectedCards[k] = 0; //deselect all cards
+							}
+							return;
+						} else {
+							surface.flash(Color.RED, 50);
+						}
 					}
+				}
+				else{
+					surface.flash(Color.RED, 50);
 				}
 			}
 		}

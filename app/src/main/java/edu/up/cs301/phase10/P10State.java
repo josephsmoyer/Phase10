@@ -257,14 +257,14 @@ public class P10State extends GameState
 		Card wild = new Card(Rank.WILD, Color.Black);
 		Card skip = new Card(Rank.SKIP, Color.Black);
 		for(int i = 0; i < 1; i++) {	//cards to add once
-			myDeck.add(one);
-			myDeck.add(two);
-			myDeck.add(three);
-			myDeck.add(four);
-			myDeck.add(five);
-			myDeck.add(six);
-			myDeck.add(seven);
-			myDeck.add(eight);
+			//myDeck.add(one);
+			//myDeck.add(two);
+			//myDeck.add(three);
+			//myDeck.add(four);
+			//myDeck.add(five);
+			//myDeck.add(six);
+			//myDeck.add(seven);
+			//myDeck.add(eight);
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
@@ -284,13 +284,13 @@ public class P10State extends GameState
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
-			//myDeck.add(twelve);
+			myDeck.add(twelve);
 			//myDeck.add(wild);
 			//myDeck.add(skip);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
-			//myDeck.add(two);
+			myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
 			//myDeck.add(five);
@@ -302,16 +302,16 @@ public class P10State extends GameState
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
 			//myDeck.add(wild);
-			//myDeck.add(skip);
+			myDeck.add(skip);
 		}
 
 		if(hookHand) {
 			myDeck.moveAllCardsTo(hands[playerToHook]);                //send hand tp state area holding it
 
 			Deck tempDeck = new Deck();
-			//tempDeck.add(wild);						 //put wild on discard pile if you wnat it
+			tempDeck.add(wild);						 //put wild on discard pile if you wnat it
 			//tempDeck.add(skip);						 //put a skip on discard pile for intiail skip testing
-			//tempDeck.moveTopCardTo(discardPile);
+			tempDeck.moveTopCardTo(discardPile);
 		}
 
 		for(int i = 0; i < numPlayers; i++){
