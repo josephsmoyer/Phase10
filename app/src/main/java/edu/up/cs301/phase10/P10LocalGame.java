@@ -348,7 +348,7 @@ public class P10LocalGame extends LocalGame {
 					if(!state.getAlreadySkip()[c.getSkipValue()]){ //if that player hasnt been skipped
 						Log.i("Skipping Player", Integer.toString(playerToSkip));
 						//Toast.makeText(myContext, "Skip played on " + PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
-						P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("Skip played on " + PlayerBeingSkipped);
+						P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("Skip played on " + PlayerBeingSkipped + " by " + playerNames[thisPlayerIdx]);
 						for(int i = 0; i < state.getNumberPlayers(); i++){
 							if(!(players[i] instanceof P10ComputerPlayer)){
 								players[i].sendInfo(errorInfo);
@@ -363,11 +363,13 @@ public class P10LocalGame extends LocalGame {
 						Log.i("Cannot skip player", Integer.toString(playerToSkip));
 						//Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
 						P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo(PlayerBeingSkipped + " has already been skipped");
+						/*
 						for(int i = 0; i < state.getNumberPlayers(); i++){
 							if(!(players[i] instanceof P10ComputerPlayer)){		//for non-computer players (PROXY/HUMAN)
 								players[i].sendInfo(errorInfo);
 							}
-						}
+						}*/
+						players[thisPlayerIdx].sendInfo(errorInfo);
 						return false;
 					}
 				}
