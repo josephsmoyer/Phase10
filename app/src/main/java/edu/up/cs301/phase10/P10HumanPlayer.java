@@ -1022,7 +1022,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 								selectedCards[j] = 0; //deselect all cards
 							}
 							return;
-						} else if (count == 1) {
+						} else if (state.getPlayedPhase()[playerNum][0].size() != 0 && count == 1) {
+							//if player has made phase, allow hitting
 							P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
 							game.sendAction(myAction);
 							Log.i("Hitcard", "Action");
@@ -1045,7 +1046,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 							}
 							return;
 						}
-						if (count == 1) {
+						else if (state.getPlayedPhase()[playerNum][0].size() != 0 && count == 1) {
 							P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 1);
 							game.sendAction(myAction);
 							for (int k = 0; k < selectedCards.length; k++) {
