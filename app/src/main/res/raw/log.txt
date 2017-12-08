@@ -84,3 +84,14 @@ Solution Resource:
 *https://stackoverflow.com/questions/4675750/lock-screen-orientation-android
 Solution Description:
 *Gave an example, used to update our code
+
+Author:
+*Trenton Langer
+Date:
+*12/7/2017
+Problem Description:
+*Wanted to lock tablet orientation, but in either landscape or landscape rotated 180degrees
+Solution Resource:
+*https://stackoverflow.com/questions/9987578/how-to-rotate-my-application-180-degree-upside-down-upon-rotating-device-180-deg
+Solution Description:
+*Gave an example, used to update our code
