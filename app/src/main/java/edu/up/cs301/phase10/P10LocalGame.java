@@ -273,11 +273,12 @@ public class P10LocalGame extends LocalGame {
 			//if we have a draw card action, at the proper time
 			P10DrawCardAction myAction = (P10DrawCardAction) P10ma;
 			//determine which pile should be drawn from
+			Card c;
 			if (myAction.drawPile) {
-				Card c = new Card(state.getDrawCard());
+				c = new Card(state.getDrawCard());
 				state.getHand(thisPlayerIdx).add(c);
 			} else {
-				Card c = new Card(state.peekDiscardCard());
+				c = new Card(state.peekDiscardCard());
 				//if the discard pile contains a skip card, do not pick up
 				if (c.getWildValue() == 14) {
 					return false;
@@ -289,6 +290,12 @@ public class P10LocalGame extends LocalGame {
 			}
 			//after a successful draw, the next move will not be a draw
 			state.setShouldDraw(false);
+
+			P10ToastMessageInfo cardInfo = new P10ToastMessageInfo("New Card: "+c.toString());
+			players[thisPlayerIdx].sendInfo(cardInfo);
+
+			//sort that players hand after they draw
+			state.getHand(thisPlayerIdx).sortNumerical();
 		} else if (P10ma.isDiscardCard()) {
 			//if it is supposed to be a draw action
 			if (state.getShouldDraw()) {

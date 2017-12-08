@@ -1,5 +1,6 @@
 package edu.up.cs301.phase10;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -37,10 +38,11 @@ public class P10MainActivity extends GameMainActivity {
 		final Typeface[] tfArr = new Typeface[1];
 		tfArr[0] = tf0;
 
+		final Context myContext = this;
 
 		playerTypes.add(new GamePlayerType("Human player (Green)") {
 			public GamePlayer createPlayer(String name) {
-				return new P10HumanPlayer(name, backgroundGreen, tfArr);
+				return new P10HumanPlayer(name, backgroundGreen, tfArr, myContext);
 			}
 		});
 		/*playerTypes.add(new GamePlayerType("Human player (Yellow)") {

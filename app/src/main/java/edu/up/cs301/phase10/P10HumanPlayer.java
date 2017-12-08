@@ -1,6 +1,7 @@
 package edu.up.cs301.phase10;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,9 +10,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import edu.up.cs301.animation.AnimationSurface;
 import edu.up.cs301.animation.Animator;
@@ -54,6 +57,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	// our activity
 	private Activity myActivity;
+
+	//our activity context
+	private Context myContext;
 
 	// the amination surface
 	private AnimationSurface surface;
@@ -100,7 +106,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * @param bkColor
 	 * 		the background color
 	 */
-	public P10HumanPlayer(String name, int bkColor, Typeface[] tfs) {
+	public P10HumanPlayer(String name, int bkColor, Typeface[] tfs, Context myContext) {
 		super(name);
 		backgroundColor = bkColor;
 		tf = tfs;
@@ -123,6 +129,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		imgArr[4] = R.mipmap.cog;
 		imgArr[5] = R.drawable.help_icon;
 		imgArr[6] = R.drawable.manual;
+
+		this.myContext = myContext;
 	}
 
 	/**
@@ -134,10 +142,16 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	@Override
 	public void receiveInfo(GameInfo info) {
 		if(info instanceof  P10PopUpMessageInfo){
-			Log.i("REceived error info", "sdfd");
+			//Log.i("REceived error info", "sdfd");
 			P10PopUpMessageInfo myInfo = (P10PopUpMessageInfo) info;
 			String myMessage = myInfo.getMyMessage();
 			MessageBox.popUpMessage(myMessage, myActivity);
+		}
+		if(info instanceof  P10ToastMessageInfo){
+			//Log.i("REceived error info", "sdfd");
+			P10ToastMessageInfo myInfo = (P10ToastMessageInfo) info;
+			String myMessage = myInfo.getMyMessage();
+			Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
 		}
 
 		Log.i("P10HumanPlayer", "receiving updated state ("+info.getClass()+")");
@@ -631,7 +645,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 				//Create the rects and locations for the players cards in hand
 				start = (100 - (length * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) - LEFT_BORDER_PERCENT)) / 2;
-				state.getHand(playerNum).sortNumerical();
+				//state.getHand(playerNum).sortNumerical();
 				for (int i = 0; i < length; i++) {
 					if (selectedCards[i] == -1) {
 						selectedCards[i]++;
