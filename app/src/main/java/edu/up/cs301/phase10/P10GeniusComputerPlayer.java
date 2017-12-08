@@ -62,14 +62,14 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                         int temp = 0;
                         boolean swag = false; //
                         int cardNum2 = 0;
-                        int[] cardNum = new int[];
+                        //int[] cardNum = new int[];
                         for (int i = 0; i < 14; i++) {
                             temp = count[i];
 
                             if (temp >= highCount) {
                                 highCount = temp;
 
-                                cardNum = i;
+                                //cardNum = i;
 
                             }
 

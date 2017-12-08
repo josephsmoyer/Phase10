@@ -27,6 +27,9 @@ public class P10LocalGame extends LocalGame {
 
 	Context myContext;
 
+	//Info for starting each round on a new player
+	int roundStartPlayer;
+
 	/**
 	 * Constructor for the P10LocalGame.
 	 */
@@ -45,6 +48,7 @@ public class P10LocalGame extends LocalGame {
 		//Log.i("P10LocalGame", "creating game");
 		// create the state for the beginning of the game
 		state = new P10State(number);
+		roundStartPlayer = state.getToPlay();
 		String myStateStr = Integer.toString(state.getHand(1).size());
 		//Log.i("State Check", myStateStr); //should have 10 cards in the initialized hand
 
@@ -350,7 +354,7 @@ public class P10LocalGame extends LocalGame {
 					}
 					else{
 						Log.i("Cannot skip player", Integer.toString(playerToSkip));
-						Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
 						P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo(PlayerBeingSkipped + " has already been skipped");
 						for(int i = 0; i < state.getNumberPlayers(); i++){
 							if(!(players[i] instanceof P10ComputerPlayer)){		//for non-computer players (PROXY/HUMAN)
@@ -1757,7 +1761,8 @@ public class P10LocalGame extends LocalGame {
 		}
 		state.updatePlacements();
 		//Reset "the Dealer" to be player 0
-		state.setToPlay(0);
+		roundStartPlayer = (roundStartPlayer + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+		state.setToPlay(roundStartPlayer);
 		//Start with a draw action
 		state.setShouldDraw(true);
 		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard

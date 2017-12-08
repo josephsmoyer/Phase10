@@ -29,7 +29,7 @@ import edu.up.cs301.game.util.MessageBox;
  * regions on a surface. Presently, it is laid out for landscape orientation.
  * If the device is held in portrait mode, the cards will be very long and
  * skinny.
- * 
+ *
  * @author Steven R. Vegdahl
  * @version July 2013
  */
@@ -42,13 +42,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	private final static float LEFT_BORDER_PERCENT = 2; // width of left border
 	private final static float RIGHT_BORDER_PERCENT = 2; // width of right border
 	private final static float VERTICAL_BORDER_PERCENT = 4; // width of top/bottom borders
-    private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
-    private final static float VER_OVERLAP = 2; //Vertical overlap to still see number
+	private final static float HOR_OVERLAP = 2; //horizontal overlap to still see number
+	private final static float VER_OVERLAP = 2; //Vertical overlap to still see number
 	private final static float SMALL_CARD_HEIGHT_PERCENT = 5;
 	private final static float SMALL_CARD_WIDTH_PERCENT = 2.1246f;
 	private final static float SMALL_HOR_OVERLAP = 2; //horizontal overlap to still see number
 	private final static float SMALL_VER_OVERLAP = 2; //Vertical overlap to still see number
-	
+
 	// our game state
 	protected P10State state;
 
@@ -57,7 +57,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	// the amination surface
 	private AnimationSurface surface;
-	
+
 	// the background color
 	private int backgroundColor;
 	private RectF[] rects = new RectF[11];
@@ -94,7 +94,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	/**
 	 * constructor
-	 * 
+	 *
 	 * @param name
 	 * 		the player's name
 	 * @param bkColor
@@ -127,7 +127,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	/**
 	 * callback method: we have received a message from the game
-	 * 
+	 *
 	 * @param info
 	 * 		the message we have received from the game
 	 */
@@ -161,7 +161,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	/**
 	 * call-back method: called whenever the GUI has changed (e.g., at the beginning
 	 * of the game, or when the screen orientation changes).
-	 * 
+	 *
 	 * @param activity
 	 * 		the current activity
 	 */
@@ -177,7 +177,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		surface = (AnimationSurface) myActivity
 				.findViewById(R.id.animation_surface);
 		surface.setAnimator(this);
-		
+
 		// read in the card images
 		Card.initImages(activity);
 
@@ -234,7 +234,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * - the middle deck, with the top card face-up, others face-down
 	 * - the two players' decks, with all cards face-down
 	 * - a red bar to indicate whose turn it is
-	 * 
+	 *
 	 * @param g
 	 * 		the canvas on which we are to draw
 	 */
@@ -611,19 +611,19 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				drawCard(g, discardLocation, state.peekDiscardCard());
 				drawCard(g, drawLocation, Card.fromString("1x"));
 
-                if(state.getShouldDraw() && state.getToPlay() == playerNum){
-                    //if the player should draw, and its the humans turn
-                    float rectLeft1 = (start + LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) * width / 100;
-                    float rectRight1 = rectLeft + width * CARD_WIDTH_PERCENT / 100;
-                    float rectTop1 = (50 - VERTICAL_BORDER_PERCENT - CARD_HEIGHT_PERCENT / 2) * height / 100f;
-                    float rectBottom1 = (50 - VERTICAL_BORDER_PERCENT + CARD_HEIGHT_PERCENT / 2) * height / 100f;
+				if(state.getShouldDraw() && state.getToPlay() == playerNum){
+					//if the player should draw, and its the humans turn
+					float rectLeft1 = (start + LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) * width / 100;
+					float rectRight1 = rectLeft + width * CARD_WIDTH_PERCENT / 100;
+					float rectTop1 = (50 - VERTICAL_BORDER_PERCENT - CARD_HEIGHT_PERCENT / 2) * height / 100f;
+					float rectBottom1 = (50 - VERTICAL_BORDER_PERCENT + CARD_HEIGHT_PERCENT / 2) * height / 100f;
 					float x, y;
 					x = rectRight + (rectRight1-rectLeft1)/2;
 					y = rectTop1 + (rectBottom1-rectTop1)/2;
-                    float radius = 25;
-                    g.drawCircle(x, y, radius, needToDrawPaint);
+					float radius = 25;
+					g.drawCircle(x, y, radius, needToDrawPaint);
 					g.drawText("Remember to Draw!", x, y+(radius*3), needToDrawPaint);
-                }
+				}
 
 				//start of all the possible cards as neither selected or not
 				for (int i = length; i < 11; i++) {
@@ -742,7 +742,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		}
 
 	}
-	
+
 	/**
 	 * @return
 	 * 		the rectangle that represents the location on the drawing
@@ -780,13 +780,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				return phaseLoc;
 		}
 	}
-	
+
 	/**
 	 * @return
 	 * 		the rectangle that represents the location on the drawing
 	 * 		surface where the top card in the current player's deck is to
 	 * 		be drawn
-	 */	
+	 */
 	private RectF thisPlayerTopCardLocation() {
 		// near the right-bottom of the drawing surface, based on the height
 		// and width, and the percentages defined above
@@ -797,13 +797,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				(100-RIGHT_BORDER_PERCENT)*width/100f,
 				(100-VERTICAL_BORDER_PERCENT)*height/100f);
 	}
-	
+
 	/**
 	 * @return
 	 * 		the rectangle that represents the location on the drawing
 	 * 		surface where the top card in the middle pile is to
 	 * 		be drawn
-	 */	
+	 */
 	private RectF middlePileTopCardLocation() {
 		// near the middle-bottom of the drawing surface, based on the height
 		// and width, and the percentages defined above
@@ -815,11 +815,11 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		float rectBottom = (100-VERTICAL_BORDER_PERCENT)*height/100f;
 		return new RectF(rectLeft, rectTop, rectRight, rectBottom);
 	}
-		
+
 	/**
 	 * draws a sequence of card-backs, each offset a bit from the previous one, so that all can be
 	 * seen to some extent
-	 * 
+	 *
 	 * @param g
 	 * 		the canvas to draw on
 	 * @param topRect
@@ -833,7 +833,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 	 * 		the number of card-backs to draw
 	 */
 	private void drawCardBacks(Canvas g, RectF topRect, float deltaX, float deltaY,
-			int numCards) {
+							   int numCards) {
 		// loop through from back to front, drawing a card-back in each location
 		for (int i = numCards-1; i >= 0; i--) {
 			// determine theh position of this card's top/left corner
@@ -848,7 +848,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 
 	/**
 	 * callback method: we have received a touch on the animation surface
-	 * 
+	 *
 	 * @param event
 	 * 		the motion-event
 	 */
@@ -901,6 +901,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		//If a card was selected
 		else {
 			selectedCards[touchedCard] = (selectedCards[touchedCard]+1)%2; //Toggle card selected/unselected
+			return;
 		}
 
 		if(discardLocation.contains(x,y)){
@@ -938,7 +939,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				return;
 			}
 			else if (count > 1) { //if more than 1 card is selected, flash
-                surface.flash(Color.RED, 50);
+				Log.i("Flash", "Discard More than 1");
+				surface.flash(Color.RED, 50);
 			}
 			else{ //if no cards are selected then attempt to draw from the discard pile
 				//action contains player (this) and false to indicate discard pile
@@ -955,8 +957,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			game.sendAction(myAction);
 			return;
 		}
-        for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
-        	//phaseLocs[i] = getPhaseLoc(i);
+		for(int i = 0; i < 2; i++){ /*for(int i = 0; i < phaseLocs.length; i++){*/
+			//phaseLocs[i] = getPhaseLoc(i);
 			//Log.i("Reached", Integer.toString(i));
 			//Log.i("SHould be true", Boolean.toString(phaseLocs[i].contains(x, y)));
 			if(phaseLocs[i].contains(x, y)){
@@ -1023,11 +1025,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						} else if (count == 1) {
 							P10HitCardAction myAction = new P10HitCardAction(this, myCard, i, 0);
 							game.sendAction(myAction);
+							Log.i("Hitcard", "Action");
 							for (int k = 0; k < selectedCards.length; k++) {
 								selectedCards[k] = 0; //deselect all cards
 							}
 							return;
 						} else {
+							Log.i("Flash", "Computer Phase locs1");
 							surface.flash(Color.RED, 50);
 						}
 					} else if (computerPhaseLocs[i - offset][1].contains(x, y)) {
@@ -1049,20 +1053,22 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 							}
 							return;
 						} else {
+							Log.i("Flash", "Computer Phase locs2");
 							surface.flash(Color.RED, 50);
 						}
 					}
 				}
 				else{
+					Log.i("Flash", "ELSE");
 					surface.flash(Color.RED, 50);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * draws a card on the canvas; if the card is null, draw a card-back
-	 * 
+	 *
 	 * @param g
 	 * 		the canvas object
 	 * @param rect
@@ -1105,10 +1111,10 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 			g.drawRect(blocks[turn], red);
 		}
 	}*/
-	
+
 	/**
 	 * scales a rectangle, moving all edges with respect to its center
-	 * 
+	 *
 	 * @param rect
 	 * 		the original rectangle
 	 * @param factor
@@ -1125,13 +1131,13 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		float right = rect.right-midX;
 		float top = rect.top-midY;
 		float bottom = rect.bottom-midY;
-		
+
 		// scale each side; move back so that center is in original location
 		left = left*factor + midX;
 		right = right*factor + midX;
 		top = top*factor + midY;
 		bottom = bottom*factor + midY;
-		
+
 		// create/return the new rectangle
 		return new RectF(left, top, right, bottom);
 	}
