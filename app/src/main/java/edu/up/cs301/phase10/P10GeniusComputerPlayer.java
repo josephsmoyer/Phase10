@@ -62,11 +62,11 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                         int temp = 0;
                         boolean swag = false;
                         int cardNum2 = 0;
-                        int cardNum = 0;
+                        int[] cardNum = new int[];
                         for (int i = 0; i < 14; i++) {
                             temp = count[i];
 
-                            if (temp > highCount) {
+                            if (temp >= highCount) {
                                 highCount = temp;
 
                                 cardNum = i;
@@ -75,32 +75,33 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
 
 
                         }
-                        if (savedState.getPhases()[this.playerNum] == 1) {
+                        //if (savedState.getPhases()[this.playerNum] == 1) {
 
 
-                            if (highCount > 3) {
-                                for (int i = 0; i < 14; i++) {
-                                    count[i] = temp;
-                                    if (i == cardNum) {
-                                        break;
-                                    }
+                         //   if (highCount > 3) {
+                            //    for (int i = 0; i < 14; i++) {
+                            //        count[i] = temp;
+                             //       if (i == cardNum) {
+                             //           break;
+                              //      }
 
-                                    if (temp > lastCount) {
-
-
-                                        highCount = temp;
-                                        cardNum2 = i;
+                              //      if (temp > lastCount) {
 
 
-                                    }
-                                }
-                                if (savedState.peekDiscardCard().getRank().value(1) == cardNum2) {
-                                    action = false;
-                                }
-                            }
+                              //          highCount = temp;
+                             //           cardNum2 = i;
 
 
-                        }
+                              //      }
+                              //  }
+                             //   if (savedState.peekDiscardCard().getRank().value(1) == cardNum2) {
+                             //       action = false;
+                             //   }
+                            //}
+
+
+                        //}
+
 
                 }
                 myAction = new P10DrawCardAction(this, action);//dumb player always draws from draw pile unless that card is a wild
