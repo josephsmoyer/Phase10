@@ -13,8 +13,8 @@ import edu.up.cs301.game.infoMsg.GameInfo;
  * Created by Trenton on 11/18/2017.
  */
 
-public class P10ModerateComputerPlayer extends P10ComputerPlayer {
-    P10ModerateComputerPlayer(String playerName){
+public class P10GeniusComputerPlayer extends P10ComputerPlayer {
+    P10GeniusComputerPlayer(String playerName){
         super(playerName);
     }
 
@@ -44,11 +44,67 @@ public class P10ModerateComputerPlayer extends P10ComputerPlayer {
             GameAction myAction = null;
 
             //if the next valid action is a draw
-            if(savedState.getShouldDraw()){
+            if(savedState.getShouldDraw()) {
+                boolean action = true;
                 Log.i("Drawing - Player", Integer.toString(this.playerNum));
+                if (savedState.peekDiscardCard().getRank().value(1) == 13) {
+                    action = false;
+                }
+                switch (savedState.getPhases()[this.playerNum]) {
+                    case 1:
+                    case 3:
+                    case 7:
+                    case 9:
+                    case 10:
+                        int count[] = cardsCount(savedState.getHand(playerNum));
+                        int highCount = 0;
+                        int lastCount = 0;
+                        int temp = 0;
+                        boolean swag = false;
+                        int cardNum2 = 0;
+                        int cardNum = 0;
+                        for (int i = 0; i < 14; i++) {
+                            temp = count[i];
 
-                myAction = new P10DrawCardAction(this, true);}  //dumb player always draws from draw pile unless that card is a wild
+                            if (temp > highCount) {
+                                highCount = temp;
 
+                                cardNum = i;
+
+                            }
+
+
+                        }
+                        if (savedState.getPhases()[this.playerNum] == 1) {
+
+
+                            if (highCount > 3) {
+                                for (int i = 0; i < 14; i++) {
+                                    count[i] = temp;
+                                    if (i == cardNum) {
+                                        break;
+                                    }
+
+                                    if (temp > lastCount) {
+
+
+                                        highCount = temp;
+                                        cardNum2 = i;
+
+
+                                    }
+                                }
+                                if (savedState.peekDiscardCard().getRank().value(1) == cardNum2) {
+                                    action = false;
+                                }
+                            }
+
+
+                        }
+
+                }
+                myAction = new P10DrawCardAction(this, action);//dumb player always draws from draw pile unless that card is a wild
+            }
             //if next valid action is to skip player
             else if (savedState.getChooseSkip()) {
                 int random = generateToSkip();

@@ -2,13 +2,9 @@ package edu.up.cs301.phase10;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import edu.up.cs301.card.Card;
 import edu.up.cs301.card.Color;
 import edu.up.cs301.card.Rank;
-import edu.up.cs301.game.GamePlayer;
 import edu.up.cs301.game.infoMsg.GameState;
 
 /**
@@ -272,8 +268,8 @@ public class P10State extends GameState
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
-			//myDeck.add(twelve);
-			//myDeck.add(wild);
+			myDeck.add(twelve);
+			myDeck.add(wild);
 			//myDeck.add(skip);
 		}
 		for(int i = 0; i < 2; i++) {	//cards to add twice
@@ -290,7 +286,7 @@ public class P10State extends GameState
 			//myDeck.add(eleven);
 			myDeck.add(twelve);
 			//myDeck.add(wild);
-			myDeck.add(skip);
+			//myDeck.add(skip);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
@@ -319,7 +315,7 @@ public class P10State extends GameState
 		}
 
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 9;							//start all players on phase 1
+			phases[i] = 1;							//start all players on phase 1
 			//scores[i] = 0;							//start all players with a score of zero
 			//toSkip[i] = false;						//start no players with a skip pending
 			//alreadySkip[i] = false;					//start no players marked as already been skipped
