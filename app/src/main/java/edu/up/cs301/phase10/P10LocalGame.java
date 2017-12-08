@@ -383,15 +383,16 @@ public class P10LocalGame extends LocalGame {
 		}
 
 		if(checkIfRoundOver()){
-			roundAdjustment();
 			int playerOut = 0;
 			for(int i = 0; i < state.getNumberPlayers(); i++){
 				if(state.getHand(i).size() == 0){
 					playerOut = i;
 				}
 			}
+			roundAdjustment();
 			//Toast.makeText(myContext, "Round Ended - Player ran out of cards", Toast.LENGTH_LONG).show();
-			P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("Round Ended - Because a Player ran out of cards");
+			String outPlayerName = playerNames[playerOut];
+			P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("Round Ended - "+outPlayerName+" played all of their cards");
 			for(int i = 0; i < state.getNumberPlayers(); i++){
 				if(!(players[i] instanceof P10ComputerPlayer)){
 					players[i].sendInfo(errorInfo);
