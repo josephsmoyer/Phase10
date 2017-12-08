@@ -1103,4 +1103,30 @@ public class P10ComputerPlayer extends GameComputerPlayer
 
         return toReturn;
     }
+
+    /*
+     *Generates the playerIDX for the player to skip
+     */
+    protected int generateToSkip(){
+        int random;
+        boolean[] alreadySkipped = savedState.getAlreadySkip();
+        boolean allSkipped = true;
+        do {
+            random = (int) (Math.random() * (savedState.getNumberPlayers()));
+            if (alreadySkipped[random]){ //if that player has already been skipped
+                random = playerNum; //set value so that loop will reset
+            }
+            for(int i = 0; i < alreadySkipped.length; i++){
+                if(i != random){    //ignoring skipping yourself
+                    if(!alreadySkipped[i]){
+                        allSkipped = false;      //update allskipped if you can find a player to skip
+                    }
+                }
+            }
+            if(allSkipped){
+                random = -1; //if everyone has been skipped exit loop by setting value
+            }
+        } while (random == playerNum);
+        return random;
+    }
 }

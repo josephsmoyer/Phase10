@@ -54,25 +54,7 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
             }
             //if next valid action is to skip player
             else if (savedState.getChooseSkip()) {
-                int random;
-                boolean[] alreadySkipped = savedState.getAlreadySkip();
-                boolean allSkipped = true;
-                do {
-                    random = (int) (Math.random() * (savedState.getNumberPlayers()));
-                    if (alreadySkipped[random]){ //if that player has already been skipped
-                        random = playerNum; //set value so that loop will reset
-                    }
-                    for(int i = 0; i < alreadySkipped.length; i++){
-                        if(i != random){    //ignoring skipping yourself
-                            if(!alreadySkipped[i]){
-                                allSkipped = false;      //update allskipped if you can find a player to skip
-                            }
-                        }
-                    }
-                    if(allSkipped){
-                        random = -1; //if everyone has been skipped exit loop by setting value
-                    }
-                } while (random == playerNum);
+                int random = generateToSkip();
                 //if (savedState.getAlreadySkip() && !savedState.getToSkip)
                 myAction = new P10SkipPlayerAction(this, random);
             }
@@ -100,7 +82,11 @@ public class P10DumbComputerPlayer extends P10ComputerPlayer {
                     Log.i("Discarding - Player", Integer.toString(this.playerNum));
                     //sleeps for half a second before discarding
                     sleep(500);
-                    Card c = toDiscard(savedState.getHand(playerNum), savedState.getPhases()[playerNum]);
+                    Card c = new Card(toDiscard(savedState.getHand(playerNum), savedState.getPhases()[playerNum]));
+                    if(c.getWildValue() ==  14){
+                        //if its a skip card
+                        c.setSkipValue(generateToSkip());
+                    }
                     myAction = new P10DiscardCardAction(this, c);
                 }
             }

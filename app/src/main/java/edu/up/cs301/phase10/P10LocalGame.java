@@ -315,7 +315,37 @@ public class P10LocalGame extends LocalGame {
 				Log.i("Turn is player", Integer.toString(nextIDX));
 				state.setToPlay(nextIDX);        //update
 			}
-		} else if (P10ma.isSkipPlayer()) {
+			//alternate skip protocol
+			if(state.getChooseSkip()){
+				if(c.getSkipValue() != -1){	//if found someone to skip
+					int playerToSkip = c.getSkipValue();
+					String PlayerBeingSkipped = playerNames[playerToSkip];
+					if(!state.getAlreadySkip()[c.getSkipValue()]){ //if that player hasnt been skipped
+						Log.i("Skipping Player", Integer.toString(playerToSkip));
+						Toast.makeText(myContext, "Skip played on " + PlayerBeingSkipped, Toast.LENGTH_SHORT).show();
+						//Skip player
+						state.setToSkip(playerToSkip, true);
+						state.setChooseSkip(false);
+					}
+					else{
+						Log.i("Cannot skip player", Integer.toString(playerToSkip));
+						Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
+					}
+				}
+
+				//after discarding, the next action should be a draw
+				state.setShouldDraw(true);
+				//Log.i("Turn is player", Integer.toString(thisPlayerIdx));
+				int nextIDX = (thisPlayerIdx + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+				while (state.getToSkip()[nextIDX]) {
+					state.setToSkip(nextIDX, false);
+					state.setAlreadySkip(nextIDX, true);
+					nextIDX = (nextIDX + 1) % (state.getNumberPlayers());
+				}
+				Log.i("Turn is player", Integer.toString(nextIDX));
+				state.setToPlay(nextIDX);        //update
+			}
+		}/* else if (P10ma.isSkipPlayer()) {
 			P10SkipPlayerAction myAction = (P10SkipPlayerAction) P10ma;
 			int playerToSkip = myAction.getPlayerID();
 			if(playerToSkip == -1){		//if computer couldnt find a player to skip
@@ -359,7 +389,7 @@ public class P10LocalGame extends LocalGame {
 					Toast.makeText(myContext, PlayerBeingSkipped + " has already been skipped", Toast.LENGTH_SHORT).show();
 				}
 			}
-		} else { // some unexpected action
+		} */else { // some unexpected action
 			return false;
 		}
 
