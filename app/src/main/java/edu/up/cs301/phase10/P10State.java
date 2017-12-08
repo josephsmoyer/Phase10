@@ -309,8 +309,8 @@ public class P10State extends GameState
 			myDeck.moveAllCardsTo(hands[playerToHook]);                //send hand tp state area holding it
 
 			Deck tempDeck = new Deck();
-			//tempDeck.add(wild);						 //put wild on discard pile if you wnat it
-			tempDeck.add(skip);						 //put a skip on discard pile for intiail skip testing
+			tempDeck.add(wild);						 //put wild on discard pile if you wnat it
+			//tempDeck.add(skip);						 //put a skip on discard pile for intiail skip testing
 			tempDeck.moveTopCardTo(discardPile);
 		}
 
