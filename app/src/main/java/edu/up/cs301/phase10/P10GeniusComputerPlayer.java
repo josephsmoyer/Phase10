@@ -195,7 +195,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                     }
                 }
                 if(!hasSet){        //if no set yet
-                    for(int i = 0; i < count.length; i++){
+                    for(int i = 0; i < count.length-2; i++){
                         if(count[i] == 1){
                             valueToDiscard = i;     //chooses to discard the highest value card not in a group
                         }
@@ -208,6 +208,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
 
                 }
                 if(hasSet){
+                    toSave.add(13);
                     for(int i = 0; i < count.length; i++){
                         if(count[i] >= 3){
                             toSave.add(i);
@@ -262,7 +263,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                     }
                 }
                 if(!hasSet){        //if no set yet
-                    for(int i = 0; i < count.length; i++){
+                    for(int i = 0; i < count.length-2; i++){
                         if(count[i] == 1){
                             valueToDiscard = i;     //chooses to discard the highest value card not in a group
                         }
@@ -275,6 +276,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
 
                 }
                 if(hasSet){
+                    toSave.add(13); //save wilds!!!
                     for(int i = 0; i < count.length; i++){
                         if(count[i] >= 4){
                             toSave.add(i);

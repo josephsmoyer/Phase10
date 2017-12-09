@@ -1719,6 +1719,7 @@ public class P10LocalGame extends LocalGame {
 	protected boolean checkIfRoundOver(){
 		for(int i = 0; i < state.getNumberPlayers(); i++){
 			if(state.getHand(i).size() == 0){
+				roundStartPlayer = i; //player who ran out gets to start
 				return true;
 			}
 		}
@@ -1771,7 +1772,7 @@ public class P10LocalGame extends LocalGame {
 		}
 		state.updatePlacements();
 		//Reset "the Dealer" to be player 0
-		roundStartPlayer = (roundStartPlayer + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+		//roundStartPlayer = (roundStartPlayer + 1) % (state.getNumberPlayers()); //increment players whose turn it is
 		state.setToPlay(roundStartPlayer);
 		//Start with a draw action
 		state.setShouldDraw(true);

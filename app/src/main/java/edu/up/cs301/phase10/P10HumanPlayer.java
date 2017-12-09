@@ -683,6 +683,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					if(state.getPlayedPhase()[playerNum][j].size() > 7){
 						overlapCrunch = 1.5f;
 					}
+                    if(state.getPlayedPhase()[playerNum][j].size() > 9){
+                        overlapCrunch = 1.75f;
+                    }
+					if(state.getPlayedPhase()[playerNum][j].size() > 12){
+						overlapCrunch = 2.5f;
+					}
 					for (int k = 0; k < state.getPlayedPhase()[playerNum][j].size(); k++) {
 						RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 						drawCard(g, myRect, state.getPlayedPhase()[playerNum][j].peekAt(k));
@@ -717,16 +723,19 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 							rectTop = computerPhaseLocs[j - offset][k].top;
 							rectBottom = computerPhaseLocs[j - offset][k].bottom;
 
-							float overlapCrunch = 1;	//factopr for card spacing if phase locations get too full
-							if(state.getPlayedPhase()[j-offset][k].size() > 7){
-								overlapCrunch = 1.5f;
+							float overlapCrunch = 0;	//factopr for card spacing if phase locations get too full
+							if(state.getPlayedPhase()[j][k].size() > 7){
+								overlapCrunch = 2f;
+							}
+							if(state.getPlayedPhase()[j][k].size() > 9){
+								overlapCrunch = 4f;
 							}
 							//cards in phase locations
 							for (int l = 0; l < state.getPlayedPhase()[j][k].size(); l++) {
 								RectF myRect = new RectF(rectLeft, rectTop, rectRight, rectBottom);
 								drawCard(g, myRect, state.getPlayedPhase()[j][k].peekAt(l));
 
-								rectLeft = rectLeft + width * (2 * SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP) / (100*overlapCrunch);
+								rectLeft = rectLeft + width * (2 * SMALL_CARD_WIDTH_PERCENT - SMALL_HOR_OVERLAP - overlapCrunch*(SMALL_CARD_WIDTH_PERCENT/8) ) / (100);
 								rectRight = rectLeft + width * SMALL_CARD_WIDTH_PERCENT / 100;
 							}
 						}
@@ -761,11 +770,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				float rectB = height * CARD_HEIGHT_PERCENT / 100 / 2;
 				scoreRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(scoreRect, scorePaint);
+				float diff = rectB-rectT;
+				g.drawText("Stats", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);
 
 				rectT = height * CARD_HEIGHT_PERCENT / 100 / 2;
 				rectB = height * CARD_HEIGHT_PERCENT / 100;
 				helpRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(helpRect, helpPaint);
+				g.drawText("Help", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);
+
 
 				/*//for bitmap drawings
 				Rect r = new Rect(0,0,imgBitmap[4].getWidth(),imgBitmap[4].getHeight());

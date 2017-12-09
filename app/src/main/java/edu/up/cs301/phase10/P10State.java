@@ -263,17 +263,17 @@ public class P10State extends GameState
 		Card skip = new Card(Rank.SKIP, Color.Black);
 		for(int i = 0; i < 1; i++) {	//cards to add once
 			//myDeck.add(one);
-			//myDeck.add(two);
-			//myDeck.add(three);
-			//myDeck.add(four);
-			//myDeck.add(five);
-			//myDeck.add(six);
-			//myDeck.add(seven);
+			myDeck.add(two);
+			myDeck.add(three);
+			myDeck.add(four);
+			myDeck.add(five);
+			myDeck.add(six);
+			myDeck.add(seven);
 			//myDeck.add(eight);
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
-			myDeck.add(twelve);
+			//myDeck.add(twelve);
 			myDeck.add(wild);
 			//myDeck.add(skip);
 		}
@@ -289,13 +289,13 @@ public class P10State extends GameState
 			//myDeck.add(nine);
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
-			myDeck.add(twelve);
+			//myDeck.add(twelve);
 			//myDeck.add(wild);
 			//myDeck.add(skip);
 		}
 		for(int i = 0; i < 3; i++) {	//cards to add three times
 			//myDeck.add(one);
-			myDeck.add(two);
+			//myDeck.add(two);
 			//myDeck.add(three);
 			//myDeck.add(four);
 			//myDeck.add(five);
@@ -306,8 +306,8 @@ public class P10State extends GameState
 			//myDeck.add(ten);
 			//myDeck.add(eleven);
 			//myDeck.add(twelve);
-			//myDeck.add(wild);
-			myDeck.add(skip);
+			myDeck.add(wild);
+			//myDeck.add(skip);
 		}
 
 		if(hookHand) {
@@ -320,7 +320,7 @@ public class P10State extends GameState
 		}
 
 		for(int i = 0; i < numPlayers; i++){
-			phases[i] = 1;							//start all players on phase 1
+			phases[i] = 4;							//start all players on phase 1
 			//scores[i] = 0;							//start all players with a score of zero
 			//toSkip[i] = false;						//start no players with a skip pending
 			//alreadySkip[i] = false;					//start no players marked as already been skipped
