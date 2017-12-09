@@ -95,3 +95,26 @@ Solution Resource:
 *https://stackoverflow.com/questions/9987578/how-to-rotate-my-application-180-degree-upside-down-upon-rotating-device-180-deg
 Solution Description:
 *Gave an example, used to update our code
+
+Author:
+*Joseph Smoyer
+Date:
+*12/5/2017
+Problem Description:
+*Network play wasn't quite working
+Solution Resource:
+*Class Notes on game framework
+Solution Description:
+*Had to add an ID to each action in order for those moveActions to go over the network
+
+Author:
+*Joseph Smoyer
+Date:
+*12/7/2017
+Problem Description:
+*Needed to modify computer player to draw from discard pile but didn't know how to specify a switch
+in logic from one phase to another
+Solution Resource:
+*Java API tutorial
+Solution Description:
+*Used a switch statement to specify when to use specific code based on the phase the player is on.

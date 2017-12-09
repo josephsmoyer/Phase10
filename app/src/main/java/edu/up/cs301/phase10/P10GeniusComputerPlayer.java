@@ -49,9 +49,9 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
 
             //if the next valid action is a draw
             if(savedState.getShouldDraw()) {
-                boolean action = true;
+                boolean action = true;//boolean which holds whether or not the computer player picks from discard or draw
                 Log.i("Drawing - Player", Integer.toString(this.playerNum));
-                if (savedState.peekDiscardCard().getRank().value(1) == 13) {
+                if (savedState.peekDiscardCard().getRank().value(1) == 13) {//picks up card if it is a wild
                     action = false;
                 }
                 switch (savedState.getPhases()[this.playerNum]) {

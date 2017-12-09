@@ -61,7 +61,7 @@ public class P10MainActivity extends GameMainActivity {
 			}
 		});
 
-		playerTypes.add(new GamePlayerType("Computer player (genius)") {
+		playerTypes.add(new GamePlayerType("Computer player (Genius)") {
 			public GamePlayer createPlayer(String name) {
 				return new P10GeniusComputerPlayer(name);
 			}
