@@ -770,11 +770,15 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				float rectB = height * CARD_HEIGHT_PERCENT / 100 / 2;
 				scoreRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(scoreRect, scorePaint);
+				float diff = rectB-rectT;
+				g.drawText("Stats", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);
 
 				rectT = height * CARD_HEIGHT_PERCENT / 100 / 2;
 				rectB = height * CARD_HEIGHT_PERCENT / 100;
 				helpRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(helpRect, helpPaint);
+				g.drawText("Help", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);
+
 
 				/*//for bitmap drawings
 				Rect r = new Rect(0,0,imgBitmap[4].getWidth(),imgBitmap[4].getHeight());
