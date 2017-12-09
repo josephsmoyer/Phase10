@@ -92,7 +92,7 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
 
 
                 }
-                myAction = new P10DrawCardAction(this, action);//dumb player always draws from draw pile unless that card is a wild
+                myAction = new P10DrawCardAction(this, action);//genius player always draws from draw pile unless that card is a wild or if it needs a card for a set
             }
             //if next valid action is to skip player
             else { //if its not time to draw
