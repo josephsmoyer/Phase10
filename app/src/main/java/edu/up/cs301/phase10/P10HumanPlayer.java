@@ -128,7 +128,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		imgArr[2] = R.drawable.scores;
 		imgArr[3] = R.drawable.manual;
 		imgArr[4] = R.mipmap.cog;
-		imgArr[5] = R.drawable.help_icon;
+		imgArr[5] = R.mipmap.help;
 		imgArr[6] = R.drawable.manual;
 
 		this.myContext = myContext;
@@ -281,6 +281,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 		Paint phaseTextPaint = new Paint();
 		phaseTextPaint.setColor(Color.BLACK);
 		phaseTextPaint.setTextSize(40);
+		//phaseTextPaint.setTypeface(tf[0]);
+
+		Paint textPaint = new Paint();
+		textPaint.setColor(Color.WHITE);
+		textPaint.setTextSize(55);
+		textPaint.setTypeface(tf[0]);
 
 		if(state == null){
 			return;
@@ -299,10 +305,6 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 
 				//float scoreX = width/8;
-				Paint textPaint = new Paint();
-				textPaint.setColor(Color.WHITE);
-				textPaint.setTextSize(55);
-				textPaint.setTypeface(tf[0]);
 
 
 				//placeholder paint
@@ -361,8 +363,8 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				//g.drawRect(closeHelpRect, helpPaint); To find perfect hitbox
 			}
 			else {
-				height = surface.getHeight();
-				width = surface.getWidth();
+				//height = surface.getHeight();
+				//width = surface.getWidth();
 				//if the players hand is not initialized
 				if (state.getHand(playerNum) == null) return;
 				//variables for rect creation
@@ -772,7 +774,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				}
 
 				//Location for Score Info Toggler
-				float rectL = width - CARD_WIDTH_PERCENT * width / 100;
+				/*float rectL = width - CARD_WIDTH_PERCENT * width / 100;
 				float rectR = width;
 				float rectT = 0;
 				float rectB = height * CARD_HEIGHT_PERCENT / 100 / 2;
@@ -785,18 +787,24 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				rectB = height * CARD_HEIGHT_PERCENT / 100;
 				helpRect = new RectF(rectL, rectT, rectR, rectB);
 				g.drawRect(helpRect, helpPaint);
-				g.drawText("Help", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);
+				g.drawText("Help", rectL + width*(SMALL_CARD_WIDTH_PERCENT/2)/100, rectB - diff/3, phaseTextPaint);*/
 
-
-				/*//for bitmap drawings
-				Rect r = new Rect(0,0,imgBitmap[4].getWidth(),imgBitmap[4].getHeight());
-				//settings box (can be changed after)
-				scoreRect = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
+				//Load Stats and Help images
+				imgBitmap[0] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[4]);
+				imgBitmap[1] = BitmapFactory.decodeResource(myActivity.getResources(), imgArr[5]);
 				//placeholder paint
 				Paint p = new Paint();
 				p.setColor(Color.BLACK);
+				Rect r = new Rect(0,0,imgBitmap[0].getWidth(),imgBitmap[0].getHeight());
+				//stats box
+				scoreRect = new RectF((92.5f*g.getWidth()/100), 0, g.getWidth(), 7.5f*g.getWidth()/100);
+				//draw the stats icon
+				g.drawBitmap(imgBitmap[0], r, scoreRect, p);
+				r = new Rect(0,0,imgBitmap[1].getWidth(),imgBitmap[1].getHeight());
+				//help box
+				helpRect = new RectF((92.5f*g.getWidth()/100), 7.5f*g.getWidth()/100, g.getWidth(), 15f*g.getWidth()/100);
 				//draw the settings icon
-				g.drawBitmap(imgBitmap[4], r, scoreRect, p);*/
+				g.drawBitmap(imgBitmap[1], r, helpRect, p);
 			}
 		}
 
