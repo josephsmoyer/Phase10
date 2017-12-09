@@ -1776,18 +1776,27 @@ public class P10LocalGame extends LocalGame {
 		state.setToPlay(roundStartPlayer);
 		//Start with a draw action
 		state.setShouldDraw(true);
-		//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
-		state.cleanDecks();
 
-		if(state.peekDiscardCard().getWildValue() == 14){ //if flips a wild for first card
-			state.setAlreadySkip(state.getToPlay(), true);	//mark first player as being skipped
-			int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
-			state.setToPlay(nextIDX);
-			//Toast.makeText(myContext, "First Player skipped, because of skip in discard Pile", Toast.LENGTH_SHORT).show();
-			P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("First Player skipped, because of skip in discard Pile");
-			for(int i = 0; i < state.getNumberPlayers(); i++){
-				if(!(players[i] instanceof P10ComputerPlayer)){
-					players[i].sendInfo(errorInfo);
+		boolean gameOver = false;
+		for(int i = 0; i < state.getNumberPlayers(); i++){
+			if(state.getPhases()[i] == 11){
+				gameOver = true;
+			}
+		}
+		if(!gameOver) {
+			//empty the discard/draw piles & reDeal cards to the players & put a card from draw to start discard
+			state.cleanDecks();
+
+			if (state.peekDiscardCard().getWildValue() == 14) { //if flips a wild for first card
+				state.setAlreadySkip(state.getToPlay(), true);    //mark first player as being skipped
+				int nextIDX = (state.getToPlay() + 1) % (state.getNumberPlayers()); //increment players whose turn it is
+				state.setToPlay(nextIDX);
+				//Toast.makeText(myContext, "First Player skipped, because of skip in discard Pile", Toast.LENGTH_SHORT).show();
+				P10PopUpMessageInfo errorInfo = new P10PopUpMessageInfo("First Player skipped, because of skip in discard Pile");
+				for (int i = 0; i < state.getNumberPlayers(); i++) {
+					if (!(players[i] instanceof P10ComputerPlayer)) {
+						players[i].sendInfo(errorInfo);
+					}
 				}
 			}
 		}

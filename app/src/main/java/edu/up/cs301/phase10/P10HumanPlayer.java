@@ -158,7 +158,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 				Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
 			}
 			else {	//if the toast message contains a card
-				Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(myContext, myMessage, Toast.LENGTH_SHORT).show();
 				selectCard = myInfo.getMyCard();	//select that card
 			}
 		}
@@ -382,7 +382,12 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					// draw phase number and instructions for phase
 					int p = Integer.parseInt(Integer.toString(state.getPhases()[playerNum]));
 					if (i == 0) {
-						g.drawText("Phase " + p, phaseLocs[i].left, phaseLocs[i].top-10, phaseTextPaint);
+						if(p < 11) {
+							g.drawText("Phase " + p, phaseLocs[i].left, phaseLocs[i].top - 10, phaseTextPaint);
+						}
+						else{
+							g.drawText("Game Over!", phaseLocs[i].left, phaseLocs[i].top - 10, phaseTextPaint);
+						}
 					}
 					switch (p) {
 						case 1:
@@ -660,6 +665,9 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 						selectedCards[i]++;
 					}
 					if(selectCard != null){
+						for(int j = 0; j < state.getHand(playerNum).size(); j++){
+							selectedCards[j] = 0;	//deselect all cards
+						}
 						if(state.getHand(playerNum).peekAt(i).toString().equals(selectCard)){
 							//Log.i("Match Select", selectCard);
 							selectedCards[i]++;			//"select" the card in the players hand

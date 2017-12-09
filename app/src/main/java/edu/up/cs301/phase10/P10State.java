@@ -99,7 +99,7 @@ public class P10State extends GameState
 		}
 
 		// randomly pick the player who starts
-		toPlay = 0; //(int)(numPlayers*Math.random());
+		toPlay = (int)(numPlayers*Math.random());
 
 		//initialize the draw pile
 		drawPile.add108(); 			//fill the deck with cards
