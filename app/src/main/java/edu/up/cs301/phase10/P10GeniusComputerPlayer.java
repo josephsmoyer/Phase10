@@ -10,7 +10,11 @@ import edu.up.cs301.game.actionMsg.GameAction;
 import edu.up.cs301.game.infoMsg.GameInfo;
 
 /**
- * Created by Trenton on 11/18/2017.
+ *
+ * Created by Joseph on 11/18/2017.
+ *
+ * genius computer player is a cool little thing that makes the computer draw cards from the discard
+ * pile if it is advantageous to the computer
  */
 
 public class P10GeniusComputerPlayer extends P10ComputerPlayer {
@@ -57,50 +61,34 @@ public class P10GeniusComputerPlayer extends P10ComputerPlayer {
                     case 9:
                     case 10:
                         int count[] = cardsCount(savedState.getHand(playerNum));
-                        int highCount = 0;
-                        int lastCount = 0;
+
                         int temp = 0;
                         boolean swag = false; //
                         int cardNum2 = 0;
-                        //int[] cardNum = new int[];
+                        ArrayList<Integer> cardNum = new ArrayList<Integer>();//creates an array list which stores any number with more than two instance
+                        int j = 0;//
                         for (int i = 0; i < 14; i++) {
                             temp = count[i];
 
-                            if (temp >= highCount) {
-                                highCount = temp;
+                            if (temp >= 2) {// if the current card has more than 2 or 2 instances in a hand
+                                cardNum.add(j, i);
+                                j++;
 
-                                //cardNum = i;
+
 
                             }
 
 
                         }
-                        //if (savedState.getPhases()[this.playerNum] == 1) {
+                        for(int h = 0; h<cardNum.size(); h++){
+                            if(savedState.peekDiscardCard().getRank().value(1) == cardNum.get(h)){
+                                action = false;
+                            }
+                        }
+
+                    case 2:case 4:case 5:case 6:
 
 
-                         //   if (highCount > 3) {
-                            //    for (int i = 0; i < 14; i++) {
-                            //        count[i] = temp;
-                             //       if (i == cardNum) {
-                             //           break;
-                              //      }
-
-                              //      if (temp > lastCount) {
-
-
-                              //          highCount = temp;
-                             //           cardNum2 = i;
-
-
-                              //      }
-                              //  }
-                             //   if (savedState.peekDiscardCard().getRank().value(1) == cardNum2) {
-                             //       action = false;
-                             //   }
-                            //}
-
-
-                        //}
 
 
                 }
