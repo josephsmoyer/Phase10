@@ -655,33 +655,35 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 					g.drawText("Remember to Draw!", x, y+(radius*3), needToDrawPaint);
 				}
 
-				//start of all the possible cards as neither selected or not
-				for (int i = length; i < 11; i++) {
-					selectedCards[i] = -1;
-				}
-				//Create the rects and locations for the players cards in hand
-				start = (100 - (length * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) - LEFT_BORDER_PERCENT)) / 2;
-				//state.getHand(playerNum).sortNumerical();
-				for (int i = 0; i < length; i++) {
-					if (selectedCards[i] == -1) {
-						selectedCards[i]++;
+				synchronized (state.getHand(playerNum)) {
+					//start of all the possible cards as neither selected or not
+					for (int i = length; i < 11; i++) {
+						selectedCards[i] = -1;
 					}
-					if(selectCard != null){
-						for(int j = 0; j < state.getHand(playerNum).size(); j++){
-							selectedCards[j] = 0;	//deselect all cards
+					//Create the rects and locations for the players cards in hand
+					start = (100 - (length * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT) - LEFT_BORDER_PERCENT)) / 2;
+					//state.getHand(playerNum).sortNumerical();
+					for (int i = 0; i < length; i++) {
+						if (selectedCards[i] == -1) {
+							selectedCards[i]++;
 						}
-						if(state.getHand(playerNum).peekAt(i).toString().equals(selectCard)){
-							//Log.i("Match Select", selectCard);
-							selectedCards[i]++;			//"select" the card in the players hand
-							selectCard = null;			//return selectCard to null, so only one instance gets highlighted
+						if (selectCard != null) {
+							for (int j = 0; j < state.getHand(playerNum).size(); j++) {
+								selectedCards[j] = 0;    //deselect all cards
+							}
+							if (state.getHand(playerNum).peekAt(i).toString().equals(selectCard)) {
+								//Log.i("Match Select", selectCard);
+								selectedCards[i]++;            //"select" the card in the players hand
+								selectCard = null;            //return selectCard to null, so only one instance gets highlighted
+							}
 						}
+						rectLeft = (start + (i * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT))) * width / 100;
+						rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
+						rectTop = (100 - VERTICAL_BORDER_PERCENT - CARD_HEIGHT_PERCENT - (selectedCards[i] * 5)) * height / 100f;
+						rectBottom = (100 - VERTICAL_BORDER_PERCENT - (selectedCards[i] * 5)) * height / 100f;
+						rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
+						drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 					}
-					rectLeft = (start + (i * (LEFT_BORDER_PERCENT + CARD_WIDTH_PERCENT))) * width / 100;
-					rectRight = rectLeft + width * CARD_WIDTH_PERCENT / 100;
-					rectTop = (100 - VERTICAL_BORDER_PERCENT - CARD_HEIGHT_PERCENT - (selectedCards[i] * 5)) * height / 100f;
-					rectBottom = (100 - VERTICAL_BORDER_PERCENT - (selectedCards[i] * 5)) * height / 100f;
-					rects[i] = new RectF(rectLeft, rectTop, rectRight, rectBottom);
-					drawCard(g, rects[i], state.getHand(playerNum).peekAt(i));
 				}
 				//Create the rects and locations for the players cards in the played phases for Human
 				for (int j = 0; j < 2 /*phaseLocs.length*/; j++) {
@@ -1095,7 +1097,7 @@ public class P10HumanPlayer extends GameHumanPlayer implements Animator {
 							game.sendAction(myAction);
 							Log.i("Hitcard", "Action");
 							for (int k = 0; k < selectedCards.length; k++) {
-								selectedCards[k] = 0; //deselect all cards
+						 		selectedCards[k] = 0; //deselect all cards
 							}
 							return;
 						} else {
